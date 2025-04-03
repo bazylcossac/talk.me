@@ -16,8 +16,8 @@ function Dashboard() {
   }
 
   return (
-    <div className="p-10 h-screen">
-      <div className="h-full  w-[250px] flex flex-col gap-4 justify-between">
+    <div className="p-4 h-screen">
+      <div className="h-full md:w-[250px] sm:w-full flex flex-col gap-4 justify-between">
         <FriendsList />
         <Profile />
       </div>
