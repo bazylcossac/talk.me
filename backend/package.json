@@ -1,0 +1,26 @@
+{
+  "name": "talk.me-backend",
+  "version": "1.0.0",
+  "description": "talk.me - videoconference app",
+  "homepage": "https://github.com/bazylcossac/talk.me#readme",
+  "bugs": {
+    "url": "https://github.com/bazylcossac/talk.me/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bazylcossac/talk.me.git"
+  },
+  "license": "ISC",
+  "author": "Michał Strojny",
+  "type": "commonjs",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "socket.io": "^4.8.1",
+    "uuid": "^11.1.0"
+  }
+}
