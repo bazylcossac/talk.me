@@ -5,7 +5,7 @@ import { HiMiniVideoCamera } from "react-icons/hi2";
 import { HiMiniVideoCameraSlash } from "react-icons/hi2";
 import { BiSolidMicrophoneOff } from "react-icons/bi";
 import { RootState } from "../../store/store";
-import { setCameraEnabled, setMicEnabled } from "../../store/webrtc";
+import { setCameraEnabled, setMicEnabled } from "../../store/slices/webrtc";
 
 function VideoIcons() {
   const dispatch = useDispatch();

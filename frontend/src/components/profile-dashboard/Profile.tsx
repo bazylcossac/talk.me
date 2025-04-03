@@ -1,5 +1,6 @@
 import { UserButton, useUser } from "@clerk/clerk-react";
 import VideoIcons from "./VideoIcons";
+import ActiveIcon from "./ActiveIcon";
 
 function Profile() {
   const user = useUser();
@@ -12,7 +13,7 @@ function Profile() {
             <div className="flex items-center">
               <UserButton />
             </div>
-            <div className="hidden md:inline-block absolute size-3 bg-red-500 rounded-full border-2 border-[#222222] bottom-0 left-4 cursor-pointer hover:bg-red-400"></div>
+            <ActiveIcon />
           </div>
 
           <div className="ml-2 text-xs md:flex items-center hidden ">

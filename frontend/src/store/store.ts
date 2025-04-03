@@ -1,8 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
-import webrtcReducer from "./webrtc";
+import webrtcReducer from "./slices/webrtc";
+import userReducer from "./slices/user";
 
 const store = configureStore({
   reducer: {
+    user: userReducer,
     webrtc: webrtcReducer,
   },
 });
