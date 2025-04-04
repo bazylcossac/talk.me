@@ -26,6 +26,15 @@ const io = socket(server, {
 io.on("connection", (socket) => {
   console.log(`user connected ${socket.id}`);
   socket.emit("connection", socket.id);
+
+  socket.on("user-join", (data) => {
+    console.log(data);
+  });
+
+
+  socket.on("disconnect", () => {
+    io.sockets.emit("user-left", socket.id)
+  })
 });
 
 server.listen(PORT, () => {
