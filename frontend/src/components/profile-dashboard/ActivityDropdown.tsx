@@ -6,7 +6,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import ActiveIcon from "./ActiveIcon";
 import { useDispatch } from "react-redux";
-import { userSatus } from "@/lib/constants";
+import { userStatus } from "@/lib/constants";
 import { setUserActiveStatus } from "@/store/slices/user";
 
 function ActivityDropdown() {
@@ -19,13 +19,13 @@ function ActivityDropdown() {
           <ActiveIcon />
         </DropdownMenuTrigger>
         <DropdownMenuContent
-          className="bg-[#101010] border-none ml-5 mb-2 [&>*]:text-xs [&>*]:hover:bg-[#494949] [&>*]:cursor-pointer "
+          className="bg-[#101010] border-none ml-5 mb-2 [&>*]:text-xs [&>*]:hover:bg-[#494949] [&>*]:hover:text-white [&>*]:cursor-pointer "
           side="top"
         >
           <DropdownMenuItem
             className="flex text-white"
             onClick={() =>
-              dispatch(setUserActiveStatus(userSatus.DONT_DISTURB))
+              dispatch(setUserActiveStatus(userStatus.DONT_DISTURB))
             }
           >
             <div className="bg-red-500 size-2 rounded-full"></div>
@@ -33,14 +33,14 @@ function ActivityDropdown() {
           </DropdownMenuItem>
           <DropdownMenuItem
             className="flex text-white"
-            onClick={() => dispatch(setUserActiveStatus(userSatus.ACTIVE))}
+            onClick={() => dispatch(setUserActiveStatus(userStatus.ACTIVE))}
           >
             <div className="bg-green-500 size-2 rounded-full"></div>
             Active
           </DropdownMenuItem>
           <DropdownMenuItem
             className="flex text-white"
-            onClick={() => dispatch(setUserActiveStatus(userSatus.IN_CALL))}
+            onClick={() => dispatch(setUserActiveStatus(userStatus.IN_CALL))}
           >
             <div className="bg-blue-500 size-2 rounded-full"></div>
             In call

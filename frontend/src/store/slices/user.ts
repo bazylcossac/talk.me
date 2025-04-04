@@ -1,8 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { userSatus } from "../../lib/constants";
+import { userStatus } from "../../lib/constants";
 
 const initialState = {
-  userActiveStatus: userSatus.ACTIVE,
+  userActiveStatus: userStatus.ACTIVE,
 };
 
 const userSlice = createSlice({
