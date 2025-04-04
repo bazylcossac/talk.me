@@ -1,14 +1,15 @@
 import { cn } from "@/lib/utils";
 import { userStatus } from "../../lib/constants";
 import { BsCameraVideoFill } from "react-icons/bs";
-type ActiveUserT = {
-  username: string;
-  imageUrl: string;
-  status: string;
-  socketId: string;
-};
+import { userDataType } from "@/types/types";
+// type ActiveUserT = {
+//   username: string;
+//   imageUrl: string;
+//   status: string;
+//   socketId: string;
+// };
 
-function ActiveUser({ user }: { user: ActiveUserT }) {
+function ActiveUser({ user }: { user: userDataType }) {
   return (
     <div className="select-none">
       <div className="flex flex-row items-center justify-between rounded-md md:w-[250px] p-4 md:p-3 ">

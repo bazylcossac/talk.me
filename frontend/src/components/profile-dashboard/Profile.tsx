@@ -18,7 +18,7 @@ function Profile() {
 
           <div className="ml-2 text-xs md:flex items-center hidden ">
             <p className="md:max-w-[100px] md:truncate select-none">
-              {user.user?.fullName}
+              {user.user?.username || user.user?.fullName}
             </p>
           </div>
         </div>

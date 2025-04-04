@@ -23,18 +23,22 @@ const io = socket(server, {
   },
 });
 
+let activeUsers = [];
+
 io.on("connection", (socket) => {
   console.log(`user connected ${socket.id}`);
   socket.emit("connection", socket.id);
 
   socket.on("user-join", (data) => {
-    console.log(data);
+    activeUsers.push(data);
+    io.sockets.emit("user-join", activeUsers);
   });
 
-
   socket.on("disconnect", () => {
-    io.sockets.emit("user-left", socket.id)
-  })
+    const usersLeft = activeUsers.filter((user) => user.socketId !== socket.id);
+    activeUsers = usersLeft;
+    io.sockets.emit("user-disconnected", usersLeft);
+  });
 });
 
 server.listen(PORT, () => {

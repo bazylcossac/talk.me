@@ -3,10 +3,7 @@ import { useNavigate } from "react-router";
 import Profile from "../components/profile-dashboard/Profile";
 import FriendsList from "../components/friends-list/FriendsList";
 import { useEffect } from "react";
-import {
-  connectToWebSocket,
-  handleUserJoin,
-} from "@/connection/webSocketConnection";
+import { connectToWebSocket, userJoin } from "@/connection/webSocketConnection";
 import { userStatus } from "@/lib/constants";
 
 function Dashboard() {
@@ -26,7 +23,7 @@ function Dashboard() {
         imageUrl: user.imageUrl,
         status: userStatus.ACTIVE,
       };
-      handleUserJoin(userData);
+      userJoin(userData);
     }
   }, [user]);
 
