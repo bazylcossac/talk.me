@@ -1,18 +1,23 @@
 import { useSession } from "@clerk/clerk-react";
-
 import { useNavigate } from "react-router";
 import Profile from "../components/profile-dashboard/Profile";
 import FriendsList from "../components/friends-list/FriendsList";
 import { useEffect } from "react";
+import { connectToWebSocket } from "@/connection/webSocketConnection";
+
 function Dashboard() {
   const navigate = useNavigate();
   const { isSignedIn, isLoaded } = useSession();
 
   useEffect(() => {
-    if (!isSignedIn && isLoaded) {
-      navigate("/");
-    }
-  }, [isSignedIn, navigate, isLoaded]);
+    connectToWebSocket();
+  }, []);
+
+  // useEffect(() => {
+  //   if (!isSignedIn && isLoaded) {
+  //     navigate("/");
+  //   }
+  // }, [isSignedIn, navigate, isLoaded]);
 
   if (!isLoaded) {
     return <p>loading...</p>;

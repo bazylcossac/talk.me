@@ -9,10 +9,6 @@ const app = express();
 const prisma = new PrismaClient();
 const server = http.createServer(app);
 
-server.listen(PORT, () => {
-  console.log("server running on port ", PORT);
-});
-
 const peerServer = ExpressPeerServer(server, { debug: true });
 peerServer.on("connection", (id) => {
   console.log(`user conencted with ${id} id`);
@@ -25,4 +21,13 @@ const io = socket(server, {
     origin: "http://localhost:5173",
     methods: ["GET", "POST"],
   },
+});
+
+io.on("connection", (socket) => {
+  console.log(`user connected ${socket.id}`);
+  socket.emit("connection", socket.id);
+});
+
+server.listen(PORT, () => {
+  console.log("server running on port ", PORT);
 });

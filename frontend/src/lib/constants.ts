@@ -3,3 +3,9 @@ export const userStatus = {
   DONT_DISTURB: "DONT_DISTURB",
   IN_CALL: "IN_CALL",
 };
+
+export const callStatus = {
+  CALL_REQUESTED: "CALL_REQUESTED",
+  CALL_AVAILABLE: "CALL_AVAILABLE",
+  CALL_UNVAILABLE: "CALL_UNVAILABLE",
+};

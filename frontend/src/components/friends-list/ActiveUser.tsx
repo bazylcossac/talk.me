@@ -39,11 +39,12 @@ function ActiveUser({ user }: { user: ActiveUserT }) {
             </p>
           </div>
         </div>
-        <div className="bg-[#333333] p-2  rounded-md cursor-pointer">
+        <div
+          className="bg-[#333333] p-2 rounded-md cursor-pointer hover:bg-[#222222] "
+          onClick={() => console.log(user.socketId)}
+        >
           <BsCameraVideoFill className="text-[#9C9C9C] md:text-sm" />
         </div>
-        {/* <button onClick={() => console.log(user.socketId)}></button> */}
-        {/* call button */}
       </div>
     </div>
   );

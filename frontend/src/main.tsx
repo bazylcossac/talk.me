@@ -15,21 +15,19 @@ if (!PUBLISHABLE_KEY) {
 }
 
 createRoot(document.getElementById("root")!).render(
-  <StrictMode>
-    <Rounter>
-      <ClerkProvider
-        publishableKey={PUBLISHABLE_KEY}
-        afterSignOutUrl="/"
-        signInFallbackRedirectUrl="/dashboard"
-        signUpFallbackRedirectUrl="/dashboard"
-        appearance={{
-          baseTheme: dark,
-        }}
-      >
-        <Provider store={store}>
-          <App />
-        </Provider>
-      </ClerkProvider>
-    </Rounter>
-  </StrictMode>
+  <Rounter>
+    <ClerkProvider
+      publishableKey={PUBLISHABLE_KEY}
+      afterSignOutUrl="/"
+      signInFallbackRedirectUrl="/dashboard"
+      signUpFallbackRedirectUrl="/dashboard"
+      appearance={{
+        baseTheme: dark,
+      }}
+    >
+      <Provider store={store}>
+        <App />
+      </Provider>
+    </ClerkProvider>
+  </Rounter>
 );
