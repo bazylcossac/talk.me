@@ -13,6 +13,20 @@ const users = [
     status: userStatus.ACTIVE,
     socketId: "2",
   },
+  {
+    username: "dzikidzekson",
+    imageUrl:
+      "https://img.clerk.com/eyJ0eXBlIjoicHJveHkiLCJzcmMiOiJodHRwczovL2ltYWdlcy5jbGVyay5kZXYvb2F1dGhfZ29vZ2xlL2ltZ18ydkRKTWR3UTZ3ZjA0OTVWMzVjVjFIQ2YxdHEifQ",
+    status: userStatus.DONT_DISTURB,
+    socketId: "22",
+  },
+  {
+    username: "legoprogrammer23321312321123321321312321312312321312312",
+    imageUrl:
+      "https://img.clerk.com/eyJ0eXBlIjoicHJveHkiLCJzcmMiOiJodHRwczovL2ltYWdlcy5jbGVyay5kZXYvb2F1dGhfZ29vZ2xlL2ltZ18ydkRKTWR3UTZ3ZjA0OTVWMzVjVjFIQ2YxdHEifQ",
+    status: userStatus.IN_CALL,
+    socketId: "21",
+  },
 ];
 
 function FriendsList() {
