@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import { userStatus } from "../../lib/constants";
-
+import { BsCameraVideoFill } from "react-icons/bs";
 type ActiveUserT = {
   username: string;
   imageUrl: string;
@@ -11,8 +11,8 @@ type ActiveUserT = {
 function ActiveUser({ user }: { user: ActiveUserT }) {
   return (
     <div className="select-none">
-      <div className="flex flex-row items-center md:justify-between  rounded-md md:w-[250px] p-3 md:p-2 ">
-        <div className="flex flex-row ">
+      <div className="flex flex-row items-center justify-between rounded-md md:w-[250px] p-4 md:p-3 ">
+        <div className="flex flex-row">
           <div className="">
             <div className="flex items-center relative">
               <img
@@ -34,12 +34,15 @@ function ActiveUser({ user }: { user: ActiveUserT }) {
           </div>
 
           <div className="ml-2 md:text-xs flex items-center justifty-center ">
-            <p className="max-w-[150px] overflow-y-hidden select-text scrollbar-hide">
+            <p className="max-w-[130px] overflow-y-hidden select-text scrollbar-hide">
               {user.username}
             </p>
           </div>
         </div>
-        <button onClick={() => console.log(user.socketId)}></button>
+        <div className="bg-[#333333] p-2  rounded-md cursor-pointer">
+          <BsCameraVideoFill className="text-[#9C9C9C] md:text-sm" />
+        </div>
+        {/* <button onClick={() => console.log(user.socketId)}></button> */}
         {/* call button */}
       </div>
     </div>
