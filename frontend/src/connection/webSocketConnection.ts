@@ -1,9 +1,14 @@
 import { io, Socket } from "socket.io-client";
 import { preOfferDataType, userDataType } from "../types/types";
 import store from "@/store/store";
-import { setActiveUsers, setCurrentlyLoggedUser } from "@/store/slices/user";
+import {
+  setActiveUsers,
+  setCallStatus,
+  setCurrentlyLoggedUser,
+} from "@/store/slices/user";
 import { handlePreOffer } from "./webrtcConnection";
-import { preOfferAnswerStatus } from "@/lib/constants";
+import { callStatus, preOfferAnswerStatus } from "@/lib/constants";
+import { setCallingUserData } from "@/store/slices/webrtc";
 
 let socket: Socket;
 let mySocketId: string;
@@ -73,4 +78,33 @@ export const handlePreOfferAnswer = ({
   callerSocketId: string;
 }) => {
   socket.emit("pre-offer-answer", { answer, callerSocketId });
+};
+
+export const handleSendAcceptCall = ({
+  callerSocketId,
+}: {
+  callerSocketId: string;
+}) => {
+  store.dispatch(setCallStatus(callStatus.CALL_IN_PROGRESS));
+  const currentIncomingCalls = store.getState().webrtc.callingUsersData;
+  const filteredIncomingCalls = currentIncomingCalls.filter(
+    (user) => user.socketId !== callerSocketId
+  );
+  store.dispatch(setCallingUserData(filteredIncomingCalls));
+  console.log("CALL ACCEPTED");
+  /// send accept data to caller
+};
+
+export const handleRejectCall = ({
+  callerSocketId,
+}: {
+  callerSocketId: string;
+}) => {
+  store.dispatch(setCallStatus(callStatus.CALL_AVAILABLE));
+  const currentIncomingCalls = store.getState().webrtc.callingUsersData;
+  const filteredIncomingCalls = currentIncomingCalls.filter(
+    (user) => user.socketId !== callerSocketId
+  );
+  store.dispatch(setCallingUserData(filteredIncomingCalls));
+  // send reject data to caller
 };

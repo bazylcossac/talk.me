@@ -21,6 +21,9 @@ export const callToUser = (calleSocketId: string) => {
   store.dispatch(setCallStatus(callStatus.CALL_IN_PROGRESS));
 };
 
+// handling pre offers 
+// ACCEPT / REJECT
+
 export const handlePreOffer = (data: userDataType) => {
   if (canUserConnectiWithMe()) {
     const activeIncomingCalls = store.getState().webrtc.callingUsersData;
@@ -40,6 +43,8 @@ export const handlePreOffer = (data: userDataType) => {
   }
 };
 
+
+
 const canUserConnectiWithMe = () => {
   const activeStatus = store.getState().user.userActiveStatus;
   const currentCallStatus = store.getState().user.userCallState;
@@ -52,3 +57,5 @@ const canUserConnectiWithMe = () => {
     return false;
   }
 };
+
+

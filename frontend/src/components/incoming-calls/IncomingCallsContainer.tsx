@@ -3,7 +3,7 @@ import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 import IncomingCallBox from "./IncomingCallBox";
 import { toast } from "sonner";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 // const callingData = [
 //   {
@@ -16,19 +16,38 @@ import { useEffect } from "react";
 // ];
 
 function IncomingCallContainer() {
+  const shownToastIds = useRef<Set<string>>(new Set());
   const callingUsersData = useSelector(
     (state: RootState) => state.webrtc.callingUsersData
   );
   console.log(callingUsersData);
 
+  const deleteFromShownToastIds = (socketId) => {
+    shownToastIds.current.delete(`incoming-call-${socketId}`);
+    // console.log(shownToastIds.current);
+  };
   // );
   useEffect(() => {
     callingUsersData.forEach((user) => {
-      // Sprawdź czy toast już istnieje (np. użyj socketId jako id)
-      toast.custom((t) => <IncomingCallBox user={user} toastId={t} />, {
-        id: user.socketId, // zapobiega duplikacji
-        duration: Infinity,
-      });
+      const toastId = `incoming-call-${user.socketId}`;
+
+      if (!shownToastIds.current.has(toastId)) {
+        toast.custom(
+          (t) => (
+            <IncomingCallBox
+              user={user}
+              toastId={t}
+              deleteFromShownToastIds={deleteFromShownToastIds}
+            />
+          ),
+          {
+            id: toastId,
+            duration: Infinity,
+          }
+        );
+
+        shownToastIds.current.add(toastId);
+      }
     });
   }, [callingUsersData]);
 

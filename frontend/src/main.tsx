@@ -27,7 +27,7 @@ createRoot(document.getElementById("root")!).render(
     >
       <Provider store={store}>
         <App />
-        <Toaster />
+        <Toaster position="top-right" />
       </Provider>
     </ClerkProvider>
   </Rounter>

@@ -1,25 +1,33 @@
 import { toast } from "sonner";
 import { userDataType } from "@/types/types";
 import { Button } from "../ui/button";
-function IncomingCallBox(user: { user: userDataType }, toastId: string) {
+import {
+  handleRejectCall,
+  handleSendAcceptCall,
+} from "@/connection/webSocketConnection";
+function IncomingCallBox({ user, toastId, deleteFromShownToastIds }) {
   const handleAcceptCall = () => {
     handleSendAcceptCall({
-      callerSocketId: user.user.socketId,
+      callerSocketId: user.socketId,
     });
   };
 
-  const handleDeclineCall = () => {};
+  const handleDeclineCall = () => {
+    handleRejectCall({
+      callerSocketId: user.socketId,
+    });
+  };
 
   return (
     <div className="bg-[#171717] rounded-md m-2 p-4 flex flex-col">
       <p>Incoming call</p>
       <div className="flex flex-row items-center gap-2 mt-4">
         <img
-          src={user.user.imageUrl}
+          src={user.imageUrl}
           alt="incoming call user image"
           className="rounded-full size-6"
         />
-        <p className="text-xs">{user.user.username}</p>
+        <p className="text-xs max-w-[100px]">{user.username}</p>
       </div>
 
       <div className="flex flex-row items-center gap-4  mt-4 [&>*]:cursor-pointer">
@@ -29,6 +37,7 @@ function IncomingCallBox(user: { user: userDataType }, toastId: string) {
           onClick={() => {
             handleAcceptCall();
             toast.dismiss(toastId);
+            deleteFromShownToastIds(user.socketId);
           }}
         >
           Accept
@@ -39,6 +48,7 @@ function IncomingCallBox(user: { user: userDataType }, toastId: string) {
           onClick={() => {
             handleDeclineCall();
             toast.dismiss(toastId);
+            deleteFromShownToastIds(user.socketId);
           }}
         >
           Decline
