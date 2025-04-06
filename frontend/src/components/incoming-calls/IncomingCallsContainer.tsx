@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import IncomingCallBox from "./IncomingCallBox";
 import { toast } from "sonner";
 import { useEffect, useRef } from "react";
+import { handleRejectCall } from "@/connection/webSocketConnection";
 
 // const callingData = [
 //   {
@@ -22,9 +23,8 @@ function IncomingCallContainer() {
   );
   console.log(callingUsersData);
 
-  const deleteFromShownToastIds = (socketId) => {
+  const deleteFromShownToastIds = (socketId: string) => {
     shownToastIds.current.delete(`incoming-call-${socketId}`);
-    // console.log(shownToastIds.current);
   };
   // );
   useEffect(() => {
@@ -42,7 +42,14 @@ function IncomingCallContainer() {
           ),
           {
             id: toastId,
-            duration: Infinity,
+            duration: 10000,
+            onDismiss: () => {
+              toast.dismiss(toastId);
+              deleteFromShownToastIds(user.socketId); // usunac z redux stora dodatkowo jescze
+              handleRejectCall({
+                callerSocketId: user.socketId,
+              });
+            },
           }
         );
 
