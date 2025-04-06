@@ -24,9 +24,14 @@ export const callToUser = (calleSocketId: string) => {
 export const handlePreOffer = (data: userDataType) => {
   if (canUserConnectiWithMe()) {
     const activeIncomingCalls = store.getState().webrtc.callingUsersData;
-    const newIncomingCalls = [...activeIncomingCalls, data];
+    const isUserCurrentlyCallingYou = activeIncomingCalls.find(
+      (user) => user.socketId === data.socketId
+    );
+    if (!isUserCurrentlyCallingYou) {
+      const newIncomingCalls = [...activeIncomingCalls, data];
+      store.dispatch(setCallingUserData(newIncomingCalls));
+    }
     store.dispatch(setCallStatus(callStatus.CALL_REQUESTED));
-    store.dispatch(setCallingUserData(newIncomingCalls));
   } else {
     handlePreOfferAnswer({
       answer: preOfferAnswerStatus.CALL_UNVAILABLE,

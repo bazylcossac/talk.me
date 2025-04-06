@@ -1,7 +1,15 @@
+import { toast } from "sonner";
 import { userDataType } from "@/types/types";
 import { Button } from "../ui/button";
+function IncomingCallBox(user: { user: userDataType }, toastId: string) {
+  const handleAcceptCall = () => {
+    handleSendAcceptCall({
+      callerSocketId: user.user.socketId,
+    });
+  };
 
-function IncomingCallBox(user: { user: userDataType }) {
+  const handleDeclineCall = () => {};
+
   return (
     <div className="bg-[#171717] rounded-md m-2 p-4 flex flex-col">
       <p>Incoming call</p>
@@ -18,10 +26,21 @@ function IncomingCallBox(user: { user: userDataType }) {
         <Button
           variant="secondary"
           className="bg-green-500 text-white hover:bg-green-700 text-xs"
+          onClick={() => {
+            handleAcceptCall();
+            toast.dismiss(toastId);
+          }}
         >
           Accept
         </Button>
-        <Button variant="destructive" className="hover:bg-red-700 text-xs">
+        <Button
+          variant="destructive"
+          className="hover:bg-red-700 text-xs"
+          onClick={() => {
+            handleDeclineCall();
+            toast.dismiss(toastId);
+          }}
+        >
           Decline
         </Button>
       </div>
