@@ -2,6 +2,7 @@ import { useSession, useUser } from "@clerk/clerk-react";
 import { useNavigate } from "react-router";
 import Profile from "../components/profile-dashboard/Profile";
 import FriendsList from "../components/friends-list/FriendsList";
+import IncomingCallsContainer from "@/components/incoming-calls/IncomingCallSContainer";
 import { useEffect } from "react";
 import { connectToWebSocket, userJoin } from "@/connection/webSocketConnection";
 import { userStatus } from "@/lib/constants";
@@ -43,6 +44,8 @@ function Dashboard() {
         <FriendsList />
         <Profile />
       </div>
+
+      <IncomingCallsContainer />
     </div>
   );
 }

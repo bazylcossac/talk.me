@@ -5,18 +5,24 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import ActiveIcon from "./ActiveIcon";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { userStatus } from "@/lib/constants";
 import { setUserActiveStatus } from "@/store/slices/user";
+import { RootState } from "@/store/store";
 
 function ActivityDropdown() {
   const dispatch = useDispatch();
-
+  const userActiveStatus = useSelector(
+    (state: RootState) => state.user.userActiveStatus
+  );
   return (
     <div className="absolute -bottom-2 left-[18px] focus:ring-0 focus:outline-none">
       <DropdownMenu>
         <DropdownMenuTrigger className="focus:outline-none">
-          <ActiveIcon />
+          <ActiveIcon
+            userActiveStatus={userActiveStatus}
+            className="hidden md:inline-block size-3 rounded-full border-2 border-[#222222] cursor-pointer outline-none "
+          />
         </DropdownMenuTrigger>
         <DropdownMenuContent
           className="bg-[#101010] border-none ml-5 mb-2 [&>*]:text-xs [&>*]:hover:bg-[#494949] [&>*]:hover:text-white [&>*]:cursor-pointer "

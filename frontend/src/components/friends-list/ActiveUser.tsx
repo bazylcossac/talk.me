@@ -1,8 +1,7 @@
-import { cn } from "@/lib/utils";
-import { userStatus } from "../../lib/constants";
 import { BsCameraVideoFill } from "react-icons/bs";
 import { userDataType } from "@/types/types";
 import { callToUser } from "@/connection/webrtcConnection";
+import ActiveIcon from "../profile-dashboard/ActiveIcon";
 
 function ActiveUser({ user }: { user: userDataType }) {
   const handleCallToUser = (calleSocketId: string) => {
@@ -20,16 +19,12 @@ function ActiveUser({ user }: { user: userDataType }) {
                 alt={`${user.username}'s profile image`}
                 className=" rounded-full size-7"
               />
-              <div
-                className={cn(
-                  "inline-block size-3 rounded-full border-2 border-[#222222]  outline-none absolute -bottom-[2px] -right-[3px]",
-                  {
-                    "bg-red-500": user.status === userStatus.DONT_DISTURB,
-                    "bg-green-500": user.status === userStatus.ACTIVE,
-                    "bg-blue-500": user.status === userStatus.IN_CALL,
-                  }
-                )}
-              ></div>
+              <div className="absolute -bottom-2 left-[18px] focus:ring-0 focus:outline-none">
+                <ActiveIcon
+                  userActiveStatus={user.status}
+                  className="hidden md:inline-block size-3 rounded-full border-2 border-[#222222] cursor-pointer outline-none"
+                />
+              </div>
             </div>
           </div>
 
