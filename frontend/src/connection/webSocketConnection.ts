@@ -1,10 +1,11 @@
 import { io, Socket } from "socket.io-client";
 import { userDataType } from "../types/types";
 import store from "@/store/store";
-import { setActiveUsers } from "@/store/slices/user";
+import { setActiveUsers, setCurrentlyLoggedUser } from "@/store/slices/user";
 
 let socket: Socket;
 let mySocketId: string;
+let userSocketId: string;
 
 export const connectToWebSocket = () => {
   socket = io("http://localhost:3000");
@@ -30,8 +31,11 @@ export const connectToWebSocket = () => {
   });
 };
 
-export const userJoin = (userData: userDataType) => {
+// user join - disconnect
+
+export const userJoin = (userData: Omit<userDataType, "socketId">) => {
   socket.emit("user-join", { ...userData, socketId: mySocketId });
+  store.dispatch(setCurrentlyLoggedUser({ ...userData, socketId: mySocketId }));
 };
 
 export const handleUserJoin = (activeUsers: userDataType[]) => {
@@ -40,4 +44,20 @@ export const handleUserJoin = (activeUsers: userDataType[]) => {
 
 export const handleUserDisconnect = (activeUsers: userDataType[]) => {
   store.dispatch(setActiveUsers(activeUsers));
+};
+
+// user call pre offer
+
+// caller - my socket id
+// calee - user that i want to connect with
+
+export const callToUser = (calleSocketId: string) => {
+  userSocketId = calleSocketId // setting userSocketId to calleSocketId, which is socket id that we want to connect with
+  const currentUser = store.getState().user.loggedUser;
+  socket.emit("send-pre-offer", {
+    caller: currentUser,
+    calle: calleSocketId,
+  });
+
+  store.dispatch()
 };

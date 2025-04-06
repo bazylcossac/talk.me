@@ -2,14 +2,13 @@ import { cn } from "@/lib/utils";
 import { userStatus } from "../../lib/constants";
 import { BsCameraVideoFill } from "react-icons/bs";
 import { userDataType } from "@/types/types";
-// type ActiveUserT = {
-//   username: string;
-//   imageUrl: string;
-//   status: string;
-//   socketId: string;
-// };
+import { callToUser } from "@/connection/webSocketConnection";
 
 function ActiveUser({ user }: { user: userDataType }) {
+  const handleCallToUser = (calleSocketId: string) => {
+    callToUser(calleSocketId);
+  };
+
   return (
     <div className="select-none">
       <div className="flex flex-row items-center justify-between rounded-md md:w-[250px] p-4 md:p-3 ">
@@ -23,7 +22,7 @@ function ActiveUser({ user }: { user: userDataType }) {
               />
               <div
                 className={cn(
-                  "inline-block size-3 rounded-full border-2 border-[#222222]  outline-none absolute -bottom-1 right-0",
+                  "inline-block size-3 rounded-full border-2 border-[#222222]  outline-none absolute -bottom-[2px] -right-[3px]",
                   {
                     "bg-red-500": user.status === userStatus.DONT_DISTURB,
                     "bg-green-500": user.status === userStatus.ACTIVE,
@@ -42,7 +41,7 @@ function ActiveUser({ user }: { user: userDataType }) {
         </div>
         <div
           className="bg-[#333333] p-2 rounded-md cursor-pointer hover:bg-[#222222] "
-          onClick={() => console.log(user.socketId)}
+          onClick={() => handleCallToUser(user.socketId)}
         >
           <BsCameraVideoFill className="text-[#9C9C9C] md:text-sm" />
         </div>

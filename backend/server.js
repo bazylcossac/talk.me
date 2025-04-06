@@ -34,6 +34,10 @@ io.on("connection", (socket) => {
     io.sockets.emit("user-join", activeUsers);
   });
 
+  socket.on("send-pre-offer", (data) => {
+    socket.to(data.calle.calleSocketId).emit("send-pre-offer", data.caller)
+  })
+
   socket.on("disconnect", () => {
     const usersLeft = activeUsers.filter((user) => user.socketId !== socket.id);
     activeUsers = usersLeft;
