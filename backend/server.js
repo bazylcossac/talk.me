@@ -35,8 +35,12 @@ io.on("connection", (socket) => {
   });
 
   socket.on("send-pre-offer", (data) => {
-    socket.to(data.calle.calleSocketId).emit("send-pre-offer", data.caller)
-  })
+    socket.to(data.calleSocketId).emit("send-pre-offer", data.caller);
+  });
+
+  socket.on("pre-offer-answer", ({ answer, callerSocketId }) => {
+    socket.to(callerSocketId).emit("pre-offer-answer", answer);
+  });
 
   socket.on("disconnect", () => {
     const usersLeft = activeUsers.filter((user) => user.socketId !== socket.id);

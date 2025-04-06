@@ -7,7 +7,7 @@ function Profile() {
 
   return (
     <div>
-      <div className="bg-[#222222] flex flex-row items-center md:justify-between  rounded-md md:w-[250px] md:p-2 p-4 ">
+      <div className="bg-[#222222] flex flex-row items-center justify-between rounded-md md:w-[250px] md:p-2 p-4 ">
         <div className="flex flex-row ">
           <div className="relative">
             <div className="flex items-center">
@@ -22,8 +22,9 @@ function Profile() {
             </p>
           </div>
         </div>
-
-        <VideoIcons />
+        <div className="mx-2">
+          <VideoIcons />
+        </div>
       </div>
     </div>
   );

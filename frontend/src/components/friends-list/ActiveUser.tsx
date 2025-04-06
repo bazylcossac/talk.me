@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 import { userStatus } from "../../lib/constants";
 import { BsCameraVideoFill } from "react-icons/bs";
 import { userDataType } from "@/types/types";
-import { callToUser } from "@/connection/webSocketConnection";
+import { callToUser } from "@/connection/webrtcConnection";
 
 function ActiveUser({ user }: { user: userDataType }) {
   const handleCallToUser = (calleSocketId: string) => {

@@ -4,3 +4,8 @@ export type userDataType = {
   status: string;
   socketId: string;
 };
+
+export type preOfferDataType = {
+  caller: userDataType;
+  calleSocketId: string;
+};

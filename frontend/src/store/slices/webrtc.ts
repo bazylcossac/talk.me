@@ -1,8 +1,10 @@
+import { userDataType } from "@/types/types";
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   micEnabled: true,
   cameraEnabled: true,
+  callingUserData: {} as userDataType,
 };
 
 const webrtcSlice = createSlice({
@@ -15,9 +17,13 @@ const webrtcSlice = createSlice({
     setCameraEnabled: (state, action) => {
       state.cameraEnabled = action.payload;
     },
+    setCallingUserData: (state, action) => {
+      state.callingUserData = action.payload;
+    },
   },
 });
 
-export const { setMicEnabled, setCameraEnabled } = webrtcSlice.actions;
+export const { setMicEnabled, setCameraEnabled, setCallingUserData } =
+  webrtcSlice.actions;
 
 export default webrtcSlice.reducer;
