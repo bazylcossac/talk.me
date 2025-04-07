@@ -1,17 +1,46 @@
 import { callStatus, preOfferAnswerStatus, userStatus } from "@/lib/constants";
-import { setCallStatus, setUserActiveStatus } from "@/store/slices/user";
+import { setCallStatus } from "@/store/slices/user";
 import store from "@/store/store";
 import {
-  handlePreOfferAnswer,
   handleSendPreOffer,
   handleUserActiveChange,
+  sendPreOfferAnswer,
 } from "./webSocketConnection";
-import { setCallingUserData } from "@/store/slices/webrtc";
+import { setCallingUserData, setLocalStream } from "@/store/slices/webrtc";
 import { userDataType } from "@/types/types";
+import { toast } from "sonner";
+
+const configuration = {
+  iceServers: [
+    {
+      urls: "stun:stun.l.google.com:19302",
+    },
+  ],
+};
+
+const constraints = {
+  video: true,
+  audio: true,
+};
 
 let callerSocketId;
+let peerConnection = null as RTCPeerConnection | null;
 
-export const callToUser = (calleSocketId: string) => {
+export const createPeerConection = () => {
+  peerConnection = new RTCPeerConnection(configuration);
+};
+
+// export const sendOffer = async (calleSocketId: string) => {
+//   const offer = await peerConnection?.createOffer();
+//   peerConnection?.setLocalDescription(offer);
+//   handeSendOffer({
+//     offer: offer,
+//     calleSocketId: calleSocketId,
+//   });
+// };
+
+export const callToUser = async (calleSocketId: string) => {
+  await setUpLocalStream();
   callerSocketId = calleSocketId; // setting userSocketId to calleSocketId, which is socket id that we want to connect with
   const currentUser = store.getState().user.loggedUser;
   handleSendPreOffer({
@@ -20,7 +49,19 @@ export const callToUser = (calleSocketId: string) => {
   });
 
   store.dispatch(setCallStatus(callStatus.CALL_IN_PROGRESS));
+
   handleUserActiveChange(userStatus.IN_CALL);
+};
+
+export const setUpLocalStream = async () => {
+  try {
+    const localStream = await navigator.mediaDevices.getUserMedia(constraints);
+    store.dispatch(setLocalStream(localStream));
+    createPeerConection();
+    store.dispatch(setCallStatus(callStatus.CALL_AVAILABLE));
+  } catch {
+    toast("Failed to get user media");
+  }
 };
 
 // handling pre offers
@@ -28,6 +69,10 @@ export const callToUser = (calleSocketId: string) => {
 
 export const handlePreOffer = (data: userDataType) => {
   if (canUserConnectiWithMe()) {
+    sendPreOfferAnswer({
+      answer: preOfferAnswerStatus.CALL_ACCEPTED,
+      callerSocketId: data.socketId,
+    });
     const activeIncomingCalls = store.getState().webrtc.callingUsersData;
     const isUserCurrentlyCallingYou = activeIncomingCalls.find(
       (user) => user.socketId === data.socketId
@@ -39,7 +84,7 @@ export const handlePreOffer = (data: userDataType) => {
     store.dispatch(setCallStatus(callStatus.CALL_REQUESTED));
   } else {
     // sends info to caller that call is not possible
-    handlePreOfferAnswer({
+    sendPreOfferAnswer({
       answer: preOfferAnswerStatus.CALL_UNVAILABLE,
       callerSocketId: data.socketId,
     });

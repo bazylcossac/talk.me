@@ -40,10 +40,9 @@ export const connectToWebSocket = () => {
     handlePreOffer(data);
   });
   socket.on("pre-offer-answer", (data) => {
-    store.dispatch(setCallStatus(callStatus.CALL_AVAILABLE));
-    toast("Call not possible");
-    console.log(data);
+    handlePreOfferAnswer(data);
   });
+
   socket.on(
     "activity-change",
     ({
@@ -97,7 +96,7 @@ export const handleSendPreOffer = (data: preOfferDataType) => {
   });
 };
 
-export const handlePreOfferAnswer = ({
+export const sendPreOfferAnswer = ({
   answer,
   callerSocketId,
 }: {
@@ -105,6 +104,21 @@ export const handlePreOfferAnswer = ({
   callerSocketId: string;
 }) => {
   socket.emit("pre-offer-answer", { answer: answer, callerSocketId });
+};
+
+export const handlePreOfferAnswer = ({
+  answer,
+  callerSocketId,
+}: {
+  answer: (typeof preOfferAnswerStatus)[keyof typeof preOfferAnswerStatus];
+  callerSocketId: string;
+}) => {
+  if(answer === preOfferAnswerStatus.CALL_ACCEPTED){
+    // send offer
+  }
+  else{
+    // handle rejection
+  }
 };
 
 export const handleUserActiveChange = (
