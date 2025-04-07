@@ -85,8 +85,3 @@ export const handleRejectCall = ({
   store.dispatch(setCallingUserData(filteredIncomingCalls));
   // send reject data to caller
 };
-
-export const handleStatusChange = () => {
-    
-}
-

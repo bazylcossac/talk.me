@@ -7,8 +7,9 @@ import {
   setCurrentlyLoggedUser,
 } from "@/store/slices/user";
 import { handlePreOffer } from "./webrtcConnection";
-import { callStatus, preOfferAnswerStatus } from "@/lib/constants";
+import { callStatus, preOfferAnswerStatus, userStatus } from "@/lib/constants";
 import { toast } from "sonner";
+import { current } from "@reduxjs/toolkit";
 
 let socket: Socket;
 let mySocketId: string;
@@ -43,6 +44,30 @@ export const connectToWebSocket = () => {
     toast("Call not possible");
     console.log(data);
   });
+  socket.on(
+    "activity-change",
+    ({
+      user,
+      activity,
+    }: {
+      user: userDataType;
+      activity: (typeof userStatus)[keyof typeof userStatus];
+    }) => {
+      const acttiveUsers = store.getState().user.activeUsers;
+      const newUsers = acttiveUsers.filter(
+        (activeUser) => activeUser.socketId !== user.socketId
+      );
+      const newActiveUsers = [
+        ...newUsers,
+        {
+          ...user,
+          status: activity,
+        },
+      ];
+
+      store.dispatch(setActiveUsers(newActiveUsers));
+    }
+  );
 };
 
 // user join - disconnect
@@ -80,4 +105,15 @@ export const handlePreOfferAnswer = ({
   callerSocketId: string;
 }) => {
   socket.emit("pre-offer-answer", { answer: answer, callerSocketId });
+};
+
+export const handleUserActiveChange = (
+  newActivity: (typeof userStatus)[keyof typeof userStatus]
+) => {
+  const currentUser = store.getState().user.loggedUser;
+
+  socket.emit("activity-change", {
+    user: currentUser,
+    activity: newActivity,
+  });
 };

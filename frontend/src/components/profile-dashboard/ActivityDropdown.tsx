@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { userStatus } from "@/lib/constants";
 import { setUserActiveStatus } from "@/store/slices/user";
 import { RootState } from "@/store/store";
+import { handleUserActiveChange } from "@/connection/webSocketConnection";
 
 function ActivityDropdown() {
   const dispatch = useDispatch();
@@ -30,23 +31,30 @@ function ActivityDropdown() {
         >
           <DropdownMenuItem
             className="flex text-white"
-            onClick={() =>
-              dispatch(setUserActiveStatus(userStatus.DONT_DISTURB))
-            }
+            onClick={() => {
+              dispatch(setUserActiveStatus(userStatus.DONT_DISTURB));
+              handleUserActiveChange(userStatus.DONT_DISTURB);
+            }}
           >
             <div className="bg-red-500 size-2 rounded-full"></div>
             Do not disturb
           </DropdownMenuItem>
           <DropdownMenuItem
             className="flex text-white"
-            onClick={() => dispatch(setUserActiveStatus(userStatus.ACTIVE))}
+            onClick={() => {
+              dispatch(setUserActiveStatus(userStatus.ACTIVE));
+              handleUserActiveChange(userStatus.ACTIVE);
+            }}
           >
             <div className="bg-green-500 size-2 rounded-full"></div>
             Active
           </DropdownMenuItem>
           <DropdownMenuItem
             className="flex text-white"
-            onClick={() => dispatch(setUserActiveStatus(userStatus.IN_CALL))}
+            onClick={() => {
+              dispatch(setUserActiveStatus(userStatus.IN_CALL));
+              handleUserActiveChange(userStatus.IN_CALL);
+            }}
           >
             <div className="bg-blue-500 size-2 rounded-full"></div>
             In call

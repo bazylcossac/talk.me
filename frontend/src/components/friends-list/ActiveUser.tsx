@@ -8,6 +8,8 @@ function ActiveUser({ user }: { user: userDataType }) {
     callToUser(calleSocketId);
   };
 
+  console.log(user);
+
   return (
     <div className="select-none">
       <div className="flex flex-row items-center justify-between rounded-md md:w-[250px] p-4 md:p-3 ">

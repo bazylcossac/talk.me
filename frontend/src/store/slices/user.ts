@@ -20,7 +20,10 @@ const userSlice = createSlice({
       state.userActiveStatus = action.payload;
     },
     setActiveUsers: (state, action) => {
-      state.activeUsers = action.payload;
+      const filteredUsers = action.payload.filter(
+        (user: userDataType) => user.socketId !== state.loggedUser.socketId
+      );
+      state.activeUsers = filteredUsers;
     },
     setCallStatus: (state, action) => {
       state.userCallState = action.payload;

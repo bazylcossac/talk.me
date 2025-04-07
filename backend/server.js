@@ -42,6 +42,9 @@ io.on("connection", (socket) => {
     socket.to(callerSocketId).emit("pre-offer-answer", answer);
   });
 
+  socket.on("activity-change", (data) => {
+    io.sockets.emit("activity-change", data);
+  });
   socket.on("disconnect", () => {
     const usersLeft = activeUsers.filter((user) => user.socketId !== socket.id);
     activeUsers = usersLeft;
