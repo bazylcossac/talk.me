@@ -8,7 +8,10 @@ const initialState = {
   micEnabled: true,
   cameraEnabled: true,
   callingUsersData: [] as userDataType[],
-  rejectAnswer: []
+  rejectAnswer: {
+    reject: false,
+    answer: "",
+  },
 };
 
 const webrtcSlice = createSlice({
@@ -30,6 +33,9 @@ const webrtcSlice = createSlice({
     setCallingUserData: (state, action) => {
       state.callingUsersData = action.payload;
     },
+    setRejectAnswer: (state, action) => {
+      state.rejectAnswer = action.payload;
+    },
   },
 });
 
@@ -39,6 +45,7 @@ export const {
   setCallingUserData,
   setLocalStream,
   setRemoteStream,
+  setRejectAnswer,
 } = webrtcSlice.actions;
 
 export default webrtcSlice.reducer;

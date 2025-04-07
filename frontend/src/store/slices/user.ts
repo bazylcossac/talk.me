@@ -7,6 +7,7 @@ const initialState = {
   userActiveStatus: userStatus.ACTIVE,
   activeUsers: [] as userDataType[],
   userCallState: callStatus.CALL_AVAILABLE,
+  
 };
 
 const userSlice = createSlice({

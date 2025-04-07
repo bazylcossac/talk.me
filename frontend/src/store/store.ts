@@ -7,6 +7,13 @@ const store = configureStore({
     user: userReducer,
     webrtc: webrtcReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: ["webrtc/setLocalStream", "webrtc/setRemoteStream"],
+        ignoredPaths: ["webrtc.localStream", "webrtc.remoteStream"],
+      },
+    }),
 });
 
 export default store;

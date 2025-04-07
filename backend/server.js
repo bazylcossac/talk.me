@@ -39,7 +39,13 @@ io.on("connection", (socket) => {
   });
 
   socket.on("pre-offer-answer", ({ answer, callerSocketId }) => {
-    socket.to(callerSocketId).emit("pre-offer-answer", {answer, callerSocketId});
+    socket
+      .to(callerSocketId)
+      .emit("pre-offer-answer", { answer, socketId: socket.id });
+  });
+
+  socket.on("send-offer", (data) => {
+    socket.to(data.calleSocketId).emit("send-offer", data);
   });
 
   socket.on("activity-change", (data) => {

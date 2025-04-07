@@ -3,13 +3,15 @@ import { preOfferDataType, userDataType } from "../types/types";
 import store from "@/store/store";
 import {
   setActiveUsers,
-  setCallStatus,
   setCurrentlyLoggedUser,
   setUserActiveStatus,
 } from "@/store/slices/user";
-import { handlePreOffer } from "./webrtcConnection";
-import { callStatus, preOfferAnswerStatus, userStatus } from "@/lib/constants";
-import { toast } from "sonner";
+import {
+  handleOffer,
+  handlePreOffer,
+  handlePreOfferAnswer,
+} from "./webrtcConnection";
+import { preOfferAnswerStatus, userStatus } from "@/lib/constants";
 
 let socket: Socket;
 let mySocketId: string;
@@ -41,6 +43,11 @@ export const connectToWebSocket = () => {
   });
   socket.on("pre-offer-answer", (data) => {
     handlePreOfferAnswer(data);
+  });
+
+  socket.on("send-offer", (data) => {
+    console.log("GOOOOT OFFFEEER");
+    handleOffer(data);
   });
 
   socket.on(
@@ -106,21 +113,6 @@ export const sendPreOfferAnswer = ({
   socket.emit("pre-offer-answer", { answer: answer, callerSocketId });
 };
 
-export const handlePreOfferAnswer = ({
-  answer,
-  callerSocketId,
-}: {
-  answer: (typeof preOfferAnswerStatus)[keyof typeof preOfferAnswerStatus];
-  callerSocketId: string;
-}) => {
-  if(answer === preOfferAnswerStatus.CALL_ACCEPTED){
-    // send offer
-  }
-  else{
-    // handle rejection
-  }
-};
-
 export const handleUserActiveChange = (
   newActivity: (typeof userStatus)[keyof typeof userStatus]
 ) => {
@@ -131,4 +123,17 @@ export const handleUserActiveChange = (
     activity: newActivity,
   });
   store.dispatch(setUserActiveStatus(newActivity));
+};
+
+export const handleSendOffer = ({
+  offer,
+  calleSocketId,
+}: {
+  offer: RTCSessionDescriptionInit;
+  calleSocketId: string;
+}) => {
+  socket.emit("send-offer", {
+    offer,
+    calleSocketId,
+  });
 };
