@@ -5,11 +5,11 @@ import {
   setActiveUsers,
   setCallStatus,
   setCurrentlyLoggedUser,
+  setUserActiveStatus,
 } from "@/store/slices/user";
 import { handlePreOffer } from "./webrtcConnection";
 import { callStatus, preOfferAnswerStatus, userStatus } from "@/lib/constants";
 import { toast } from "sonner";
-import { current } from "@reduxjs/toolkit";
 
 let socket: Socket;
 let mySocketId: string;
@@ -116,4 +116,5 @@ export const handleUserActiveChange = (
     user: currentUser,
     activity: newActivity,
   });
+  store.dispatch(setUserActiveStatus(newActivity));
 };

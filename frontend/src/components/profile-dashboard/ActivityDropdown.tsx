@@ -32,7 +32,6 @@ function ActivityDropdown() {
           <DropdownMenuItem
             className="flex text-white"
             onClick={() => {
-              dispatch(setUserActiveStatus(userStatus.DONT_DISTURB));
               handleUserActiveChange(userStatus.DONT_DISTURB);
             }}
           >
@@ -42,7 +41,6 @@ function ActivityDropdown() {
           <DropdownMenuItem
             className="flex text-white"
             onClick={() => {
-              dispatch(setUserActiveStatus(userStatus.ACTIVE));
               handleUserActiveChange(userStatus.ACTIVE);
             }}
           >
@@ -52,7 +50,6 @@ function ActivityDropdown() {
           <DropdownMenuItem
             className="flex text-white"
             onClick={() => {
-              dispatch(setUserActiveStatus(userStatus.IN_CALL));
               handleUserActiveChange(userStatus.IN_CALL);
             }}
           >

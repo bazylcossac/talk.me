@@ -1,9 +1,10 @@
 import { callStatus, preOfferAnswerStatus, userStatus } from "@/lib/constants";
-import { setCallStatus } from "@/store/slices/user";
+import { setCallStatus, setUserActiveStatus } from "@/store/slices/user";
 import store from "@/store/store";
 import {
   handlePreOfferAnswer,
   handleSendPreOffer,
+  handleUserActiveChange,
 } from "./webSocketConnection";
 import { setCallingUserData } from "@/store/slices/webrtc";
 import { userDataType } from "@/types/types";
@@ -19,6 +20,7 @@ export const callToUser = (calleSocketId: string) => {
   });
 
   store.dispatch(setCallStatus(callStatus.CALL_IN_PROGRESS));
+  handleUserActiveChange(userStatus.IN_CALL);
 };
 
 // handling pre offers
@@ -63,6 +65,7 @@ export const handleSendAcceptCall = ({
   callerSocketId: string;
 }) => {
   store.dispatch(setCallStatus(callStatus.CALL_IN_PROGRESS));
+  handleUserActiveChange(userStatus.IN_CALL);
   const currentIncomingCalls = store.getState().webrtc.callingUsersData;
   const filteredIncomingCalls = currentIncomingCalls.filter(
     (user) => user.socketId !== callerSocketId
@@ -78,6 +81,7 @@ export const handleRejectCall = ({
   callerSocketId: string;
 }) => {
   store.dispatch(setCallStatus(callStatus.CALL_AVAILABLE));
+  handleUserActiveChange(userStatus.ACTIVE);
   const currentIncomingCalls = store.getState().webrtc.callingUsersData;
   const filteredIncomingCalls = currentIncomingCalls.filter(
     (user) => user.socketId !== callerSocketId
