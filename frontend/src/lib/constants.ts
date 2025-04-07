@@ -6,7 +6,7 @@ export const userStatus = {
 
 export const callStatus = {
   CALL_REQUESTED: "CALL_REQUESTED",
-  // caller => cannot call 2 users at the same time
+  // caller => cannot call multiple users at the same time
   // calle => can have multiple callers
   CALL_AVAILABLE: "CALL_AVAILABLE",
   // caller => can call, can be called
@@ -23,4 +23,4 @@ export const preOfferAnswerStatus = {
   CALL_ACCEPTED: "CALL_ACCEPTED",
   CALL_REJECTED: "CALL_REJECTED",
   CALL_UNVAILABLE: "CALL_UNVAILABLE",
-};
+} as const;

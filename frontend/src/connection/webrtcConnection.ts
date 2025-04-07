@@ -21,7 +21,7 @@ export const callToUser = (calleSocketId: string) => {
   store.dispatch(setCallStatus(callStatus.CALL_IN_PROGRESS));
 };
 
-// handling pre offers 
+// handling pre offers
 // ACCEPT / REJECT
 
 export const handlePreOffer = (data: userDataType) => {
@@ -36,14 +36,13 @@ export const handlePreOffer = (data: userDataType) => {
     }
     store.dispatch(setCallStatus(callStatus.CALL_REQUESTED));
   } else {
+    // sends info to caller that call is not possible
     handlePreOfferAnswer({
       answer: preOfferAnswerStatus.CALL_UNVAILABLE,
       callerSocketId: data.socketId,
     });
   }
 };
-
-
 
 const canUserConnectiWithMe = () => {
   const activeStatus = store.getState().user.userActiveStatus;
@@ -58,4 +57,36 @@ const canUserConnectiWithMe = () => {
   }
 };
 
+export const handleSendAcceptCall = ({
+  callerSocketId,
+}: {
+  callerSocketId: string;
+}) => {
+  store.dispatch(setCallStatus(callStatus.CALL_IN_PROGRESS));
+  const currentIncomingCalls = store.getState().webrtc.callingUsersData;
+  const filteredIncomingCalls = currentIncomingCalls.filter(
+    (user) => user.socketId !== callerSocketId
+  );
+  store.dispatch(setCallingUserData(filteredIncomingCalls));
+  console.log("CALL ACCEPTED");
+  /// send accept data to caller
+};
+
+export const handleRejectCall = ({
+  callerSocketId,
+}: {
+  callerSocketId: string;
+}) => {
+  store.dispatch(setCallStatus(callStatus.CALL_AVAILABLE));
+  const currentIncomingCalls = store.getState().webrtc.callingUsersData;
+  const filteredIncomingCalls = currentIncomingCalls.filter(
+    (user) => user.socketId !== callerSocketId
+  );
+  store.dispatch(setCallingUserData(filteredIncomingCalls));
+  // send reject data to caller
+};
+
+export const handleStatusChange = () => {
+    
+}
 

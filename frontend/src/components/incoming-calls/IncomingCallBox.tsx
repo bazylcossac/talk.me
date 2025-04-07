@@ -4,8 +4,17 @@ import { Button } from "../ui/button";
 import {
   handleRejectCall,
   handleSendAcceptCall,
-} from "@/connection/webSocketConnection";
-function IncomingCallBox({ user, toastId, deleteFromShownToastIds }) {
+} from "@/connection/webrtcConnection";
+
+function IncomingCallBox({
+  user,
+  toastId,
+  deleteFromShownToastIds,
+}: {
+  user: userDataType;
+  toastId: string | number;
+  deleteFromShownToastIds: (socketId: string) => void;
+}) {
   const handleAcceptCall = () => {
     handleSendAcceptCall({
       callerSocketId: user.socketId,
