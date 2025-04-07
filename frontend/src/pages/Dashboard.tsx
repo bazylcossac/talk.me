@@ -6,6 +6,7 @@ import IncomingCallsContainer from "@/components/incoming-calls/IncomingCallSCon
 import { useEffect } from "react";
 import { connectToWebSocket, userJoin } from "@/connection/webSocketConnection";
 import { userStatus } from "@/lib/constants";
+import MainCallContainer from "@/components/main-call/MainCallContainer";
 
 function Dashboard() {
   const currentUser = useUser();
@@ -39,12 +40,14 @@ function Dashboard() {
   }
 
   return (
-    <div className="p-4 h-screen ">
+    <div className="p-4 h-screen  flex flex-row gap-4">
       <div className="h-full md:w-[250px] w-full flex flex-col gap-4 justify-between">
         <FriendsList />
         <Profile />
       </div>
-
+      <div className="w-full h-full">
+        <MainCallContainer />
+      </div>
       <IncomingCallsContainer />
     </div>
   );

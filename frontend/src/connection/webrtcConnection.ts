@@ -49,6 +49,8 @@ export const createPeerConection = () => {
   peerConnection.onconnectionstatechange = (event) => {
     if (peerConnection!.connectionState === "connected") {
       console.log("CONNECTED TO USER");
+      console.log(store.getState().webrtc.remoteStream);
+      console.log(store.getState().webrtc.localStream);
     }
   };
 
@@ -211,6 +213,6 @@ export const handleRejectCall = ({
   });
 };
 
-export const handleCandidate = async(candidate) => {
-    await peerConnection!.addIceCandidate(candidate)
-}
+export const handleCandidate = async (candidate) => {
+  await peerConnection!.addIceCandidate(candidate);
+};
