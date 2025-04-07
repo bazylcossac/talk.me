@@ -7,7 +7,9 @@ import {
   setUserActiveStatus,
 } from "@/store/slices/user";
 import {
+  handleCandidate,
   handleOffer,
+  handleOfferAnswer,
   handlePreOffer,
   handlePreOfferAnswer,
 } from "./webrtcConnection";
@@ -46,9 +48,16 @@ export const connectToWebSocket = () => {
   });
 
   socket.on("send-offer", (data) => {
-    console.log("GOOOOT OFFFEEER");
     handleOffer(data);
   });
+
+  socket.on("send-offer-answer", (data) => {
+    handleOfferAnswer(data);
+  });
+
+  socket.on("send-candidate", (candidate) => {
+    handleCandidate(candidate)
+  })
 
   socket.on(
     "activity-change",
@@ -137,3 +146,18 @@ export const handleSendOffer = ({
     calleSocketId,
   });
 };
+
+export const sendOfferAnswer = ({
+  answer,
+  socketId,
+}: {
+  answer: RTCSessionDescriptionInit;
+  socketId: string;
+}) => {
+  socket.emit("send-offer-answer", { answer, socketId });
+};
+
+
+export const sendIceCandidate = ({candidate, socketId } : {candidate: RTCIceCandidate, socketId: string}) => {
+  socket.emit("send-candidate", {candidate, socketId})
+}

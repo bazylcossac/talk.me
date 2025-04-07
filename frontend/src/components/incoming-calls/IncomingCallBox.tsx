@@ -17,13 +17,13 @@ function IncomingCallBox({
 }) {
   const handleAcceptCall = () => {
     handleSendAcceptCall({
-      callerSocketId: user.socketId,
+      callerSocketID: user.socketId,
     });
   };
 
   const handleDeclineCall = () => {
     handleRejectCall({
-      callerSocketId: user.socketId,
+      callerSocketID: user.socketId,
     });
   };
 

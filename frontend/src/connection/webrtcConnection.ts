@@ -5,9 +5,15 @@ import {
   handleSendOffer,
   handleSendPreOffer,
   handleUserActiveChange,
+  sendIceCandidate,
+  sendOfferAnswer,
   sendPreOfferAnswer,
 } from "./webSocketConnection";
-import { setCallingUserData, setLocalStream } from "@/store/slices/webrtc";
+import {
+  setCallingUserData,
+  setLocalStream,
+  setRemoteStream,
+} from "@/store/slices/webrtc";
 import { userDataType } from "@/types/types";
 import { toast } from "sonner";
 
@@ -24,11 +30,36 @@ const constraints = {
   audio: true,
 };
 
-let callerSocketId;
+let callerSocketId: string;
 let peerConnection = null as RTCPeerConnection | null;
 
 export const createPeerConection = () => {
   peerConnection = new RTCPeerConnection(configuration);
+
+  const localStream = store.getState().webrtc.localStream;
+  if (!localStream) return;
+
+  localStream.getTracks().forEach((track) => {
+    peerConnection?.addTrack(track, localStream);
+  });
+
+  peerConnection.ontrack = (event) => {
+    store.dispatch(setRemoteStream(event.streams[0]));
+  };
+  peerConnection.onconnectionstatechange = (event) => {
+    if (peerConnection!.connectionState === "connected") {
+      console.log("CONNECTED TO USER");
+    }
+  };
+
+  peerConnection.onicecandidate = (event) => {
+    if (event.candidate) {
+      sendIceCandidate({
+        candidate: event.candidate,
+        socketId: callerSocketId,
+      });
+    }
+  };
 };
 
 export const callToUser = async (calleSocketId: string) => {
@@ -50,8 +81,9 @@ export const setUpLocalStream = async () => {
     store.dispatch(setLocalStream(localStream));
     createPeerConection();
     store.dispatch(setCallStatus(callStatus.CALL_AVAILABLE));
-  } catch {
+  } catch (err) {
     toast("Failed to get user media");
+    console.error(err);
   }
 };
 
@@ -90,6 +122,7 @@ export const handlePreOfferAnswer = ({
 
 export const sendOffer = async (calleSocketId: string) => {
   const offer = await peerConnection!.createOffer();
+  console.log("CREATING ANSWER!");
   peerConnection!.setLocalDescription(offer);
   handleSendOffer({
     offer,
@@ -99,19 +132,31 @@ export const sendOffer = async (calleSocketId: string) => {
 
 export const handleOffer = async ({
   offer,
-  calleSocketId,
+  socketId,
 }: {
   offer: RTCSessionDescriptionInit;
-  calleSocketId: string;
+  socketId: string;
 }) => {
   await peerConnection?.setRemoteDescription(offer);
-  const answer = await peerConnection?.createAnswer();
+  const answer = await peerConnection!.createAnswer();
   await peerConnection?.setLocalDescription(answer);
-  console.log("AA");
-  console.log(callerSocketId);
-  // sendOfferAnswer({
+  console.log(peerConnection!.connectionState);
 
-  // })
+  sendOfferAnswer({
+    answer: answer,
+    socketId: socketId,
+  });
+};
+
+export const handleOfferAnswer = async ({
+  answer,
+  socketId,
+}: {
+  answer: RTCSessionDescriptionInit;
+  socketId: string;
+}) => {
+  await peerConnection!.setRemoteDescription(answer);
+  console.log(peerConnection!.connectionState);
 };
 
 const canUserConnectiWithMe = () => {
@@ -127,39 +172,45 @@ const canUserConnectiWithMe = () => {
   }
 };
 
-export const handleSendAcceptCall = ({
-  callerSocketId,
+export const handleSendAcceptCall = async ({
+  callerSocketID,
 }: {
-  callerSocketId: string;
+  callerSocketID: string;
 }) => {
   store.dispatch(setCallStatus(callStatus.CALL_IN_PROGRESS));
+  callerSocketId = callerSocketID;
   handleUserActiveChange(userStatus.IN_CALL);
   const currentIncomingCalls = store.getState().webrtc.callingUsersData;
   const filteredIncomingCalls = currentIncomingCalls.filter(
-    (user) => user.socketId !== callerSocketId
+    (user) => user.socketId !== callerSocketID
   );
   store.dispatch(setCallingUserData(filteredIncomingCalls));
+  await setUpLocalStream();
   createPeerConection();
   handlePreOfferAnswer({
     answer: preOfferAnswerStatus.CALL_ACCEPTED,
-    socketId: callerSocketId,
+    socketId: callerSocketID,
   });
 };
 
 export const handleRejectCall = ({
-  callerSocketId,
+  callerSocketID,
 }: {
-  callerSocketId: string;
+  callerSocketID: string;
 }) => {
   store.dispatch(setCallStatus(callStatus.CALL_AVAILABLE));
   handleUserActiveChange(userStatus.ACTIVE);
   const currentIncomingCalls = store.getState().webrtc.callingUsersData;
   const filteredIncomingCalls = currentIncomingCalls.filter(
-    (user) => user.socketId !== callerSocketId
+    (user) => user.socketId !== callerSocketID
   );
   store.dispatch(setCallingUserData(filteredIncomingCalls));
   handlePreOfferAnswer({
     answer: preOfferAnswerStatus.CALL_REJECTED,
-    socketId: callerSocketId,
+    socketId: callerSocketID,
   });
 };
+
+export const handleCandidate = async(candidate) => {
+    await peerConnection!.addIceCandidate(candidate)
+}

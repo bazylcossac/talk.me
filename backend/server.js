@@ -45,8 +45,18 @@ io.on("connection", (socket) => {
   });
 
   socket.on("send-offer", (data) => {
-    socket.to(data.calleSocketId).emit("send-offer", data);
+    socket
+      .to(data.calleSocketId)
+      .emit("send-offer", { offer: data.offer, socketId: socket.id });
   });
+
+  socket.on("send-offer-answer", (data) => {
+    socket.to(data.socketId).emit("send-offer-answer", data);
+  });
+
+  socket.on("send-candidate",(data) => {
+    socket.to(data.socketId).emit("send-candidate", data.candidate)
+  })
 
   socket.on("activity-change", (data) => {
     io.sockets.emit("activity-change", data);
