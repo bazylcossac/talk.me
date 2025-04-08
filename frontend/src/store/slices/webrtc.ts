@@ -7,6 +7,7 @@ const initialState = {
   groupCallStreams: null as MediaStream[] | null,
   micEnabled: true,
   cameraEnabled: true,
+  showCallButtons: false,
   callingUsersData: [] as userDataType[],
   rejectAnswer: {
     reject: false,

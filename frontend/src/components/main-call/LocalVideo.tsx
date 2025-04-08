@@ -19,8 +19,13 @@ function LocalVideo() {
   }, [localStream]);
 
   return (
-    <div>
-      <video ref={videoRef} autoPlay playsInline />
+    <div className="ml-auto inline-block absolute right-0 m-4 z-10">
+      <video
+        ref={videoRef}
+        autoPlay
+        playsInline
+        className="rounded-md max-w-[250px]  "
+      />
     </div>
   );
 }

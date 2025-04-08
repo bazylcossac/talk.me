@@ -60,7 +60,7 @@ function IncomingCallBox({
             deleteFromShownToastIds(user.socketId);
           }}
         >
-          Decline
+          Reject
         </Button>
       </div>
     </div>

@@ -46,7 +46,7 @@ export const createPeerConection = () => {
   peerConnection.ontrack = (event) => {
     store.dispatch(setRemoteStream(event.streams[0]));
   };
-  peerConnection.onconnectionstatechange = (event) => {
+  peerConnection.onconnectionstatechange = () => {
     if (peerConnection!.connectionState === "connected") {
       console.log("CONNECTED TO USER");
       console.log(store.getState().webrtc.remoteStream);
@@ -83,7 +83,7 @@ export const setUpLocalStream = async () => {
     const localStream = await navigator.mediaDevices.getUserMedia(constraints);
     store.dispatch(setLocalStream(localStream));
     createPeerConection();
-    store.dispatch(setCallStatus(callStatus.CALL_AVAILABLE));
+    store.dispatch(setCallStatus(callStatus.CALL_IN_PROGRESS));
   } catch (err) {
     toast("Failed to get user media");
     console.error(err);

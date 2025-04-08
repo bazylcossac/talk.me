@@ -6,7 +6,7 @@ function FriendsList() {
   const activeUsers = useSelector((state: RootState) => state.user.activeUsers);
 
   return (
-    <div className="bg-[#222222] md:w-[250px] :w-full h-full rounded-md overflow-y-auto scrollbar-hide ">
+    <div className="bg-[#222222] md:w-[250px] w-full h-full rounded-md overflow-y-auto scrollbar-hide ">
       {activeUsers?.map((user) => (
         <ActiveUser user={user} key={user.socketId} />
       ))}
