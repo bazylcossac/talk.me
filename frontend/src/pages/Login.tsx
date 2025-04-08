@@ -1,10 +1,11 @@
 import { SignIn } from "@clerk/clerk-react";
 
 import Logo from "../components/Logo";
+import Background from "@/components/Background";
 
 function Login() {
   return (
-    <div className="h-screen flex flex-col items-center justify-center">
+    <div className="h-screen flex flex-col items-center justify-center ">
       <div className="fixed top-0 right-0 ">
         <Logo />
       </div>
@@ -13,6 +14,7 @@ function Login() {
         Your video conference <span className="text-blue-500 ">app</span>
       </h1>
       <SignIn />
+      <Background />
     </div>
   );
 }
