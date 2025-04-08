@@ -10,6 +10,7 @@ import {
   handleCandidate,
   handleOffer,
   handleOfferAnswer,
+  handleOtherUserLeaveCall,
   handlePreOffer,
   handlePreOfferAnswer,
 } from "./webrtcConnection";
@@ -23,6 +24,7 @@ export const connectToWebSocket = () => {
 
   socket.on("connection", (socketId) => {
     mySocketId = socketId;
+    console.log(socketId);
   });
 
   socket.on("user-join", (activeUsers) => {
@@ -83,6 +85,10 @@ export const connectToWebSocket = () => {
       store.dispatch(setActiveUsers(newActiveUsers));
     }
   );
+
+  socket.on("leave-call", () => {
+    handleOtherUserLeaveCall();
+  });
 };
 
 // user join - disconnect
@@ -165,4 +171,8 @@ export const sendIceCandidate = ({
   socketId: string;
 }) => {
   socket.emit("send-candidate", { candidate, socketId });
+};
+
+export const sendCloseConnection = ({ socketId }: { socketId: string }) => {
+  socket.emit("leave-call", socketId);
 };

@@ -61,11 +61,18 @@ io.on("connection", (socket) => {
   socket.on("activity-change", (data) => {
     io.sockets.emit("activity-change", data);
   });
+
+  socket.on("leave-call", (socketId) => {
+    socket.to(socketId).emit("leave-call")
+  })
+
   socket.on("disconnect", () => {
     const usersLeft = activeUsers.filter((user) => user.socketId !== socket.id);
     activeUsers = usersLeft;
     io.sockets.emit("user-disconnected", usersLeft);
   });
+
+  
 });
 
 server.listen(PORT, () => {

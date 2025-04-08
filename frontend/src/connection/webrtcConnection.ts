@@ -5,6 +5,7 @@ import {
   handleSendOffer,
   handleSendPreOffer,
   handleUserActiveChange,
+  sendCloseConnection,
   sendIceCandidate,
   sendOfferAnswer,
   sendPreOfferAnswer,
@@ -30,7 +31,7 @@ const constraints = {
   audio: true,
 };
 
-let callerSocketId: string;
+let callerSocketId: string | null;
 let peerConnection = null as RTCPeerConnection | null;
 
 export const createPeerConection = () => {
@@ -58,7 +59,7 @@ export const createPeerConection = () => {
     if (event.candidate) {
       sendIceCandidate({
         candidate: event.candidate,
-        socketId: callerSocketId,
+        socketId: callerSocketId as string,
       });
     }
   };
@@ -224,4 +225,28 @@ export const handleRejectCall = ({
 
 export const handleCandidate = async (candidate: RTCIceCandidate) => {
   await peerConnection!.addIceCandidate(candidate);
+};
+
+export const handleLeaveCall = () => {
+  console.log(callerSocketId);
+  peerConnection?.close();
+  peerConnection = null;
+  store.dispatch(setCallStatus(callStatus.CALL_AVAILABLE));
+  handleUserActiveChange(userStatus.ACTIVE);
+  store.dispatch(setLocalStream(null));
+  store.dispatch(setRemoteStream(null));
+  sendCloseConnection({
+    socketId: callerSocketId as string,
+  });
+  callerSocketId = null;
+};
+
+export const handleOtherUserLeaveCall = () => {
+  peerConnection?.close();
+  peerConnection = null;
+  callerSocketId = null;
+  store.dispatch(setCallStatus(callStatus.CALL_AVAILABLE));
+  handleUserActiveChange(userStatus.ACTIVE);
+  store.dispatch(setLocalStream(null));
+  store.dispatch(setRemoteStream(null));
 };
