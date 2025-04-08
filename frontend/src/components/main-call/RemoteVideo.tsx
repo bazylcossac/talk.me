@@ -1,17 +1,21 @@
-import store from "@/store/store";
+import  { RootState } from "@/store/store";
 import { useRef, useEffect } from "react";
+import { useSelector } from "react-redux";
 
 function LocalVideo() {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const localStream = store.getState().webrtc.remoteStream;
+  const remoteStream = useSelector(
+    (state: RootState) => state.webrtc.remoteStream
+  );
 
   useEffect(() => {
-    videoRef!.current!.srcObject = localStream;
+    if (videoRef.current && remoteStream)
+      videoRef!.current!.srcObject = remoteStream;
 
     videoRef!.current!.onloadedmetadata = () => {
       videoRef!.current!.play();
     };
-  }, [localStream]);
+  }, [remoteStream]);
 
   return (
     <div>

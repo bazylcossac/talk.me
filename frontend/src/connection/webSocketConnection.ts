@@ -56,8 +56,8 @@ export const connectToWebSocket = () => {
   });
 
   socket.on("send-candidate", (candidate) => {
-    handleCandidate(candidate)
-  })
+    handleCandidate(candidate);
+  });
 
   socket.on(
     "activity-change",
@@ -157,7 +157,12 @@ export const sendOfferAnswer = ({
   socket.emit("send-offer-answer", { answer, socketId });
 };
 
-
-export const sendIceCandidate = ({candidate, socketId } : {candidate: RTCIceCandidate, socketId: string}) => {
-  socket.emit("send-candidate", {candidate, socketId})
-}
+export const sendIceCandidate = ({
+  candidate,
+  socketId,
+}: {
+  candidate: RTCIceCandidate;
+  socketId: string;
+}) => {
+  socket.emit("send-candidate", { candidate, socketId });
+};

@@ -36,7 +36,7 @@ function IncomingCallContainer() {
               toast.dismiss(toastId);
               deleteFromShownToastIds(user.socketId);
               handleRejectCall({
-                callerSocketId: user.socketId,
+                callerSocketID: user.socketId,
               });
             },
           }

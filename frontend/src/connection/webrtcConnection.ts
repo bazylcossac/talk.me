@@ -75,6 +75,7 @@ export const callToUser = async (calleSocketId: string) => {
 
   store.dispatch(setCallStatus(callStatus.CALL_IN_PROGRESS));
   handleUserActiveChange(userStatus.IN_CALL);
+  console.log(store.getState().user.userCallState);
 };
 
 export const setUpLocalStream = async () => {
@@ -213,6 +214,6 @@ export const handleRejectCall = ({
   });
 };
 
-export const handleCandidate = async (candidate) => {
+export const handleCandidate = async (candidate: RTCIceCandidate) => {
   await peerConnection!.addIceCandidate(candidate);
 };
