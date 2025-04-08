@@ -62,7 +62,7 @@ function LocalVideo() {
 
       <div className="mt-auto p-2 absolute bottom-5 w-full   ">
         <CallButtons
-          className={`flex flex-row items-center justify-center gap-4 text-3xl [&>*]:hover:cursor-pointer animate-duration-300 ${
+          className={`flex flex-row items-center justify-center gap-4 text-3xl [&>*]:hover:cursor-pointer animate-duration-300 mb-4 ${
             isVisible ? "animate-fade-up" : " animate-fade-down animate-reverse"
           }`}
         />

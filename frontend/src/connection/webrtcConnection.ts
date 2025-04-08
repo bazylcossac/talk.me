@@ -65,13 +65,13 @@ export const createPeerConection = () => {
 };
 
 export const callToUser = async (calleSocketId: string) => {
-  await setUpLocalStream();
   callerSocketId = calleSocketId; // setting userSocketId to calleSocketId, which is socket id that we want to connect with
   const currentUser = store.getState().user.loggedUser;
   handleSendPreOffer({
     caller: currentUser,
     calleSocketId: calleSocketId,
   });
+  await setUpLocalStream();
 
   store.dispatch(setCallStatus(callStatus.CALL_IN_PROGRESS));
   handleUserActiveChange(userStatus.IN_CALL);
@@ -94,16 +94,21 @@ export const setUpLocalStream = async () => {
 // ACCEPT / REJECT
 
 export const handlePreOffer = (data: userDataType) => {
+  const activeIncomingCalls = store.getState().webrtc.callingUsersData;
+  const isUserCurrentlyCallingYou = activeIncomingCalls.find(
+    (user) => user.socketId === data.socketId
+  );
+  if (!isUserCurrentlyCallingYou) {
+    const newIncomingCalls = [...activeIncomingCalls, data];
+    store.dispatch(setCallingUserData(newIncomingCalls));
+  }
   if (canUserConnectiWithMe()) {
-    const activeIncomingCalls = store.getState().webrtc.callingUsersData;
-    const isUserCurrentlyCallingYou = activeIncomingCalls.find(
-      (user) => user.socketId === data.socketId
-    );
-    if (!isUserCurrentlyCallingYou) {
-      const newIncomingCalls = [...activeIncomingCalls, data];
-      store.dispatch(setCallingUserData(newIncomingCalls));
-    }
     store.dispatch(setCallStatus(callStatus.CALL_REQUESTED));
+  } else {
+    sendPreOfferAnswer({
+      answer: preOfferAnswerStatus.CALL_UNVAILABLE,
+      callerSocketId: data.socketId,
+    });
   }
 };
 
@@ -119,7 +124,9 @@ export const handlePreOfferAnswer = ({
     console.log(socketId);
     sendOffer(socketId);
   } else {
-    // handle rejection
+    if (answer === preOfferAnswerStatus.CALL_UNVAILABLE) {
+      toast("User is in call, waiting...");
+    }
   }
 };
 
@@ -166,12 +173,13 @@ const canUserConnectiWithMe = () => {
   const activeStatus = store.getState().user.userActiveStatus;
   const currentCallStatus = store.getState().user.userCallState;
   if (
-    activeStatus !== userStatus.DONT_DISTURB &&
-    currentCallStatus !== callStatus.CALL_UNVAILABLE
+    activeStatus === userStatus.DONT_DISTURB ||
+    currentCallStatus === callStatus.CALL_UNVAILABLE ||
+    currentCallStatus === callStatus.CALL_IN_PROGRESS
   ) {
-    return true;
-  } else {
     return false;
+  } else {
+    return true;
   }
 };
 

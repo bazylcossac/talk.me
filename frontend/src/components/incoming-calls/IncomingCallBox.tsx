@@ -28,7 +28,7 @@ function IncomingCallBox({
   };
 
   return (
-    <div className="bg-[#171717] rounded-md m-2 p-4 flex flex-col">
+    <div className="bg-[#171717] rounded-md m-2 p-4 flex flex-col z-100">
       <p>Incoming call</p>
       <div className="flex flex-row items-center gap-2 mt-4">
         <img
