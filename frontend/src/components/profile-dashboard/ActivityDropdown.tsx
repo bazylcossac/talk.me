@@ -5,14 +5,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import ActiveIcon from "./ActiveIcon";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { userStatus } from "@/lib/constants";
-import { setUserActiveStatus } from "@/store/slices/user";
-import { RootState } from "@/store/store";
+
+import store, { RootState } from "@/store/store";
 import { handleUserActiveChange } from "@/connection/webSocketConnection";
+import { setCallingUserData } from "@/store/slices/webrtc";
 
 function ActivityDropdown() {
-  const dispatch = useDispatch();
   const userActiveStatus = useSelector(
     (state: RootState) => state.user.userActiveStatus
   );
@@ -42,6 +42,7 @@ function ActivityDropdown() {
             className="flex text-white"
             onClick={() => {
               handleUserActiveChange(userStatus.ACTIVE);
+              store.dispatch(setCallingUserData([]));
             }}
           >
             <div className="bg-green-500 size-2 rounded-full"></div>

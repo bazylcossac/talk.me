@@ -2,7 +2,6 @@ import { useSession, useUser } from "@clerk/clerk-react";
 import { useNavigate } from "react-router";
 import Profile from "../components/profile-dashboard/Profile";
 import FriendsList from "../components/friends-list/FriendsList";
-
 import { useEffect } from "react";
 import { connectToWebSocket, userJoin } from "@/connection/webSocketConnection";
 import { userStatus } from "@/lib/constants";
