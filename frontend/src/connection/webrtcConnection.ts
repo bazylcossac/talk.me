@@ -9,6 +9,7 @@ import {
   sendIceCandidate,
   sendOfferAnswer,
   sendPreOfferAnswer,
+  sendRejectAnswer,
 } from "./webSocketConnection";
 import {
   setCallingUserData,
@@ -128,6 +129,11 @@ export const handlePreOfferAnswer = ({
     if (answer === preOfferAnswerStatus.CALL_UNVAILABLE) {
       toast("User is in call, waiting...");
     }
+    if (answer === preOfferAnswerStatus.CALL_REJECTED) {
+      sendRejectAnswer({
+        socketId,
+      });
+    }
   }
 };
 
@@ -210,17 +216,22 @@ export const handleRejectCall = ({
 }: {
   callerSocketID: string;
 }) => {
-  store.dispatch(setCallStatus(callStatus.CALL_AVAILABLE));
-  handleUserActiveChange(userStatus.ACTIVE);
   const currentIncomingCalls = store.getState().webrtc.callingUsersData;
   const filteredIncomingCalls = currentIncomingCalls.filter(
     (user) => user.socketId !== callerSocketID
   );
   store.dispatch(setCallingUserData(filteredIncomingCalls));
+  console.log("caller socket id");
+  console.log(callerSocketID);
   handlePreOfferAnswer({
     answer: preOfferAnswerStatus.CALL_REJECTED,
     socketId: callerSocketID,
   });
+};
+
+export const handleRejectedCall = () => {
+  handleOtherUserLeaveCall();
+  toast("User rejected call, sorry :'( ");
 };
 
 export const handleCandidate = async (candidate: RTCIceCandidate) => {

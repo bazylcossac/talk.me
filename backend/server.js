@@ -66,6 +66,10 @@ io.on("connection", (socket) => {
     socket.to(socketId).emit("leave-call")
   })
 
+  socket.on("rejected-call", (socketId) => {
+    socket.to(socketId).emit("rejected-call")
+  })
+
   socket.on("disconnect", () => {
     const usersLeft = activeUsers.filter((user) => user.socketId !== socket.id);
     activeUsers = usersLeft;

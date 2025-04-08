@@ -13,6 +13,7 @@ import {
   handleOtherUserLeaveCall,
   handlePreOffer,
   handlePreOfferAnswer,
+  handleRejectedCall,
 } from "./webrtcConnection";
 import { preOfferAnswerStatus, userStatus } from "@/lib/constants";
 
@@ -88,6 +89,10 @@ export const connectToWebSocket = () => {
 
   socket.on("leave-call", () => {
     handleOtherUserLeaveCall();
+  });
+
+  socket.on("rejected-call", () => {
+    handleRejectedCall();
   });
 };
 
@@ -175,4 +180,8 @@ export const sendIceCandidate = ({
 
 export const sendCloseConnection = ({ socketId }: { socketId: string }) => {
   socket.emit("leave-call", socketId);
+};
+
+export const sendRejectAnswer = ({ socketId }: { socketId: string }) => {
+  socket.emit("rejected-call", socketId);
 };
