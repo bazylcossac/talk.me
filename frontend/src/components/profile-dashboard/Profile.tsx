@@ -23,7 +23,10 @@ function Profile() {
           </div>
         </div>
         <div className="mx-2">
-          <VideoIcons />
+          <VideoIcons
+            optionsVisible={true}
+            className="flex justify-center gap-6 md:gap-4 text-[#cdcdcd] [&>*]:cursor-pointer [&>*]:hover:text-[#f1f1f1] text-2xl md:text-[17px] w-full"
+          />
         </div>
       </div>
     </div>

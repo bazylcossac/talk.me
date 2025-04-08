@@ -7,30 +7,54 @@ import { BiSolidMicrophoneOff } from "react-icons/bi";
 import { RootState } from "../../store/store";
 import { setCameraEnabled, setMicEnabled } from "../../store/slices/webrtc";
 
-function VideoIcons() {
+function VideoIcons({
+  className,
+  optionsVisible = false,
+}: {
+  className: string;
+  optionsVisible: boolean;
+}) {
   const dispatch = useDispatch();
   const micEnabled = useSelector((state: RootState) => state.webrtc.micEnabled);
   const cameraEnabled = useSelector(
     (state: RootState) => state.webrtc.cameraEnabled
   );
 
+  const localStream = useSelector(
+    (state: RootState) => state.webrtc.localStream
+  );
+
+  const handleMicEnabled = () => {
+    if (localStream) {
+      dispatch(setMicEnabled(!micEnabled));
+      localStream.getAudioTracks()[0].enabled = !micEnabled;
+    }
+  };
+
+  const handleCameraEnabled = () => {
+    if (localStream) {
+      dispatch(setCameraEnabled(!cameraEnabled));
+      localStream.getVideoTracks()[0].enabled = !cameraEnabled;
+    }
+  };
+
   return (
-    <div className="flex justify-center gap-6 md:gap-4 text-[#cdcdcd] [&>*]:cursor-pointer [&>*]:hover:text-[#f1f1f1] text-2xl md:text-[17px] w-full">
-      <div onClick={() => dispatch(setMicEnabled(!micEnabled))}>
+    <div className={className}>
+      <div onClick={handleMicEnabled}>
         {micEnabled ? (
           <BiSolidMicrophone />
         ) : (
           <BiSolidMicrophoneOff className="text-red-500" />
         )}
       </div>
-      <div onClick={() => dispatch(setCameraEnabled(!cameraEnabled))}>
+      <div onClick={handleCameraEnabled}>
         {cameraEnabled ? (
           <HiMiniVideoCamera />
         ) : (
           <HiMiniVideoCameraSlash className="text-red-500" />
         )}
       </div>
-      <IoMdSettings />
+      {optionsVisible && <IoMdSettings />}
     </div>
   );
 }
