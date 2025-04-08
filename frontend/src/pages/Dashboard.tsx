@@ -8,13 +8,17 @@ import { connectToWebSocket, userJoin } from "@/connection/webSocketConnection";
 import { userStatus } from "@/lib/constants";
 import MainCallContainer from "@/components/main-call/MainCallContainer";
 import IncomingCallsContainer from "@/components/incoming-calls/IncomingCallsContainer";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 function Dashboard() {
   const currentUser = useUser();
   const { isSignedIn, isLoaded } = useSession();
   const navigate = useNavigate();
   const { user } = currentUser;
-
+  const userActivity = useSelector(
+    (state: RootState) => state.user.userActiveStatus
+  );
   useEffect(() => {
     connectToWebSocket();
   }, []);
@@ -49,7 +53,7 @@ function Dashboard() {
       <div className="w-full h-full">
         <MainCallContainer />
       </div>
-      <IncomingCallsContainer />
+      {userActivity !== userStatus.DONT_DISTURB && <IncomingCallsContainer />}
     </div>
   );
 }

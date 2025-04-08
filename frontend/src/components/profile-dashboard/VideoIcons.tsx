@@ -25,15 +25,15 @@ function VideoIcons({
   );
 
   const handleMicEnabled = () => {
+    dispatch(setMicEnabled(!micEnabled));
     if (localStream) {
-      dispatch(setMicEnabled(!micEnabled));
       localStream.getAudioTracks()[0].enabled = !micEnabled;
     }
   };
 
   const handleCameraEnabled = () => {
+    dispatch(setCameraEnabled(!cameraEnabled));
     if (localStream) {
-      dispatch(setCameraEnabled(!cameraEnabled));
       localStream.getVideoTracks()[0].enabled = !cameraEnabled;
     }
   };

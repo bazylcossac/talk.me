@@ -19,7 +19,7 @@ function LocalVideo() {
   }, [localStream]);
 
   return (
-    <div className="ml-auto inline-block absolute right-0 m-4 z-10">
+    <div className="ml-auto inline-block absolute right-0 m-4 z-10 shadow-2xl">
       <video
         ref={videoRef}
         autoPlay

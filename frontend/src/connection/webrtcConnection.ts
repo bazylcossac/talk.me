@@ -107,10 +107,22 @@ export const handlePreOffer = (data: userDataType) => {
   if (canUserConnectiWithMe()) {
     store.dispatch(setCallStatus(callStatus.CALL_REQUESTED));
   } else {
-    sendPreOfferAnswer({
-      answer: preOfferAnswerStatus.CALL_UNVAILABLE,
-      callerSocketId: data.socketId,
-    });
+    const callState = store.getState().user.userCallState;
+    const activeStatus = store.getState().user.userActiveStatus;
+    if (
+      callState === callStatus.CALL_IN_PROGRESS ||
+      activeStatus === userStatus.IN_CALL
+    ) {
+      sendPreOfferAnswer({
+        answer: preOfferAnswerStatus.USER_CALL_IN_PROGRESS,
+        callerSocketId: data.socketId,
+      });
+    }
+    if (activeStatus === userStatus.DONT_DISTURB)
+      sendPreOfferAnswer({
+        answer: preOfferAnswerStatus.CALL_UNVAILABLE,
+        callerSocketId: data.socketId,
+      });
   }
 };
 
@@ -127,7 +139,9 @@ export const handlePreOfferAnswer = ({
     sendOffer(socketId);
   } else {
     if (answer === preOfferAnswerStatus.CALL_UNVAILABLE) {
-      toast("User is in call, waiting...");
+      toast("User don't want any calls rn.");
+    } else if (answer === preOfferAnswerStatus.USER_CALL_IN_PROGRESS) {
+      toast("User is currently in a call!");
     }
     if (answer === preOfferAnswerStatus.CALL_REJECTED) {
       sendRejectAnswer({
@@ -240,15 +254,20 @@ export const handleCandidate = async (candidate: RTCIceCandidate) => {
 
 export const handleLeaveCall = () => {
   console.log(callerSocketId);
-  peerConnection?.close();
-  peerConnection = null;
+  if (
+    store.getState().user.userCallState === callStatus.CALL_IN_PROGRESS &&
+    peerConnection!.connectionState === "connected"
+  ) {
+    sendCloseConnection({
+      socketId: callerSocketId as string,
+    });
+  }
   store.dispatch(setCallStatus(callStatus.CALL_AVAILABLE));
   handleUserActiveChange(userStatus.ACTIVE);
+  peerConnection?.close();
+  peerConnection = null;
   store.dispatch(setLocalStream(null));
   store.dispatch(setRemoteStream(null));
-  sendCloseConnection({
-    socketId: callerSocketId as string,
-  });
   callerSocketId = null;
 };
 
