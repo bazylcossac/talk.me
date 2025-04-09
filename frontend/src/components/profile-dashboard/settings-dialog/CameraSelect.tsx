@@ -6,7 +6,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-function CameraSelect() {
+function CameraSelect({ allCameras }: { allCameras: MediaDeviceInfo[] }) {
   return (
     <div>
       <p className="text-sm mb-2">Select camera</p>
@@ -15,11 +15,16 @@ function CameraSelect() {
           <SelectValue placeholder="Theme" />
         </SelectTrigger>
         <SelectContent className="bg-[#121212] text-white ">
-          <SelectItem value="light" className="hover:cursor-pointer">
-            Light
-          </SelectItem>
-          <SelectItem value="dark">Dark</SelectItem>
-          <SelectItem value="system">System</SelectItem>
+          {allCameras?.map((device) => {
+            return (
+              <SelectItem
+                value={device.deviceId}
+                className="hover:cursor-pointer hover:bg-[#323232]"
+              >
+                {device.label}
+              </SelectItem>
+            );
+          })}
         </SelectContent>
       </Select>
     </div>

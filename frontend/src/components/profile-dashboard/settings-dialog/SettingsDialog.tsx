@@ -22,62 +22,66 @@ function SettingsDialog({
   showOptions: boolean;
   setShowOptions: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-  const [loadingSettings, setLoadingSettings] = useState(false);
+  const [loadingSettings, setLoadingSettings] = useState(true);
+  const [allDevices, setAllDevices] = useState<MediaDeviceInfo[]>([]);
   const [allInputs, setAllInputs] = useState<MediaDeviceInfo[]>([]);
   const [allOutputs, setAllOutputs] = useState<MediaDeviceInfo[]>([]);
   const [allCameras, setAllCamers] = useState<MediaDeviceInfo[]>([]);
 
   useEffect(() => {
     const getMediaDevices = async () => {
-      setLoadingSettings(true);
       const devices = await navigator.mediaDevices.enumerateDevices();
-      devices.forEach((device) => {
-        switch (device.kind) {
-          case "audioinput":
-            setAllInputs(device);
-            break;
-          case "audiooutput":
-            allOutputs.push(device);
-            break;
-          case "videoinput":
-            allCameras.push(device);
-            break;
-        }
-      });
+      setAllDevices(devices);
       setLoadingSettings(false);
     };
     getMediaDevices();
-  }, [allCameras, allInputs, allOutputs]);
+  }, []);
 
-  if (loadingSettings) {
-    return <p>loading...</p>;
-  }
+  useEffect(() => {
+    allDevices.forEach((device) => {
+      switch (device.kind) {
+        case "audioinput":
+          setAllInputs((prev) => [...prev, device]);
+          break;
+        case "audiooutput":
+          setAllOutputs((prev) => [...prev, device]);
+          break;
+        case "videoinput":
+          setAllCamers((prev) => [...prev, device]);
+          break;
+      }
+    });
+  }, [allDevices]);
+
+  console.log(allOutputs);
 
   return (
     <div>
       <Dialog open={showOptions} onOpenChange={setShowOptions}>
-        <DialogContent className="bg-[#0b0b0b] border-none shadow-md">
-          <DialogHeader>
-            <DialogTitle className="flex flex-row items-center gap-4 ">
-              <p>Settings</p>
-            </DialogTitle>
-            <DialogDescription></DialogDescription>
-          </DialogHeader>
-          <div className="flex flex-row justify-between items-center">
-            <InputSelect allInputs={setAllInputs}/>
-            <OutputSelect />
-          </div>
+        {!loadingSettings && (
+          <DialogContent className="bg-[#0b0b0b] border-none shadow-md">
+            <DialogHeader>
+              <DialogTitle className="flex flex-row items-center gap-4 ">
+                <p>Settings</p>
+              </DialogTitle>
+              <DialogDescription></DialogDescription>
+            </DialogHeader>
+            <div className="flex flex-row justify-between items-center">
+              <InputSelect allInputs={allInputs} />
+              <OutputSelect allOutputs={allOutputs} />
+            </div>
 
-          <CameraSelect />
+            <CameraSelect allCameras={allCameras} />
 
-          <LowSettingsSwitch />
-          <Button
-            className="hover:cursor-pointer hover:bg-[#121212]"
-            onClick={() => setShowOptions(false)}
-          >
-            Save
-          </Button>
-        </DialogContent>
+            <LowSettingsSwitch />
+            <Button
+              className="hover:cursor-pointer hover:bg-[#121212]"
+              onClick={() => setShowOptions(false)}
+            >
+              Save
+            </Button>
+          </DialogContent>
+        )}
       </Dialog>
     </div>
   );
