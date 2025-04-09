@@ -10,6 +10,7 @@ const initialState = {
   showCallButtons: false,
   screenSharingEnabled: false,
   screenSharingLowOptions: false,
+  currentCallChatMessage: [],
   callingUsersData: [] as userDataType[],
   rejectAnswer: {
     reject: false,

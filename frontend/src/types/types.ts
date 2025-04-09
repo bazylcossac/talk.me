@@ -9,3 +9,9 @@ export type preOfferDataType = {
   caller: userDataType;
   calleSocketId: string;
 };
+
+export type chatMessage = {
+  socketId: string;
+  username: string;
+  message: string;
+};

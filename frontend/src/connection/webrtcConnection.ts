@@ -1,5 +1,7 @@
 import {
   callStatus,
+  configuration,
+  constraints,
   preOfferAnswerStatus,
   screenSharingLowQualityOptions,
   userStatus,
@@ -20,22 +22,10 @@ import {
   setCallingUserData,
   setLocalStream,
   setRemoteStream,
+  setScreenSharingEnabled,
 } from "@/store/slices/webrtc";
 import { userDataType } from "@/types/types";
 import { toast } from "sonner";
-
-const configuration = {
-  iceServers: [
-    {
-      urls: "stun:stun.l.google.com:19302",
-    },
-  ],
-};
-
-const constraints = {
-  video: true,
-  audio: true,
-};
 
 let callerSocketId: string | null;
 let peerConnection = null as RTCPeerConnection | null;
@@ -188,7 +178,6 @@ export const handleOffer = async ({
 
 export const handleOfferAnswer = async ({
   answer,
-  socketId,
 }: {
   answer: RTCSessionDescriptionInit;
   socketId: string;
@@ -277,16 +266,14 @@ export const handleLeaveCall = () => {
       socketId: callerSocketId as string,
     });
   }
-  store.dispatch(setCallStatus(callStatus.CALL_AVAILABLE));
-  handleUserActiveChange(userStatus.ACTIVE);
-  peerConnection?.close();
-  peerConnection = null;
-  store.dispatch(setLocalStream(null));
-  store.dispatch(setRemoteStream(null));
-  callerSocketId = null;
+  clearAfterClosingConnection();
 };
 
 export const handleOtherUserLeaveCall = () => {
+  clearAfterClosingConnection();
+};
+
+const clearAfterClosingConnection = () => {
   peerConnection?.close();
   peerConnection = null;
   callerSocketId = null;
@@ -294,6 +281,7 @@ export const handleOtherUserLeaveCall = () => {
   handleUserActiveChange(userStatus.ACTIVE);
   store.dispatch(setLocalStream(null));
   store.dispatch(setRemoteStream(null));
+  store.dispatch(setScreenSharingEnabled(false));
 };
 
 export const handleScreenSharing = async (screenSharingEnabled: boolean) => {

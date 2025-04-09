@@ -26,6 +26,21 @@ export const preOfferAnswerStatus = {
   USER_CALL_IN_PROGRESS: "USER_CALL_IN_PROGRESS",
 } as const;
 
+// WEBRTC CONSTANTS
+
+export const constraints = {
+  video: true,
+  audio: true,
+};
+
+export const configuration = {
+  iceServers: [
+    {
+      urls: "stun:stun.l.google.com:19302",
+    },
+  ],
+};
+
 export const screenSharingHighQualityOptions = {
   video: {
     width: { ideal: 1920 },
