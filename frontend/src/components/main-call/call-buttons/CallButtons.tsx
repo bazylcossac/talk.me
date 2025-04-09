@@ -1,21 +1,27 @@
 import VideoIcons from "@/components/profile-dashboard/VideoIcons";
-import { handleLeaveCall } from "@/connection/webrtcConnection";
-import { useState } from "react";
+import {
+  handleLeaveCall,
+  handleScreenSharing,
+} from "@/connection/webrtcConnection";
+import { useSelector, useDispatch } from "react-redux";
 import { IoClose } from "react-icons/io5";
 import { LuScreenShare } from "react-icons/lu";
+import { RootState } from "@/store/store";
+import { setScreenSharingEnabled } from "@/store/slices/webrtc";
 
 function CallButtons({ className }: { className: string }) {
-  // const screenSharingEnabled = store.
-  const [screenSharingEnabled, setScreenSharingEnabled] = useState(false);
+  const dispatch = useDispatch();
+  const screenSharingEnabled = useSelector(
+    (state: RootState) => state.webrtc.screenSharingEnabled
+  );
+  //   const [screenSharingEnabled, setScreenSharingEnabled] = useState(false);
 
   const leaveCall = () => {
     handleLeaveCall();
   };
 
   const screenSharing = () => {
-    setScreenSharingEnabled((prev) => !prev);
-    
-    
+    dispatch(setScreenSharingEnabled(!screenSharingEnabled));
     handleScreenSharing(!screenSharingEnabled);
   };
 

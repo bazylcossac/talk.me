@@ -285,7 +285,37 @@ export const handleOtherUserLeaveCall = () => {
   store.dispatch(setRemoteStream(null));
 };
 
+export const handleScreenSharing = async (screenSharingEnabled: boolean) => {
+  if (screenSharingEnabled) {
+    const screenSharingStream = await navigator.mediaDevices.getDisplayMedia();
+    const senders = await peerConnection!.getSenders();
 
-export const handleScreenSharing = () => {
-    
-}
+    const sender = senders.find(
+      (sender) =>
+        sender.track!.kind === screenSharingStream.getVideoTracks()[0].kind
+    );
+
+    if (!sender) {
+      toast("Failed to screern share");
+      return;
+    }
+    sender.replaceTrack(screenSharingStream.getVideoTracks()[0]);
+  } else if (!screenSharingEnabled) {
+    const localStream = store.getState().webrtc.localStream;
+    if (!localStream) {
+      setUpLocalStream();
+    }
+    const senders = await peerConnection!.getSenders();
+
+    const sender = senders.find(
+      (sender) => sender.track!.kind === localStream?.getVideoTracks()[0].kind
+    );
+
+    if (!sender) {
+      toast("Failed to switch back to camera");
+      return;
+    }
+
+    sender.replaceTrack(localStream!.getVideoTracks()[0]);
+  }
+};

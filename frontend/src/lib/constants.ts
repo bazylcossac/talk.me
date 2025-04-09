@@ -26,19 +26,20 @@ export const preOfferAnswerStatus = {
   USER_CALL_IN_PROGRESS: "USER_CALL_IN_PROGRESS",
 } as const;
 
-
 export const screenSharingHighQualityOptions = {
   video: {
-    width: {ideal: 1920},
-    heigth: {ideal: 1080},
-    frameRate: {ideal: 30}
-  }
-}
+    width: { ideal: 1920 },
+    heigth: { ideal: 1080 },
+    frameRate: { ideal: 30 },
+    cursor: "always",
+  },
+};
 
 export const screenSharingLowQualityOptions = {
   video: {
-    width: {ideal: 630},
-    heigth: {ideal: 480},
-    frameRate: {ideal: 15}
-  }
-}
+    width: { ideal: 630 },
+    heigth: { ideal: 480 },
+    frameRate: { ideal: 15 },
+    cursor: "always",
+  },
+};
