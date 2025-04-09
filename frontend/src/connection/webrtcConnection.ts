@@ -1,4 +1,9 @@
-import { callStatus, preOfferAnswerStatus, userStatus } from "@/lib/constants";
+import {
+  callStatus,
+  preOfferAnswerStatus,
+  screenSharingLowQualityOptions,
+  userStatus,
+} from "@/lib/constants";
 import { setCallStatus } from "@/store/slices/user";
 import store from "@/store/store";
 import {
@@ -211,6 +216,12 @@ export const handleSendAcceptCall = async ({
 }: {
   callerSocketID: string;
 }) => {
+  if (store.getState().user.userCallState === callStatus.CALL_IN_PROGRESS) {
+    sendCloseConnection({
+      socketId: callerSocketId as string,
+    });
+  }
+
   store.dispatch(setCallStatus(callStatus.CALL_IN_PROGRESS));
   callerSocketId = callerSocketID;
   handleUserActiveChange(userStatus.IN_CALL);
@@ -287,7 +298,9 @@ export const handleOtherUserLeaveCall = () => {
 
 export const handleScreenSharing = async (screenSharingEnabled: boolean) => {
   if (screenSharingEnabled) {
-    const screenSharingStream = await navigator.mediaDevices.getDisplayMedia();
+    const screenSharingStream = await navigator.mediaDevices.getDisplayMedia(
+      screenSharingLowQualityOptions
+    );
     const senders = await peerConnection!.getSenders();
 
     const sender = senders.find(
