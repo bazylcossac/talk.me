@@ -10,6 +10,11 @@ const initialState = {
   showCallButtons: false,
   screenSharingEnabled: false,
   screenSharingLowOptions: false,
+  selectedMediaDevices: {
+    input: null as string | null,
+    output: null as string | null,
+    camera: null as string | null,
+  },
   currentCallChatMessage: [],
   callingUsersData: [] as userDataType[],
   rejectAnswer: {
@@ -38,7 +43,17 @@ const webrtcSlice = createSlice({
       state.screenSharingEnabled = action.payload;
     },
     setScreenSharingLowOptions: (state, action) => {
+      console.log(action.payload);
       state.screenSharingLowOptions = action.payload;
+    },
+    setSelectedMediaDevices: (state, action) => {
+      const {
+        device,
+        value,
+      }: { device: "input" | "output" | "camera"; value: string } =
+        action.payload;
+
+      state.selectedMediaDevices[device] = value;
     },
     setCallingUserData: (state, action) => {
       state.callingUsersData = action.payload;

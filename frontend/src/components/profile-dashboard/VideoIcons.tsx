@@ -7,7 +7,7 @@ import { BiSolidMicrophoneOff } from "react-icons/bi";
 import { RootState } from "../../store/store";
 import { setCameraEnabled, setMicEnabled } from "../../store/slices/webrtc";
 import { useState } from "react";
-import SettingsDialog from "./SettingsDialog";
+import SettingsDialog from "./settings-dialog/SettingsDialog";
 
 function VideoIcons({
   className,

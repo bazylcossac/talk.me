@@ -288,10 +288,14 @@ const clearAfterClosingConnection = () => {
 export const handleScreenSharing = async (screenSharingEnabled: boolean) => {
   if (screenSharingEnabled) {
     const isLowMedia = store.getState().webrtc.screenSharingLowOptions;
+
+    const qualityMode = isLowMedia
+      ? screenSharingLowQualityOptions
+      : screenSharingHighQualityOptions;
+
+    console.log(qualityMode);
     const screenSharingStream = await navigator.mediaDevices.getDisplayMedia(
-      isLowMedia
-        ? screenSharingLowQualityOptions
-        : screenSharingHighQualityOptions
+      qualityMode
     );
     const senders = await peerConnection!.getSenders();
 
