@@ -3,6 +3,7 @@ import {
   configuration,
   constraints,
   preOfferAnswerStatus,
+  screenSharingHighQualityOptions,
   screenSharingLowQualityOptions,
   userStatus,
 } from "@/lib/constants";
@@ -286,8 +287,11 @@ const clearAfterClosingConnection = () => {
 
 export const handleScreenSharing = async (screenSharingEnabled: boolean) => {
   if (screenSharingEnabled) {
+    const isLowMedia = store.getState().webrtc.screenSharingLowOptions;
     const screenSharingStream = await navigator.mediaDevices.getDisplayMedia(
-      screenSharingLowQualityOptions
+      isLowMedia
+        ? screenSharingLowQualityOptions
+        : screenSharingHighQualityOptions
     );
     const senders = await peerConnection!.getSenders();
 

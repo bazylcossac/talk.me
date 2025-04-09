@@ -6,6 +6,8 @@ import { HiMiniVideoCameraSlash } from "react-icons/hi2";
 import { BiSolidMicrophoneOff } from "react-icons/bi";
 import { RootState } from "../../store/store";
 import { setCameraEnabled, setMicEnabled } from "../../store/slices/webrtc";
+import { useState } from "react";
+import SettingsDialog from "./SettingsDialog";
 
 function VideoIcons({
   className,
@@ -14,6 +16,7 @@ function VideoIcons({
   className: string;
   optionsVisible: boolean;
 }) {
+  const [showOptions, setShowOptions] = useState(false);
   const dispatch = useDispatch();
   const micEnabled = useSelector((state: RootState) => state.webrtc.micEnabled);
   const cameraEnabled = useSelector(
@@ -38,24 +41,36 @@ function VideoIcons({
     }
   };
 
+  const handleShowSettings = () => {
+    setShowOptions((prev) => !prev);
+  };
+
   return (
-    <div className={className}>
-      <div onClick={handleMicEnabled}>
-        {micEnabled ? (
-          <BiSolidMicrophone />
-        ) : (
-          <BiSolidMicrophoneOff className="text-red-500" />
-        )}
+    <>
+      <div className={className}>
+        <div onClick={handleMicEnabled}>
+          {micEnabled ? (
+            <BiSolidMicrophone />
+          ) : (
+            <BiSolidMicrophoneOff className="text-red-500" />
+          )}
+        </div>
+        <div onClick={handleCameraEnabled}>
+          {cameraEnabled ? (
+            <HiMiniVideoCamera />
+          ) : (
+            <HiMiniVideoCameraSlash className="text-red-500" />
+          )}
+        </div>
+        {optionsVisible && <IoMdSettings onClick={handleShowSettings} />}
       </div>
-      <div onClick={handleCameraEnabled}>
-        {cameraEnabled ? (
-          <HiMiniVideoCamera />
-        ) : (
-          <HiMiniVideoCameraSlash className="text-red-500" />
-        )}
-      </div>
-      {optionsVisible && <IoMdSettings />}
-    </div>
+      {showOptions && (
+        <SettingsDialog
+          showOptions={showOptions}
+          setShowOptions={setShowOptions}
+        />
+      )}
+    </>
   );
 }
 
