@@ -141,7 +141,9 @@ export const handlePreOfferAnswer = ({
     if (answer === preOfferAnswerStatus.CALL_UNVAILABLE) {
       toast("User don't want any calls rn.");
     } else if (answer === preOfferAnswerStatus.USER_CALL_IN_PROGRESS) {
-      toast("User is currently in a call!");
+      toast("User is currently in a call!", {
+        className: "bg-black text-wite",
+      });
     }
     if (answer === preOfferAnswerStatus.CALL_REJECTED) {
       sendRejectAnswer({
@@ -245,7 +247,9 @@ export const handleRejectCall = ({
 
 export const handleRejectedCall = () => {
   handleOtherUserLeaveCall();
-  toast("User rejected call, sorry :'( ");
+  toast("User rejected call, sorry :'( ", {
+    className: "bg-black text-white",
+  });
 };
 
 export const handleCandidate = async (candidate: RTCIceCandidate) => {
@@ -280,3 +284,8 @@ export const handleOtherUserLeaveCall = () => {
   store.dispatch(setLocalStream(null));
   store.dispatch(setRemoteStream(null));
 };
+
+
+export const handleScreenSharing = () => {
+    
+}

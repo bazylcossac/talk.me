@@ -8,6 +8,7 @@ const initialState = {
   micEnabled: true,
   cameraEnabled: true,
   showCallButtons: false,
+  screenSharingEnabled: false,
   callingUsersData: [] as userDataType[],
   rejectAnswer: {
     reject: false,
@@ -31,6 +32,9 @@ const webrtcSlice = createSlice({
     setCameraEnabled: (state, action) => {
       state.cameraEnabled = action.payload;
     },
+    setScreenSharingEnabled: (state, action) => {
+      state.screenSharingEnabled = action.payload;
+    },
     setCallingUserData: (state, action) => {
       state.callingUsersData = action.payload;
     },
@@ -47,6 +51,7 @@ export const {
   setLocalStream,
   setRemoteStream,
   setRejectAnswer,
+  setScreenSharingEnabled,
 } = webrtcSlice.actions;
 
 export default webrtcSlice.reducer;
