@@ -11,8 +11,8 @@ import { useDispatch, useSelector } from "react-redux";
 
 function OutputSelect({ allOutputs }: { allOutputs: MediaDeviceInfo[] }) {
   const dispatch = useDispatch();
-  const cameraDeviceId = useSelector(
-    (state: RootState) => state.webrtc.selectedCameraDeviceId
+  const selectedOutputDeviceId = useSelector(
+    (state: RootState) => state.webrtc.selectedOutputDeviceId
   );
 
   const handlDeviceChange = (deviceId: string) => {
@@ -24,7 +24,7 @@ function OutputSelect({ allOutputs }: { allOutputs: MediaDeviceInfo[] }) {
       <p className="text-sm mb-2">Select output</p>
       <Select
         onValueChange={handlDeviceChange}
-        value={cameraDeviceId || "default"}
+        value={selectedOutputDeviceId || "default"}
       >
         <SelectTrigger className="w-[180px]">
           <SelectValue placeholder="Output" />
