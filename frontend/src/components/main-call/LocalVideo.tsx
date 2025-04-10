@@ -4,11 +4,15 @@ import { useRef, useEffect } from "react";
 
 function LocalVideo() {
   const videoRef = useRef<HTMLVideoElement>(null);
+
   const localStream = useSelector(
     (state: RootState) => state.webrtc.localStream
   );
   const selectedOutputDeviceId = useSelector(
     (state: RootState) => state.webrtc.selectedOutputDeviceId
+  );
+  const localCameraHide = useSelector(
+    (state: RootState) => state.webrtc.localCameraHide
   );
 
   useEffect(() => {
@@ -24,21 +28,17 @@ function LocalVideo() {
     }
   }, [localStream, selectedOutputDeviceId]);
 
-  // useEffect(() => {
-  //   const changeOutputDevice = async () => {
-  //     console.log("SELECTING 2 EFFECT");
-  //     await videoRef.current?.setSinkId(selectedOutputDeviceId);
-  //   };
-  //   changeOutputDevice();
-  // }, [selectedOutputDeviceId]);
-
   return (
-    <div className="ml-auto inline-block absolute right-0 m-4 z-10 shadow-2xl">
+    <div
+      className={`ml-auto  absolute right-0 m-4 z-10 shadow-2xl ${
+        localCameraHide ? "hidden" : "inline-block"
+      }`}
+    >
       <video
         ref={videoRef}
         autoPlay
         playsInline
-        className="rounded-md max-w-[250px]  "
+        className="rounded-md max-w-[250px]"
       />
     </div>
   );

@@ -9,6 +9,7 @@ const initialState = {
   micEnabled: true,
   cameraEnabled: true,
   showCallButtons: false,
+  localCameraHide: false,
   screenSharingEnabled: false,
   screenSharingLowOptions: false,
   selectedInputDeviceId: "",
@@ -56,6 +57,9 @@ const webrtcSlice = createSlice({
     setCallingUserData: (state, action) => {
       state.callingUsersData = action.payload;
     },
+    setLocalCameraHide: (state, action) => {
+      state.localCameraHide = action.payload;
+    },
   },
 });
 
@@ -71,6 +75,7 @@ export const {
   setSelectedInputDeviceId,
   setSelectedOutputDeviceId,
   setSelectedCameraDeviceId,
+  setLocalCameraHide,
 } = webrtcSlice.actions;
 
 export default webrtcSlice.reducer;
