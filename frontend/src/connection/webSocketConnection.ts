@@ -126,11 +126,13 @@ export const handleSendPreOffer = (data: preOfferDataType) => {
 export const sendPreOfferAnswer = ({
   answer,
   callerSocketId,
+  roomId,
 }: {
   answer: (typeof preOfferAnswerStatus)[keyof typeof preOfferAnswerStatus];
   callerSocketId: string;
+  roomId?: string;
 }) => {
-  socket.emit("pre-offer-answer", { answer: answer, callerSocketId });
+  socket.emit("pre-offer-answer", { answer: answer, callerSocketId, roomId });
 };
 
 export const handleUserActiveChange = (
@@ -148,13 +150,16 @@ export const handleUserActiveChange = (
 export const handleSendOffer = ({
   offer,
   calleSocketId,
+  roomId,
 }: {
   offer: RTCSessionDescriptionInit;
   calleSocketId: string;
+  roomId: string;
 }) => {
   socket.emit("send-offer", {
     offer,
     calleSocketId,
+    roomId,
   });
 };
 

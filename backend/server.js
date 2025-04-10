@@ -3,6 +3,7 @@ const http = require("http");
 const socket = require("socket.io");
 const { ExpressPeerServer } = require("peer");
 const { PrismaClient, Prisma } = require("@prisma/client");
+const uuid = require("uuid");
 const PORT = 3000;
 
 const app = express();
@@ -24,6 +25,7 @@ const io = socket(server, {
 });
 
 let activeUsers = [];
+let roomId;
 
 io.on("connection", (socket) => {
   console.log(`user connected ${socket.id}`);
@@ -35,7 +37,13 @@ io.on("connection", (socket) => {
   });
 
   socket.on("send-pre-offer", (data) => {
-    socket.to(data.calleSocketId).emit("send-pre-offer", data.caller);
+    const newRoomId = uuid.v4();
+    roomId = newRoomId;
+    socket.join(roomId);
+    console.log(`${socket.id} is connected to ${roomId}`);
+    socket
+      .to(data.calleSocketId)
+      .emit("send-pre-offer", { caller: data.caller, roomId });
   });
 
   socket.on("pre-offer-answer", ({ answer, callerSocketId }) => {
@@ -45,6 +53,9 @@ io.on("connection", (socket) => {
   });
 
   socket.on("send-offer", (data) => {
+    socket.join(data.roomId);
+    roomId = data.roomId;
+    console.log(`${socket.id} is connected to ${roomId}`);
     socket
       .to(data.calleSocketId)
       .emit("send-offer", { offer: data.offer, socketId: socket.id });
@@ -54,29 +65,28 @@ io.on("connection", (socket) => {
     socket.to(data.socketId).emit("send-offer-answer", data);
   });
 
-  socket.on("send-candidate",(data) => {
-    socket.to(data.socketId).emit("send-candidate", data.candidate)
-  })
+  socket.on("send-candidate", (data) => {
+    socket.to(data.socketId).emit("send-candidate", data.candidate);
+  });
 
   socket.on("activity-change", (data) => {
     io.sockets.emit("activity-change", data);
   });
 
   socket.on("leave-call", (socketId) => {
-    socket.to(socketId).emit("leave-call")
-  })
+    socket.to(socketId).emit("leave-call");
+  });
 
   socket.on("rejected-call", (socketId) => {
-    socket.to(socketId).emit("rejected-call")
-  })
+    socket.to(socketId).emit("rejected-call");
+  });
 
   socket.on("disconnect", () => {
     const usersLeft = activeUsers.filter((user) => user.socketId !== socket.id);
+
     activeUsers = usersLeft;
     io.sockets.emit("user-disconnected", usersLeft);
   });
-
-  
 });
 
 server.listen(PORT, () => {

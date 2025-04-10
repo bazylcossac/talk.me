@@ -109,13 +109,19 @@ export const setUpLocalStream = async () => {
 // handling pre offers
 // ACCEPT / REJECT
 
-export const handlePreOffer = (data: userDataType) => {
+export const handlePreOffer = ({
+  caller,
+  roomId,
+}: {
+  caller: userDataType;
+  roomId: string;
+}) => {
   const activeIncomingCalls = store.getState().webrtc.callingUsersData;
   const isUserCurrentlyCallingYou = activeIncomingCalls.find(
-    (user) => user.socketId === data.socketId
+    (user) => user.socketId === caller.socketId
   );
   if (!isUserCurrentlyCallingYou) {
-    const newIncomingCalls = [...activeIncomingCalls, data];
+    const newIncomingCalls = [...activeIncomingCalls, { ...caller, roomId }];
     store.dispatch(setCallingUserData(newIncomingCalls));
   }
   if (canUserConnectiWithMe()) {
@@ -129,13 +135,13 @@ export const handlePreOffer = (data: userDataType) => {
     ) {
       sendPreOfferAnswer({
         answer: preOfferAnswerStatus.USER_CALL_IN_PROGRESS,
-        callerSocketId: data.socketId,
+        callerSocketId: caller.socketId,
       });
     }
     if (activeStatus === userStatus.DONT_DISTURB)
       sendPreOfferAnswer({
         answer: preOfferAnswerStatus.CALL_UNVAILABLE,
-        callerSocketId: data.socketId,
+        callerSocketId: caller.socketId,
       });
   }
 };
@@ -143,14 +149,16 @@ export const handlePreOffer = (data: userDataType) => {
 export const handlePreOfferAnswer = ({
   answer,
   socketId,
+  roomId,
 }: {
   answer: (typeof preOfferAnswerStatus)[keyof typeof preOfferAnswerStatus];
   socketId: string;
+  roomId: string;
 }) => {
   if (answer === preOfferAnswerStatus.CALL_ACCEPTED) {
     console.log("ACCEPTED");
     console.log(socketId);
-    sendOffer(socketId);
+    sendOffer(socketId, roomId);
   } else {
     if (answer === preOfferAnswerStatus.CALL_UNVAILABLE) {
       toast("User don't want any calls rn.");
@@ -167,13 +175,14 @@ export const handlePreOfferAnswer = ({
   }
 };
 
-export const sendOffer = async (calleSocketId: string) => {
+export const sendOffer = async (calleSocketId: string, roomId: string) => {
   const offer = await peerConnection!.createOffer();
-  console.log("CREATING ANSWER!");
+
   peerConnection!.setLocalDescription(offer);
   handleSendOffer({
     offer,
     calleSocketId: calleSocketId,
+    roomId,
   });
 };
 
@@ -221,8 +230,10 @@ const canUserConnectiWithMe = () => {
 
 export const handleSendAcceptCall = async ({
   callerSocketID,
+  roomId,
 }: {
   callerSocketID: string;
+  roomId: string;
 }) => {
   if (store.getState().user.userCallState === callStatus.CALL_IN_PROGRESS) {
     sendCloseConnection({
@@ -243,6 +254,7 @@ export const handleSendAcceptCall = async ({
   handlePreOfferAnswer({
     answer: preOfferAnswerStatus.CALL_ACCEPTED,
     socketId: callerSocketID,
+    roomId,
   });
 };
 
@@ -348,7 +360,7 @@ export const handleScreenSharing = async (screenSharingEnabled: boolean) => {
   }
 };
 
-export const changeScreenSharingResolution = async (lowMode: boolean) => {
+export const changeScreenSharingResolution = async () => {
   const callState = store.getState().user.userCallState;
 
   if (callState === callStatus.CALL_IN_PROGRESS) {

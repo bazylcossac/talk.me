@@ -12,7 +12,7 @@ function LowSettingsSwitch() {
 
   const handleQualitySharingChange = (checked: boolean) => {
     dispatch(setScreenSharingLowOptions(checked));
-    changeScreenSharingResolution(checked);
+    changeScreenSharingResolution();
   };
   return (
     <div>
