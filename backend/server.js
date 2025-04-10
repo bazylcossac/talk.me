@@ -81,11 +81,18 @@ io.on("connection", (socket) => {
     socket.to(socketId).emit("rejected-call");
   });
 
+  socket.on("disconnect-from-room", (roomID) => {
+    socket.leave(roomID);
+    roomId = "";
+  });
+
   socket.on("disconnect", () => {
     const usersLeft = activeUsers.filter((user) => user.socketId !== socket.id);
 
     activeUsers = usersLeft;
     io.sockets.emit("user-disconnected", usersLeft);
+    io.sockets.to(roomId).emit("close-call-user-gone", roomId);
+    roomId = "";
   });
 });
 

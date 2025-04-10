@@ -7,6 +7,7 @@ import {
   setUserActiveStatus,
 } from "@/store/slices/user";
 import {
+  clearAfterClosingConnection,
   handleCandidate,
   handleOffer,
   handleOfferAnswer,
@@ -16,6 +17,7 @@ import {
   handleRejectedCall,
 } from "./webrtcConnection";
 import { preOfferAnswerStatus, userStatus } from "@/lib/constants";
+import { toast } from "sonner";
 
 let socket: Socket;
 let mySocketId: string;
@@ -93,6 +95,12 @@ export const connectToWebSocket = () => {
 
   socket.on("rejected-call", () => {
     handleRejectedCall();
+  });
+
+  socket.on("close-call-user-gone", (roomId) => {
+    toast("User left");
+    clearAfterClosingConnection();
+    socket.emit("disconnect-from-room", roomId);
   });
 };
 

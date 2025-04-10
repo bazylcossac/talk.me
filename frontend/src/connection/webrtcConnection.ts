@@ -304,7 +304,7 @@ export const handleOtherUserLeaveCall = () => {
   clearAfterClosingConnection();
 };
 
-const clearAfterClosingConnection = () => {
+export const clearAfterClosingConnection = () => {
   peerConnection?.close();
   peerConnection = null;
   callerSocketId = null;
