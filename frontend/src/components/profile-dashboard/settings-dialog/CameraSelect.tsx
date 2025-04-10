@@ -11,6 +11,10 @@ import { RootState } from "@/store/store";
 import { useDispatch, useSelector } from "react-redux";
 
 function CameraSelect({ allCameras }: { allCameras: MediaDeviceInfo[] }) {
+  const allDevices = allCameras
+    ?.filter((device) => device.deviceId !== "")
+    .map((device) => device);
+
   const dispatch = useDispatch();
   const cameraDeviceId = useSelector(
     (state: RootState) => state.webrtc.selectedCameraDeviceId
@@ -20,6 +24,14 @@ function CameraSelect({ allCameras }: { allCameras: MediaDeviceInfo[] }) {
     dispatch(setSelectedCameraDeviceId(deviceId));
     changeInputDevice(deviceId, "camera");
   };
+
+  if (allDevices.length === 0)
+    return (
+      <div>
+        <p className="text-sm mb-2">Select camera</p>
+        <p>No devices found</p>
+      </div>
+    );
 
   return (
     <div>
@@ -34,10 +46,10 @@ function CameraSelect({ allCameras }: { allCameras: MediaDeviceInfo[] }) {
           <SelectValue placeholder="Camera" />
         </SelectTrigger>
         <SelectContent className="bg-[#121212] text-white ">
-          {allCameras?.map((device) => {
+          {allDevices?.map((device) => {
             return (
               <SelectItem
-                value={device.deviceId}
+                value={device.deviceId || "default"}
                 className="hover:cursor-pointer hover:bg-[#323232]"
               >
                 {device.label}

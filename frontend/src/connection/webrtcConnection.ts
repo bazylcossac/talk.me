@@ -272,8 +272,6 @@ export const handleRejectCall = ({
     (user) => user.socketId !== callerSocketID
   );
   store.dispatch(setCallingUserData(filteredIncomingCalls));
-  console.log("caller socket id");
-  console.log(callerSocketID);
   handlePreOfferAnswer({
     answer: preOfferAnswerStatus.CALL_REJECTED,
     socketId: callerSocketID,
