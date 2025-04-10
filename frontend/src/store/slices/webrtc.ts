@@ -15,10 +15,6 @@ const initialState = {
   selectedCameraDeviceId: "",
   currentCallChatMessage: [],
   callingUsersData: [] as userDataType[],
-  rejectAnswer: {
-    reject: false,
-    answer: "",
-  },
 };
 
 const webrtcSlice = createSlice({
@@ -55,9 +51,6 @@ const webrtcSlice = createSlice({
     },
     setCallingUserData: (state, action) => {
       state.callingUsersData = action.payload;
-    },
-    setRejectAnswer: (state, action) => {
-      state.rejectAnswer = action.payload;
     },
   },
 });

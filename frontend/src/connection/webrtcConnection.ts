@@ -78,7 +78,24 @@ export const callToUser = async (calleSocketId: string) => {
 
 export const setUpLocalStream = async () => {
   try {
-    const localStream = await navigator.mediaDevices.getUserMedia(constraints);
+    const selectedInputDeviceId = store.getState().webrtc.selectedInputDeviceId;
+
+    const selectedCameraDeviceId =
+      store.getState().webrtc.selectedCameraDeviceId;
+
+    const streamOptions = {
+      audio: selectedInputDeviceId
+        ? { deviceId: { exact: selectedInputDeviceId } }
+        : true,
+      video: selectedCameraDeviceId
+        ? { deviceId: { exact: selectedCameraDeviceId } }
+        : true,
+    };
+
+    console.log(streamOptions);
+    const localStream = await navigator.mediaDevices.getUserMedia(
+      streamOptions
+    );
     store.dispatch(setLocalStream(localStream));
     createPeerConection();
     store.dispatch(setCallStatus(callStatus.CALL_IN_PROGRESS));
@@ -326,5 +343,20 @@ export const handleScreenSharing = async (screenSharingEnabled: boolean) => {
     }
 
     sender.replaceTrack(localStream!.getVideoTracks()[0]);
+  }
+};
+
+export const changeInputDevice = async (deviceId: string) => {
+  const callState = store.getState().user.userCallState;
+  if (callState === callStatus.CALL_IN_PROGRESS) {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: { deviceId: { exact: deviceId } },
+      });
+      store.dispatch(setLocalStream(stream));
+    } catch {
+      toast.error("Failed to change input");
+    }
   }
 };
