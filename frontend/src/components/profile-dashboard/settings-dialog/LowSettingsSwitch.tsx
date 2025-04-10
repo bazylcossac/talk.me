@@ -22,6 +22,7 @@ function LowSettingsSwitch() {
         aria-readonly
         onCheckedChange={handleQualitySharingChange}
         checked={lowQualityMode}
+        
       />
     </div>
   );

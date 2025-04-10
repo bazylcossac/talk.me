@@ -5,14 +5,29 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { setSelectedOutputDeviceId } from "@/store/slices/webrtc";
+import { RootState } from "@/store/store";
+import { useDispatch, useSelector } from "react-redux";
 
 function OutputSelect({ allOutputs }: { allOutputs: MediaDeviceInfo[] }) {
+  const dispatch = useDispatch();
+  const cameraDeviceId = useSelector(
+    (state: RootState) => state.webrtc.selectedCameraDeviceId
+  );
+
+  const handlDeviceChange = (deviceId: string) => {
+    dispatch(setSelectedOutputDeviceId(deviceId));
+  };
+
   return (
     <div>
       <p className="text-sm mb-2">Select output</p>
-      <Select>
+      <Select
+        onValueChange={handlDeviceChange}
+        value={cameraDeviceId || "default"}
+      >
         <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="Theme" />
+          <SelectValue placeholder="Output" />
         </SelectTrigger>
         <SelectContent className="bg-[#121212] text-white ">
           {allOutputs?.map((device) => {
