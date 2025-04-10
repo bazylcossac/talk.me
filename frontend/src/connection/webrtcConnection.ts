@@ -346,17 +346,40 @@ export const handleScreenSharing = async (screenSharingEnabled: boolean) => {
   }
 };
 
-export const changeInputDevice = async (deviceId: string) => {
+export const changeInputDevice = async (
+  deviceId: string,
+  deviceType: "input" | "camera"
+) => {
   const callState = store.getState().user.userCallState;
   if (callState === callStatus.CALL_IN_PROGRESS) {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: true,
-        audio: { deviceId: { exact: deviceId } },
-      });
-      store.dispatch(setLocalStream(stream));
-    } catch {
-      toast.error("Failed to change input");
+    if (deviceType === "camera") {
+      try {
+        const selectedInputDeviceId =
+          store.getState().webrtc.selectedInputDeviceId;
+        const stream = await navigator.mediaDevices.getUserMedia({
+          audio: selectedInputDeviceId
+            ? { deviceId: { exact: selectedInputDeviceId } }
+            : true,
+          video: { deviceId: { exact: deviceId } },
+        });
+        store.dispatch(setLocalStream(stream));
+      } catch {
+        toast.error("Failed to change camera");
+      }
+    } else if (deviceType === "input") {
+      try {
+        const selectedCameraDeviceId =
+          store.getState().webrtc.selectedCameraDeviceId;
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: selectedCameraDeviceId
+            ? { deviceId: { exact: selectedCameraDeviceId } }
+            : true,
+          audio: { deviceId: { exact: deviceId } },
+        });
+        store.dispatch(setLocalStream(stream));
+      } catch {
+        toast.error("Failed to change camera");
+      }
     }
   }
 };

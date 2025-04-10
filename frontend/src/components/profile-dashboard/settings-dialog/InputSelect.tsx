@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/select";
 import { RootState } from "@/store/store";
 import { setSelectedInputDeviceId } from "@/store/slices/webrtc";
+import { changeInputDevice } from "@/connection/webrtcConnection";
 
 function InputSelect({ allInputs }: { allInputs: MediaDeviceInfo[] }) {
   const dispatch = useDispatch();
@@ -17,6 +18,7 @@ function InputSelect({ allInputs }: { allInputs: MediaDeviceInfo[] }) {
 
   const handlDeviceChange = (deviceId: string) => {
     dispatch(setSelectedInputDeviceId(deviceId));
+    changeInputDevice(deviceId, "input");
   };
 
   return (
