@@ -1,7 +1,6 @@
 import {
   callStatus,
   configuration,
-  constraints,
   preOfferAnswerStatus,
   screenSharingHighQualityOptions,
   screenSharingLowQualityOptions,
@@ -10,6 +9,7 @@ import {
 import { setCallStatus } from "@/store/slices/user";
 import store from "@/store/store";
 import {
+  handleDisconnectFromRoom,
   handleSendOffer,
   handleSendPreOffer,
   handleUserActiveChange,
@@ -31,7 +31,7 @@ import { toast } from "sonner";
 
 let callerSocketId: string | null;
 let peerConnection = null as RTCPeerConnection | null;
-
+let currentRoomId: string | null;
 export const createPeerConection = () => {
   peerConnection = new RTCPeerConnection(configuration);
 
@@ -126,6 +126,7 @@ export const handlePreOffer = ({
   }
   if (canUserConnectiWithMe()) {
     store.dispatch(setCallStatus(callStatus.CALL_REQUESTED));
+    currentRoomId = roomId;
   } else {
     const callState = store.getState().user.userCallState;
     const activeStatus = store.getState().user.userActiveStatus;
@@ -153,12 +154,12 @@ export const handlePreOfferAnswer = ({
 }: {
   answer: (typeof preOfferAnswerStatus)[keyof typeof preOfferAnswerStatus];
   socketId: string;
-  roomId: string;
+  roomId?: string;
 }) => {
   if (answer === preOfferAnswerStatus.CALL_ACCEPTED) {
     console.log("ACCEPTED");
     console.log(socketId);
-    sendOffer(socketId, roomId);
+    sendOffer(socketId, roomId!);
   } else {
     if (answer === preOfferAnswerStatus.CALL_UNVAILABLE) {
       toast("User don't want any calls rn.");
@@ -189,10 +190,13 @@ export const sendOffer = async (calleSocketId: string, roomId: string) => {
 export const handleOffer = async ({
   offer,
   socketId,
+  roomId,
 }: {
   offer: RTCSessionDescriptionInit;
   socketId: string;
+  roomId: string;
 }) => {
+  currentRoomId = roomId;
   await peerConnection?.setRemoteDescription(offer);
   const answer = await peerConnection!.createAnswer();
   await peerConnection?.setLocalDescription(answer);
@@ -295,6 +299,7 @@ export const handleLeaveCall = () => {
   ) {
     sendCloseConnection({
       socketId: callerSocketId as string,
+      currentRoomId,
     });
   }
   clearAfterClosingConnection();
@@ -308,6 +313,7 @@ export const clearAfterClosingConnection = () => {
   peerConnection?.close();
   peerConnection = null;
   callerSocketId = null;
+  currentRoomId = "";
   store.dispatch(setCallStatus(callStatus.CALL_AVAILABLE));
   handleUserActiveChange(userStatus.ACTIVE);
   store.dispatch(setLocalStream(null));
@@ -407,4 +413,8 @@ export const changeInputDevice = async (
       }
     }
   }
+};
+
+export const disconnectFromRoom = (roomId: string) => {
+  handleDisconnectFromRoom(roomId);
 };

@@ -58,7 +58,7 @@ io.on("connection", (socket) => {
     console.log(`${socket.id} is connected to ${roomId}`);
     socket
       .to(data.calleSocketId)
-      .emit("send-offer", { offer: data.offer, socketId: socket.id });
+      .emit("send-offer", { offer: data.offer, socketId: socket.id, roomId });
   });
 
   socket.on("send-offer-answer", (data) => {
@@ -73,8 +73,10 @@ io.on("connection", (socket) => {
     io.sockets.emit("activity-change", data);
   });
 
-  socket.on("leave-call", (socketId) => {
-    socket.to(socketId).emit("leave-call");
+  socket.on("leave-call", (data) => {
+    socket.leave(data.currentRoomId)
+    roomId = ""
+    socket.to(data.socketId).emit("leave-call");
   });
 
   socket.on("rejected-call", (socketId) => {
@@ -88,7 +90,7 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", () => {
     const usersLeft = activeUsers.filter((user) => user.socketId !== socket.id);
-
+    
     activeUsers = usersLeft;
     io.sockets.emit("user-disconnected", usersLeft);
     io.sockets.to(roomId).emit("close-call-user-gone", roomId);

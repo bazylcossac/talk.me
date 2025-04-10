@@ -3,6 +3,7 @@ export type userDataType = {
   imageUrl: string;
   status: string;
   socketId: string;
+  roomId?: string;
 };
 
 export type preOfferDataType = {

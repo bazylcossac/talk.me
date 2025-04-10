@@ -18,7 +18,7 @@ function IncomingCallBox({
   const handleAcceptCall = () => {
     handleSendAcceptCall({
       callerSocketID: user.socketId,
-      roomId: user.roomId
+      roomId: user.roomId!
     });
   };
 
@@ -38,7 +38,6 @@ function IncomingCallBox({
           className="rounded-full size-6"
         />
         <p className="text-xs max-w-[100px]">{user.username}</p>
-        <p>{user.roomId}</p>
       </div>
 
       <div className="flex flex-row items-center gap-4  mt-4 [&>*]:cursor-pointer">

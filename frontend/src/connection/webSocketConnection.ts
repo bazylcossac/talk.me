@@ -191,10 +191,20 @@ export const sendIceCandidate = ({
   socket.emit("send-candidate", { candidate, socketId });
 };
 
-export const sendCloseConnection = ({ socketId }: { socketId: string }) => {
-  socket.emit("leave-call", socketId);
+export const sendCloseConnection = ({
+  socketId,
+  currentRoomId,
+}: {
+  socketId: string;
+  currentRoomId: string;
+}) => {
+  socket.emit("leave-call", {socketId, currentRoomId});
 };
 
 export const sendRejectAnswer = ({ socketId }: { socketId: string }) => {
   socket.emit("rejected-call", socketId);
+};
+
+export const handleDisconnectFromRoom = (roomId: string) => {
+  socket.emit("disconnect-from-room", roomId);
 };
