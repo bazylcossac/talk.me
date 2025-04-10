@@ -2,6 +2,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/store/store";
 import { setScreenSharingLowOptions } from "@/store/slices/webrtc";
 import { Switch } from "@/components/ui/switch";
+import { changeScreenSharingResolution } from "@/connection/webrtcConnection";
 
 function LowSettingsSwitch() {
   const dispatch = useDispatch();
@@ -11,6 +12,7 @@ function LowSettingsSwitch() {
 
   const handleQualitySharingChange = (checked: boolean) => {
     dispatch(setScreenSharingLowOptions(checked));
+    changeScreenSharingResolution(checked);
   };
   return (
     <div>
@@ -22,7 +24,6 @@ function LowSettingsSwitch() {
         aria-readonly
         onCheckedChange={handleQualitySharingChange}
         checked={lowQualityMode}
-        
       />
     </div>
   );

@@ -4,6 +4,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   localStream: null as MediaStream | null,
   remoteStream: null as MediaStream | null,
+  screenSharingStrem: null as MediaStream | null,
   groupCallStreams: null as MediaStream[] | null,
   micEnabled: true,
   cameraEnabled: true,
@@ -26,6 +27,9 @@ const webrtcSlice = createSlice({
     },
     setRemoteStream: (state, action) => {
       state.remoteStream = action.payload;
+    },
+    setScreenSharingScreen: (state, action) => {
+      state.screenSharingStrem = action.payload;
     },
     setMicEnabled: (state, action) => {
       state.micEnabled = action.payload;
@@ -61,7 +65,7 @@ export const {
   setCallingUserData,
   setLocalStream,
   setRemoteStream,
-  setRejectAnswer,
+  setScreenSharingScreen,
   setScreenSharingEnabled,
   setScreenSharingLowOptions,
   setSelectedInputDeviceId,

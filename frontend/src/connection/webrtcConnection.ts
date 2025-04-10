@@ -24,6 +24,7 @@ import {
   setLocalStream,
   setRemoteStream,
   setScreenSharingEnabled,
+  setScreenSharingScreen,
 } from "@/store/slices/webrtc";
 import { userDataType } from "@/types/types";
 import { toast } from "sonner";
@@ -310,10 +311,10 @@ export const handleScreenSharing = async (screenSharingEnabled: boolean) => {
       ? screenSharingLowQualityOptions
       : screenSharingHighQualityOptions;
 
-    console.log(qualityMode);
     const screenSharingStream = await navigator.mediaDevices.getDisplayMedia(
       qualityMode
     );
+    store.dispatch(setScreenSharingScreen(screenSharingStream));
     const senders = await peerConnection!.getSenders();
 
     const sender = senders.find(
@@ -343,6 +344,18 @@ export const handleScreenSharing = async (screenSharingEnabled: boolean) => {
     }
 
     sender.replaceTrack(localStream!.getVideoTracks()[0]);
+    store.dispatch(setScreenSharingScreen(null));
+  }
+};
+
+export const changeScreenSharingResolution = async (lowMode: boolean) => {
+  const callState = store.getState().user.userCallState;
+
+  if (callState === callStatus.CALL_IN_PROGRESS) {
+    const screenSharingStream = store.getState().webrtc.screenSharingStrem;
+    screenSharingStream?.getTracks().forEach((track) => track.stop);
+
+    handleScreenSharing(true);
   }
 };
 
