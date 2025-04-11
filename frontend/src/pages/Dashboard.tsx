@@ -44,7 +44,7 @@ function Dashboard() {
   }
 
   return (
-    <div className="p-4 h-screen  flex flex-row gap-4">
+    <div className="p-4 h-screen flex flex-row gap-4">
       <div className="h-full md:w-[250px] w-full flex flex-col gap-4 justify-between">
         <FriendsList />
         <Profile />

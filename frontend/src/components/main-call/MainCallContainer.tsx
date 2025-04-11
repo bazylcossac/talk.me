@@ -5,6 +5,7 @@ import RemoteVideo from "./RemoteVideo";
 import { useSelector } from "react-redux";
 import { Button } from "../ui/button";
 import Logo from "../Logo";
+import CallChat from "./chat-button/CallChat";
 
 function MainCallContainer() {
   const callState = useSelector((state: RootState) => state.user.userCallState);
@@ -27,9 +28,14 @@ function MainCallContainer() {
   }
 
   return (
-    <div className="bg-[#222222] w-full h-full rounded-md relative">
-      <LocalVideo />
-      <RemoteVideo />
+    <div className=" w-full h-full rounded-md flex flex-row gap-4">
+      <div className="bg-[#222222] relative flex flex-row rounded-md">
+        <RemoteVideo />
+        <LocalVideo />
+      </div>
+      <div>
+        <CallChat />
+      </div>
     </div>
   );
 }
