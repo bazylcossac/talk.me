@@ -9,6 +9,7 @@ import MainCallContainer from "@/components/main-call/MainCallContainer";
 import IncomingCallsContainer from "@/components/incoming-calls/IncomingCallsContainer";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
+import LeftContainer from "@/components/LeftContainer";
 
 function Dashboard() {
   const currentUser = useUser();
@@ -45,9 +46,8 @@ function Dashboard() {
 
   return (
     <div className="p-4 h-screen flex flex-row gap-4">
-      <div className="h-full md:max-w-[250px] w-full flex flex-col gap-4 justify-between">
-        <FriendsList />
-        <Profile />
+      <div>
+        <LeftContainer />
       </div>
       <div className="w-full h-full">
         <MainCallContainer />

@@ -242,6 +242,7 @@ export const handleSendAcceptCall = async ({
   if (store.getState().user.userCallState === callStatus.CALL_IN_PROGRESS) {
     sendCloseConnection({
       socketId: callerSocketId as string,
+      currentRoomId: roomId,
     });
   }
 
@@ -297,7 +298,7 @@ export const handleLeaveCall = () => {
   ) {
     sendCloseConnection({
       socketId: callerSocketId as string,
-      currentRoomId,
+      currentRoomId: currentRoomId as string,
     });
   }
   clearAfterClosingConnection();

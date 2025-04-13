@@ -7,7 +7,8 @@ const initialState = {
   userActiveStatus: userStatus.ACTIVE,
   activeUsers: [] as userDataType[],
   userCallState: callStatus.CALL_AVAILABLE,
-  
+  leftContainerVisible: true,
+  rightContainerVisible: true,
 };
 
 const userSlice = createSlice({
@@ -29,6 +30,12 @@ const userSlice = createSlice({
     setCallStatus: (state, action) => {
       state.userCallState = action.payload;
     },
+    setLeftContainerVisible: (state, action) => {
+      state.leftContainerVisible = action.payload;
+    },
+    setRightContainerVisible: (state, action) => {
+      state.rightContainerVisible = action.payload;
+    },
   },
 });
 
@@ -37,6 +44,8 @@ export const {
   setUserActiveStatus,
   setActiveUsers,
   setCallStatus,
+  setLeftContainerVisible,
+  setRightContainerVisible
 } = userSlice.actions;
 
 export default userSlice.reducer;
