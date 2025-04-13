@@ -45,7 +45,7 @@ export const {
   setActiveUsers,
   setCallStatus,
   setLeftContainerVisible,
-  setRightContainerVisible
+  setRightContainerVisible,
 } = userSlice.actions;
 
 export default userSlice.reducer;

@@ -10,6 +10,8 @@ import IncomingCallsContainer from "@/components/incoming-calls/IncomingCallsCon
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import LeftContainer from "@/components/LeftContainer";
+import CallChat from "@/components/main-call/chat-button/CallChat";
+import RightContainer from "@/components/RightContainer";
 
 function Dashboard() {
   const currentUser = useUser();
@@ -51,6 +53,9 @@ function Dashboard() {
       </div>
       <div className="w-full h-full">
         <MainCallContainer />
+      </div>
+      <div>
+        <RightContainer />
       </div>
       {userActivity !== userStatus.DONT_DISTURB && <IncomingCallsContainer />}
     </div>

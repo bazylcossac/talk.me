@@ -30,7 +30,7 @@ function LocalVideo() {
 
   return (
     <div
-      className={`ml-auto absolute right-0 top-0 m-4 z-10 shadow-2xl ${
+      className={`ml-auto absolute right-0 top-0 m-8 z-10 shadow-2xl ${
         localCameraHide ? "hidden" : "inline-block"
       }`}
     >

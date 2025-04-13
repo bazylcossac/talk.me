@@ -1,9 +1,15 @@
+import { useDispatch, useSelector } from "react-redux";
 import { Input } from "@/components/ui/input";
 import { FormEvent, useRef } from "react";
-import { IoMdSend } from "react-icons/io";
+import { IoIosArrowForward, IoMdSend } from "react-icons/io";
+import { setRightContainerVisible } from "@/store/slices/user";
+import { RootState } from "@/store/store";
 function CallChat() {
   const formRef = useRef<HTMLFormElement>(null);
-
+  const dispatch = useDispatch();
+  const rightContainerVisible = useSelector(
+    (state: RootState) => state.user.rightContainerVisible
+  );
   const sendMessage = (e: FormEvent) => {
     e.preventDefault();
     formRef!.current!.reset();
@@ -11,6 +17,18 @@ function CallChat() {
 
   return (
     <div className="bg-[#222222] md:w-[250px] w-full h-full rounded-md overflow-y-auto scrollbar-hide flex">
+      <div className="p-1 flex items-center gap-4 z-10  bg-[#383838] absolute w-[250px] rounded-t-md">
+        <div
+          className="ml-auto"
+          onClick={() =>
+            dispatch(setRightContainerVisible(!rightContainerVisible))
+          }
+        >
+          <div className="bg-[#222222] hover:bg-[#333333] hover:text-[#888888] rounded-sm p-1">
+            <IoIosArrowForward className="text-lg cursor-pointer" />
+          </div>
+        </div>
+      </div>
       <div className="mt-auto w-full p-2">
         <form
           onSubmit={sendMessage}

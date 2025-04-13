@@ -33,9 +33,6 @@ function MainCallContainer() {
         <RemoteVideo />
         <LocalVideo />
       </div>
-      <div>
-        <CallChat />
-      </div>
     </div>
   );
 }
