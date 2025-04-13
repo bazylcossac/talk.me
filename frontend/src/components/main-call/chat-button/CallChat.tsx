@@ -2,13 +2,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { Input } from "@/components/ui/input";
 import { FormEvent, useRef } from "react";
 import { IoIosArrowForward, IoMdSend } from "react-icons/io";
-import { setRightContainerVisible } from "@/store/slices/user";
+import { setRightContainerVisible } from "@/store/slices/app";
 import { RootState } from "@/store/store";
 function CallChat() {
   const formRef = useRef<HTMLFormElement>(null);
   const dispatch = useDispatch();
   const rightContainerVisible = useSelector(
-    (state: RootState) => state.user.rightContainerVisible
+    (state: RootState) => state.app.rightContainerVisible
   );
   const sendMessage = (e: FormEvent) => {
     e.preventDefault();
@@ -24,8 +24,8 @@ function CallChat() {
             dispatch(setRightContainerVisible(!rightContainerVisible))
           }
         >
-          <div className="bg-[#222222] hover:bg-[#333333] hover:text-[#888888] rounded-sm p-1">
-            <IoIosArrowForward className="text-lg cursor-pointer" />
+          <div className="bg-[#222222] hover:bg-[#333333] hover:text-[#888888] rounded-sm p-0.25">
+            <IoIosArrowForward className="text-md cursor-pointer" />
           </div>
         </div>
       </div>

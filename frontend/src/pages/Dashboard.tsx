@@ -1,7 +1,5 @@
 import { useSession, useUser } from "@clerk/clerk-react";
 import { useNavigate } from "react-router";
-import Profile from "../components/profile-dashboard/Profile";
-import FriendsList from "../components/friends-list/FriendsList";
 import { useEffect } from "react";
 import { connectToWebSocket, userJoin } from "@/connection/webSocketConnection";
 import { userStatus } from "@/lib/constants";
@@ -10,7 +8,6 @@ import IncomingCallsContainer from "@/components/incoming-calls/IncomingCallsCon
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import LeftContainer from "@/components/LeftContainer";
-import CallChat from "@/components/main-call/chat-button/CallChat";
 import RightContainer from "@/components/RightContainer";
 
 function Dashboard() {

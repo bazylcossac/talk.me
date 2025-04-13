@@ -1,11 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 import webrtcReducer from "./slices/webrtc";
 import userReducer from "./slices/user";
+import appReducer from "./slices/app";
 
 const store = configureStore({
   reducer: {
     user: userReducer,
     webrtc: webrtcReducer,
+    app: appReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
