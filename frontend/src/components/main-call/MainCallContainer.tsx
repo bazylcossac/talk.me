@@ -12,7 +12,7 @@ function MainCallContainer() {
 
   if (callState !== callStatus.CALL_IN_PROGRESS) {
     return (
-      <div className="h-full ">
+      <div className="h-full">
         <div className="absolute right-0 mr-4">
           <Logo className="w-20" />
         </div>
@@ -28,8 +28,8 @@ function MainCallContainer() {
   }
 
   return (
-    <div className=" w-full h-full rounded-md flex flex-row gap-4">
-      <div className="bg-[#222222] relative flex flex-row rounded-md">
+    <div className=" w-full h-full  rounded-md flex flex-row gap-4">
+      <div className="bg-[#222222] relative flex flex-row rounded-md w-full">
         <RemoteVideo />
         <LocalVideo />
       </div>

@@ -42,7 +42,7 @@ function LocalVideo() {
 
   return (
     <div
-      className="h-full flex flex-col justify-center p-4 relative"
+      className="h-full w-full  flex flex-col justify-center p-4 relative"
       ref={divRef}
     >
       {!remoteStream && (
@@ -57,7 +57,7 @@ function LocalVideo() {
         ref={videoRef}
         autoPlay
         playsInline
-        className="rounded-md h-full"
+        className="rounded-md h-full w-full object-cover"
       />
 
       <div className="mt-auto p-2 absolute bottom-5 w-full   ">
