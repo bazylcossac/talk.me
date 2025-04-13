@@ -34,13 +34,6 @@ const groupsInfo = [
         socketId: "3213123",
         status: callStatus.CALL_IN_PROGRESS,
       },
-      {
-        imageUrl:
-          "https://img.clerk.com/eyJ0eXBlIjoicHJveHkiLCJzcmMiOiJodHRwczovL2ltYWdlcy5jbGVyay5kZXYvb2F1dGhfZ29vZ2xlL2ltZ18ydkRKTWR3UTZ3ZjA0OTVWMzVjVjFIQ2YxdHEifQ",
-        username: "dzikidzekson",
-        socketId: "32131232",
-        status: callStatus.CALL_IN_PROGRESS,
-      },
     ],
   },
 ];

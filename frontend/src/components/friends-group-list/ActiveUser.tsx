@@ -10,7 +10,7 @@ function ActiveUser({ user }: { user: userDataType }) {
 
   return (
     <div className="select-none">
-      <div className="flex flex-row items-center justify-between rounded-md md:w-[250px] p-4 md:p-3 ">
+      <div className="flex flex-row items-center justify-between rounded-md md:w-[250px] p-4 md:p-2 ">
         <div className="flex flex-row">
           <div className="">
             <div className="flex items-center relative">

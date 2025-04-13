@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils";
 import { ActiveGroupType } from "@/types/types";
 import { RxEnter } from "react-icons/rx";
 
@@ -11,13 +12,13 @@ function ActiveGroup({ group }: { group: ActiveGroupType }) {
           <img
             src={group.host.imageUrl}
             alt="host image"
-            className="size-9 rounded-full relative z-100 border-2 border-[#222222]"
+            className="size-8 rounded-full relative z-100 border-2 border-[#222222]"
           />
           {group.users.map((user, index) => (
             <img
               src={user.imageUrl}
               alt={`${user.username}'s image`}
-              className="size-9 rounded-full absolute border-2 border-[#222222] "
+              className="size-8 rounded-full absolute border-2 border-[#222222] "
               style={{
                 left: `${(index + 1) * 25}px`,
                 zIndex: 50 - (index + 1),
@@ -26,11 +27,12 @@ function ActiveGroup({ group }: { group: ActiveGroupType }) {
           ))}
         </div>
         <div
-          className={`bg-[#333333] p-2 rounded-md cursor-pointer hover:bg-[#222222] ${
-            group.users.length + 1 === 4
-              ? "cursor-not-allowed"
-              : "cursor-pointer"
-          }`}
+          className={cn(
+            "bg-[#333333] p-2 rounded-md cursor-pointer hover:bg-[#222222]",
+            {
+              hidden: group.users.length + 1 === 4,
+            }
+          )}
         >
           <RxEnter />
         </div>

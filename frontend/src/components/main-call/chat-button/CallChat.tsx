@@ -19,7 +19,6 @@ function CallChat() {
     <div className="bg-[#222222] md:w-[250px] w-full h-full rounded-md overflow-y-auto scrollbar-hide flex">
       <div className="p-1 flex items-center gap-4 z-10  bg-[#383838] absolute w-[250px] rounded-t-md">
         <div
-          className="ml-auto"
           onClick={() =>
             dispatch(setRightContainerVisible(!rightContainerVisible))
           }
