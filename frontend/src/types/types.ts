@@ -16,3 +16,9 @@ export type chatMessage = {
   username: string;
   message: string;
 };
+
+export type ActiveGroupType = {
+  roomId: string;
+  host: userDataType;
+  users: userDataType[];
+};

@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   leftContainerVisible: true,
   rightContainerVisible: true,
-  usersTableVisible: true,
+  friendsTableVisible: true,
 };
 
 const appSlice = createSlice({
@@ -16,8 +16,8 @@ const appSlice = createSlice({
     setRightContainerVisible: (state, action) => {
       state.rightContainerVisible = action.payload;
     },
-    setUsersTableVisible: (state, action) => {
-      state.usersTableVisible = action.payload;
+    setFriendsTableVisible: (state, action) => {
+      state.friendsTableVisible = action.payload;
     },
   },
 });
@@ -25,7 +25,7 @@ const appSlice = createSlice({
 export const {
   setLeftContainerVisible,
   setRightContainerVisible,
-  setUsersTableVisible,
+  setFriendsTableVisible,
 } = appSlice.actions;
 
 export default appSlice.reducer;
