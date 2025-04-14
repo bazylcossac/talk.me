@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Input } from "@/components/ui/input";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { IoIosArrowForward, IoMdSend } from "react-icons/io";
 import { FaFileExport } from "react-icons/fa6";
 import { setRightContainerVisible } from "@/store/slices/app";
@@ -20,6 +20,7 @@ function CallChat() {
   const allMessages = useSelector(
     (state: RootState) => state.webrtc.currentCallChatMessages
   );
+  const lastElement = useRef<HTMLDivElement>(null);
 
   const sendMessage = (formData: FormData) => {
     const message = formData.get("messageInput") as string;
@@ -41,6 +42,10 @@ function CallChat() {
     formRef!.current!.reset();
   };
 
+  useEffect(() => {
+    lastElement.current?.scrollIntoView({ behavior: "smooth" });
+  }, [allMessages]);
+
   return (
     <div className="bg-[#222222] md:w-[250px] w-full h-full rounded-md overflow-y-auto scrollbar-hide flex relative">
       <div className="p-1 flex items-center gap-4 z-10  bg-[#383838] absolute w-[250px] rounded-t-md">
@@ -56,9 +61,12 @@ function CallChat() {
       </div>
       <div className="mb-12 mt-6 overflow-y-auto w-full scrollbar-hide flex flex-col">
         {allMessages?.map((message: chatMessageType) => (
-          <div key={message.messageId} className={cn("m-2 flex")}>
+          <div
+            key={message.messageId}
+            className={cn("m-2 flex text-clip break-all")}
+          >
             <p
-              className={cn(" inline-block px-2 rounded-md", {
+              className={cn(" inline-block px-2 rounded-md max-w-[200px] ", {
                 "ml-auto bg-blue-500": message.your,
                 "bg-neutral-500": !message.your,
               })}
@@ -67,6 +75,7 @@ function CallChat() {
             </p>
           </div>
         ))}
+        <div ref={lastElement} className="h-[5px]"></div>
       </div>
       <div className="mt-auto w-full p-2 absolute bottom-0 z-10 bg-[#383838]">
         <form
