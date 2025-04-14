@@ -20,6 +20,7 @@ import {
   sendRejectAnswer,
 } from "./webSocketConnection";
 import {
+  clearCurrentCallMessages,
   setCallingUserData,
   setCurrentCallMessages,
   setLocalStream,
@@ -82,7 +83,7 @@ export const createPeerConection = () => {
   };
   currentDataChannel.onclose = () => {
     console.log("closing data channel");
-    store.dispatch(setCurrentCallMessages([]));
+    store.dispatch(clearCurrentCallMessages());
   };
 };
 
@@ -345,7 +346,10 @@ export const clearAfterClosingConnection = () => {
   store.dispatch(setRemoteStream(null));
   store.dispatch(setScreenSharingEnabled(false));
   store.dispatch(setCalleData({}));
-  store.dispatch(setCurrentCallMessages([]));
+  store.dispatch(clearCurrentCallMessages());
+
+  console.log("WYCZYSZCZONE");
+  console.log(store.getState().webrtc.currentCallChatMessages);
 };
 
 export const handleScreenSharing = async (screenSharingEnabled: boolean) => {
@@ -462,7 +466,7 @@ export const changeInputDevice = async (
 
 export const disconnectFromRoom = (roomId: string) => {
   handleDisconnectFromRoom(roomId);
-  store.dispatch(setCurrentCallMessages([]));
+  store.dispatch(clearCurrentCallMessages());
 };
 
 export const handleSendMessage = ({

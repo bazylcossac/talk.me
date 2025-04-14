@@ -60,11 +60,13 @@ const webrtcSlice = createSlice({
     setLocalCameraHide: (state, action) => {
       state.localCameraHide = action.payload;
     },
-
     setCurrentCallMessages: (state, action) => {
       const newMessages = state.currentCallChatMessages;
       newMessages.push(action.payload);
       state.currentCallChatMessages = newMessages;
+    },
+    clearCurrentCallMessages: (state) => {
+      state.currentCallChatMessages = [];
     },
   },
 });
@@ -83,6 +85,7 @@ export const {
   setSelectedCameraDeviceId,
   setLocalCameraHide,
   setCurrentCallMessages,
+  clearCurrentCallMessages,
 } = webrtcSlice.actions;
 
 export default webrtcSlice.reducer;
