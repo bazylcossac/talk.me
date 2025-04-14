@@ -8,9 +8,11 @@ import { RootState } from "@/store/store";
 import { setCurrentCallMessages } from "@/store/slices/webrtc";
 import { handleSendMessage } from "@/connection/webrtcConnection";
 import { useUser } from "@clerk/clerk-react";
+import { chatMessageType } from "@/types/types";
+import { cn } from "@/lib/utils";
 function CallChat() {
   const formRef = useRef<HTMLFormElement>(null);
-  const user = useUser()
+  const user = useUser();
   const dispatch = useDispatch();
   const rightContainerVisible = useSelector(
     (state: RootState) => state.app.rightContainerVisible
@@ -22,13 +24,25 @@ function CallChat() {
   const sendMessage = (formData: FormData) => {
     const message = formData.get("messageInput") as string;
     if (!message) return;
-    dispatch(setCurrentCallMessages({ your: true, username:user.user?.username || user.user?.fullName, message }));
-    handleSendMessage({username:user.user?.username || user.user?.fullName, message});
+    const messageId = crypto.randomUUID();
+    handleSendMessage({
+      username: user.user?.username! || user.user?.fullName!,
+      message,
+      messageId,
+    });
+    dispatch(
+      setCurrentCallMessages({
+        your: true,
+        username: user.user?.username || user.user?.fullName,
+        message,
+        messageId,
+      })
+    );
     formRef!.current!.reset();
   };
 
   return (
-    <div className="bg-[#222222] md:w-[250px] w-full h-full rounded-md overflow-y-auto scrollbar-hide flex">
+    <div className="bg-[#222222] md:w-[250px] w-full h-full rounded-md overflow-y-auto scrollbar-hide flex relative">
       <div className="p-1 flex items-center gap-4 z-10  bg-[#383838] absolute w-[250px] rounded-t-md">
         <div
           onClick={() =>
@@ -36,14 +50,30 @@ function CallChat() {
           }
         >
           <div className="bg-[#222222] hover:bg-[#333333] hover:text-[#888888] rounded-sm p-0.25">
-            <IoIosArrowForward className="text-md cursor-pointer" />
+            <IoIosArrowForward className="text-md curor-pointer" />
           </div>
         </div>
       </div>
-      <div>
-        {allMessages?.map(message => )}
+      <div className="mt-6 overflow-y-auto w-full scrollbar-hide flex flex-col bg-blue-300 ">
+        {allMessages?.map((message: chatMessageType) => (
+          <div
+            key={message.messageId}
+            className={cn("m-2 flex", {
+              "bg-blue-500 justifty-end": message.your,
+              "bg-red-500 justifty-end": !message.your,
+            })}
+          >
+            <p
+              className={cn("bg-red-300 inline-block p-1 rounded-md", {
+                "ml-auto": message.your,
+              })}
+            >
+              {message.message}
+            </p>
+          </div>
+        ))}
       </div>
-      <div className="mt-auto w-full p-2">
+      <div className="mt-auto w-full p-2 absolute bottom-0 z-10 bg-[#383838]">
         <form
           action={sendMessage}
           className="flex items-center justify-between gap-2"

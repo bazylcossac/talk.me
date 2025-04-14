@@ -12,8 +12,10 @@ export type preOfferDataType = {
 };
 
 export type chatMessageType = {
+  username: string;
   message: string;
   your: boolean;
+  messageId: string;
 };
 
 export type ActiveGroupType = {

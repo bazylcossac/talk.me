@@ -72,8 +72,10 @@ export const createPeerConection = () => {
   };
 
   currentDataChannel.onmessage = (event) => {
-    const message = event.data;
-    store.dispatch(setCurrentCallMessages({ your: false, message }));
+    const { username, message, messageId } = JSON.parse(event.data);
+    store.dispatch(
+      setCurrentCallMessages({ your: false, username, message, messageId })
+    );
   };
   currentDataChannel.onopen = () => {
     console.log("DATA CHANNEL OPPENED");
@@ -340,6 +342,7 @@ export const clearAfterClosingConnection = () => {
   store.dispatch(setRemoteStream(null));
   store.dispatch(setScreenSharingEnabled(false));
   store.dispatch(setCalleData({}));
+  store.dispatch(setCurrentCallMessages([]));
 };
 
 export const handleScreenSharing = async (screenSharingEnabled: boolean) => {
@@ -443,9 +446,12 @@ export const disconnectFromRoom = (roomId: string) => {
 export const handleSendMessage = ({
   username,
   message,
+  messageId,
 }: {
   username: string;
   message: string;
+  messageId: string;
 }) => {
-  currentDataChannel?.send({ username, message });
+  const data = JSON.stringify({ username, message, messageId });
+  currentDataChannel?.send(data);
 };
