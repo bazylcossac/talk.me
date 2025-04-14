@@ -18,7 +18,7 @@ function LeftContainer() {
       >
         <IoIosArrowForward className="text-md" />
       </div>
-    );
+  );
 
   return (
     <div className="h-full md:max-w-[250px] w-full flex flex-col gap-4 justify-between animate-fade-right animate-duration-300 ">

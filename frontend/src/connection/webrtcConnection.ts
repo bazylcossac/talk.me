@@ -6,7 +6,7 @@ import {
   screenSharingLowQualityOptions,
   userStatus,
 } from "@/lib/constants";
-import { setCallStatus } from "@/store/slices/user";
+import { setCalleData, setCallStatus } from "@/store/slices/user";
 import store from "@/store/store";
 import {
   handleDisconnectFromRoom,
@@ -116,6 +116,7 @@ export const handlePreOffer = ({
   caller: userDataType;
   roomId: string;
 }) => {
+  store.dispatch(setCalleData(caller));
   const activeIncomingCalls = store.getState().webrtc.callingUsersData;
   const isUserCurrentlyCallingYou = activeIncomingCalls.find(
     (user) => user.socketId === caller.socketId
@@ -268,11 +269,13 @@ export const handleRejectCall = ({
 }: {
   callerSocketID: string;
 }) => {
+  console.log("USUWAM");
   const currentIncomingCalls = store.getState().webrtc.callingUsersData;
   const filteredIncomingCalls = currentIncomingCalls.filter(
     (user) => user.socketId !== callerSocketID
   );
   store.dispatch(setCallingUserData(filteredIncomingCalls));
+  store.dispatch(setCalleData({}));
   handlePreOfferAnswer({
     answer: preOfferAnswerStatus.CALL_REJECTED,
     socketId: callerSocketID,
@@ -280,6 +283,7 @@ export const handleRejectCall = ({
 };
 
 export const handleRejectedCall = () => {
+  store.dispatch(setCalleData({}));
   handleOtherUserLeaveCall();
   toast("User rejected call, sorry :'( ", {
     className: "bg-black text-white",
@@ -292,10 +296,7 @@ export const handleCandidate = async (candidate: RTCIceCandidate) => {
 
 export const handleLeaveCall = () => {
   console.log(callerSocketId);
-  if (
-    store.getState().user.userCallState === callStatus.CALL_IN_PROGRESS &&
-    peerConnection!.connectionState === "connected"
-  ) {
+  if (store.getState().user.userCallState === callStatus.CALL_IN_PROGRESS) {
     sendCloseConnection({
       socketId: callerSocketId as string,
       currentRoomId: currentRoomId as string,
@@ -318,6 +319,7 @@ export const clearAfterClosingConnection = () => {
   store.dispatch(setLocalStream(null));
   store.dispatch(setRemoteStream(null));
   store.dispatch(setScreenSharingEnabled(false));
+  store.dispatch(setCalleData({}));
 };
 
 export const handleScreenSharing = async (screenSharingEnabled: boolean) => {

@@ -10,6 +10,7 @@ function LocalVideo() {
   const remoteStream = useSelector(
     (state: RootState) => state.webrtc.remoteStream
   );
+  const calleData = useSelector((state: RootState) => state.user.calleData);
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -57,8 +58,11 @@ function LocalVideo() {
         ref={videoRef}
         autoPlay
         playsInline
-        className="rounded-md h-full w-full object-cover"
+        className="rounded-md h-full w-full object-cover relative"
       />
+      <p className="absolute bottom-4 p-1 text-white text-shado-2xl text-xs font-bold">
+        {calleData.username}
+      </p>
 
       <div className="mt-auto p-2 absolute bottom-5 w-full   ">
         <CallButtons

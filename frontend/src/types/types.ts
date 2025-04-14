@@ -11,10 +11,11 @@ export type preOfferDataType = {
   calleSocketId: string;
 };
 
-export type chatMessage = {
+export type chatMessageType = {
   socketId: string;
   username: string;
   message: string;
+  your: boolean;
 };
 
 export type ActiveGroupType = {

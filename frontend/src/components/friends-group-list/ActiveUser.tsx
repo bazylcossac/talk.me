@@ -1,10 +1,14 @@
+import { useDispatch } from "react-redux";
 import { BsCameraVideoFill } from "react-icons/bs";
 import { userDataType } from "@/types/types";
 import { callToUser } from "@/connection/webrtcConnection";
 import ActiveIcon from "../profile-dashboard/ActiveIcon";
+import { setCalleData } from "@/store/slices/user";
 
 function ActiveUser({ user }: { user: userDataType }) {
+  const dispatch = useDispatch();
   const handleCallToUser = (calleSocketId: string) => {
+    dispatch(setCalleData(user));
     callToUser(calleSocketId);
   };
 

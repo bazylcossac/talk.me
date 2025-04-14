@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Input } from "@/components/ui/input";
 import { FormEvent, useRef } from "react";
 import { IoIosArrowForward, IoMdSend } from "react-icons/io";
+import { FaFileExport } from "react-icons/fa6";
 import { setRightContainerVisible } from "@/store/slices/app";
 import { RootState } from "@/store/store";
 function CallChat() {
@@ -34,8 +35,9 @@ function CallChat() {
           className="flex items-center justify-between gap-2"
           ref={formRef}
         >
-          <Input className="border-1 border-white/30" />
-          <IoMdSend className="text-xl hover:text-white/30 cursor-pointer" />
+          <FaFileExport className="text-lg hover:text-white/20 cursor-pointer transition " />
+          <Input className="border-1 border-white/30 focus-visible:ring-0" />
+          <IoMdSend className="text-xl hover:text-white/30 cursor-pointer transition " />
         </form>
       </div>
     </div>

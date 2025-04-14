@@ -4,6 +4,7 @@ import { userDataType } from "@/types/types";
 
 const initialState = {
   loggedUser: {} as userDataType,
+  calleData: {} as userDataType,
   userActiveStatus: userStatus.ACTIVE,
   activeUsers: [] as userDataType[],
   userCallState: callStatus.CALL_AVAILABLE,
@@ -28,6 +29,9 @@ const userSlice = createSlice({
     setCallStatus: (state, action) => {
       state.userCallState = action.payload;
     },
+    setCalleData: (state, action) => {
+      state.calleData = action.payload;
+    },
   },
 });
 
@@ -36,6 +40,7 @@ export const {
   setUserActiveStatus,
   setActiveUsers,
   setCallStatus,
+  setCalleData,
 } = userSlice.actions;
 
 export default userSlice.reducer;

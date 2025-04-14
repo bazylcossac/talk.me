@@ -1,4 +1,4 @@
-import { userDataType } from "@/types/types";
+import { chatMessageType, userDataType } from "@/types/types";
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
@@ -15,7 +15,7 @@ const initialState = {
   selectedInputDeviceId: "",
   selectedOutputDeviceId: "",
   selectedCameraDeviceId: "",
-  currentCallChatMessage: [],
+  currentCallChatMessages: [] as chatMessageType[],
   callingUsersData: [] as userDataType[],
 };
 
@@ -60,6 +60,11 @@ const webrtcSlice = createSlice({
     setLocalCameraHide: (state, action) => {
       state.localCameraHide = action.payload;
     },
+
+    setCurrentCallMessages: (state, action) => {
+      const newMessages = [action.payload, ...state.currentCallChatMessages];
+      state.currentCallChatMessages = newMessages;
+    },
   },
 });
 
@@ -76,6 +81,7 @@ export const {
   setSelectedOutputDeviceId,
   setSelectedCameraDeviceId,
   setLocalCameraHide,
+  setCurrentCallMessages,
 } = webrtcSlice.actions;
 
 export default webrtcSlice.reducer;
