@@ -99,6 +99,7 @@ export const connectToWebSocket = () => {
 
   socket.on("close-call-user-gone", (roomId) => {
     toast("User left");
+    console.log("user left");
     clearAfterClosingConnection();
     socket.emit("disconnect-from-room", roomId);
   });
@@ -198,7 +199,7 @@ export const sendCloseConnection = ({
   socketId: string;
   currentRoomId: string;
 }) => {
-  socket.emit("leave-call", {socketId, currentRoomId});
+  socket.emit("leave-call", { socketId, currentRoomId });
 };
 
 export const sendRejectAnswer = ({ socketId }: { socketId: string }) => {

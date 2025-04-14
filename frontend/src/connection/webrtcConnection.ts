@@ -21,6 +21,7 @@ import {
 } from "./webSocketConnection";
 import {
   setCallingUserData,
+  setCurrentCallMessages,
   setLocalStream,
   setRemoteStream,
   setScreenSharingEnabled,
@@ -32,8 +33,11 @@ import { toast } from "sonner";
 let callerSocketId: string | null;
 let peerConnection = null as RTCPeerConnection | null;
 let currentRoomId: string | null;
+let currentDataChannel = null as RTCDataChannel | null;
+
 export const createPeerConection = () => {
   peerConnection = new RTCPeerConnection(configuration);
+  currentDataChannel = peerConnection?.createDataChannel("chat");
 
   const localStream = store.getState().webrtc.localStream;
   if (!localStream) return;
@@ -60,6 +64,22 @@ export const createPeerConection = () => {
         socketId: callerSocketId as string,
       });
     }
+  };
+
+  peerConnection.ondatachannel = (event) => {
+    currentDataChannel = event.channel;
+    console.log(currentDataChannel);
+  };
+
+  currentDataChannel.onmessage = (event) => {
+    const message = event.data;
+    store.dispatch(setCurrentCallMessages({ your: false, message }));
+  };
+  currentDataChannel.onopen = () => {
+    console.log("DATA CHANNEL OPPENED");
+  };
+  currentDataChannel.onclose = () => {
+    console.log("closing data channel");
   };
 };
 
@@ -418,4 +438,14 @@ export const changeInputDevice = async (
 
 export const disconnectFromRoom = (roomId: string) => {
   handleDisconnectFromRoom(roomId);
+};
+
+export const handleSendMessage = ({
+  username,
+  message,
+}: {
+  username: string;
+  message: string;
+}) => {
+  currentDataChannel?.send({ username, message });
 };

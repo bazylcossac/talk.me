@@ -12,8 +12,6 @@ export type preOfferDataType = {
 };
 
 export type chatMessageType = {
-  socketId: string;
-  username: string;
   message: string;
   your: boolean;
 };
