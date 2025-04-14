@@ -54,18 +54,13 @@ function CallChat() {
           </div>
         </div>
       </div>
-      <div className="mt-6 overflow-y-auto w-full scrollbar-hide flex flex-col bg-blue-300 ">
+      <div className="mb-12 mt-6 overflow-y-auto w-full scrollbar-hide flex flex-col">
         {allMessages?.map((message: chatMessageType) => (
-          <div
-            key={message.messageId}
-            className={cn("m-2 flex", {
-              "bg-blue-500 justifty-end": message.your,
-              "bg-red-500 justifty-end": !message.your,
-            })}
-          >
+          <div key={message.messageId} className={cn("m-2 flex")}>
             <p
-              className={cn("bg-red-300 inline-block p-1 rounded-md", {
-                "ml-auto": message.your,
+              className={cn(" inline-block px-2 rounded-md", {
+                "ml-auto bg-blue-500": message.your,
+                "bg-neutral-500": !message.your,
               })}
             >
               {message.message}

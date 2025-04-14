@@ -62,8 +62,9 @@ const webrtcSlice = createSlice({
     },
 
     setCurrentCallMessages: (state, action) => {
-      const newMessages = [action.payload, ...state.currentCallChatMessages];
-      state.currentCallChatMessages = newMessages.reverse();
+      const newMessages = state.currentCallChatMessages;
+      newMessages.push(action.payload);
+      state.currentCallChatMessages = newMessages;
     },
   },
 });
