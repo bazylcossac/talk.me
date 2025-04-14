@@ -1,5 +1,5 @@
 import { RootState } from "@/store/store";
-import CallChat from "./main-call/chat-button/CallChat";
+import CallChat from "./main-call/chat-call/CallChat";
 import { useDispatch, useSelector } from "react-redux";
 import { setRightContainerVisible } from "@/store/slices/app";
 import { IoIosArrowBack } from "react-icons/io";
