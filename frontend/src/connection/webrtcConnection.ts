@@ -82,6 +82,7 @@ export const createPeerConection = () => {
   };
   currentDataChannel.onclose = () => {
     console.log("closing data channel");
+    store.dispatch(setCurrentCallMessages([]));
   };
 };
 
@@ -408,6 +409,7 @@ export const changeInputDevice = async (
   const callState = store.getState().user.userCallState;
   if (callState === callStatus.CALL_IN_PROGRESS) {
     if (deviceType === "camera") {
+      console.log("camera ghange");
       try {
         const selectedInputDeviceId =
           store.getState().webrtc.selectedInputDeviceId;
@@ -417,6 +419,22 @@ export const changeInputDevice = async (
             : true,
           video: { deviceId: { exact: deviceId } },
         });
+
+        const videoTrack = stream.getVideoTracks()[0];
+
+        const senders = await peerConnection?.getSenders();
+
+        const sender = senders?.find(
+          (sender) => sender.track?.kind === "video"
+        );
+
+        if (!sender) {
+          toast("Failed to change camera");
+          return;
+        }
+
+        await sender?.replaceTrack(videoTrack);
+
         store.dispatch(setLocalStream(stream));
       } catch {
         toast.error("Failed to change camera");
@@ -431,6 +449,7 @@ export const changeInputDevice = async (
             : true,
           audio: { deviceId: { exact: deviceId } },
         });
+
         store.dispatch(setLocalStream(stream));
       } catch {
         toast.error("Failed to change camera");
@@ -441,6 +460,7 @@ export const changeInputDevice = async (
 
 export const disconnectFromRoom = (roomId: string) => {
   handleDisconnectFromRoom(roomId);
+  store.dispatch(setCurrentCallMessages([]));
 };
 
 export const handleSendMessage = ({

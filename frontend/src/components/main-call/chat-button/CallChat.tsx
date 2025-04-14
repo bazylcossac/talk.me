@@ -66,10 +66,13 @@ function CallChat() {
             className={cn("m-2 flex text-clip break-all")}
           >
             <p
-              className={cn(" inline-block px-2 rounded-md max-w-[200px] ", {
-                "ml-auto bg-blue-500": message.your,
-                "bg-neutral-500": !message.your,
-              })}
+              className={cn(
+                " inline-block px-2 py-1 rounded-md max-w-[200px] text-sm ",
+                {
+                  "ml-auto bg-blue-500": message.your,
+                  "bg-neutral-500": !message.your,
+                }
+              )}
             >
               {message.message}
             </p>

@@ -21,7 +21,6 @@ function LocalVideo() {
     if (videoRef.current && localStream) {
       videoRef!.current!.srcObject = localStream;
       if (selectedOutputDeviceId) {
-        console.log("SELECTING 1 EFFECT");
         videoRef.current.setSinkId(selectedOutputDeviceId);
       }
       videoRef!.current!.onloadedmetadata = () => {
