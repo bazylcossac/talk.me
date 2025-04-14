@@ -78,15 +78,24 @@ function FriendsGroupList() {
           </div>
         </div>
       </div>
-      {/* FRIENDS LIST */}
-      <div className="mt-8">
-        {friendsTableVisible &&
-          activeUsers?.map((user) => (
-            <ActiveUser user={user} key={user.socketId} />
-          ))}
+      <div className="mt-8 animate-fade">
+        {/* FRIENDS LIST */}
+        {friendsTableVisible && (
+          <div className="animate-fade animate-duration-300">
+            {activeUsers?.map((user) => (
+              <ActiveUser user={user} key={user.socketId} />
+            ))}
+          </div>
+        )}
+        {/* GROUP LIST */}
 
-        {!friendsTableVisible &&
-          groupsInfo.map((group) => <ActiveGroup group={group} />)}
+        {!friendsTableVisible && (
+          <div className="animate-fade animate-duration-300">
+            {groupsInfo.map((group) => (
+              <ActiveGroup group={group} />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

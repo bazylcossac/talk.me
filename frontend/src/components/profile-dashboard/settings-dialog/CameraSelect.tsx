@@ -14,7 +14,7 @@ function CameraSelect({ allCameras }: { allCameras: MediaDeviceInfo[] }) {
   const allDevices = allCameras
     ?.filter((device) => device.deviceId !== "")
     .map((device) => device);
-
+  console.log(allDevices);
   const dispatch = useDispatch();
   const cameraDeviceId = useSelector(
     (state: RootState) => state.webrtc.selectedCameraDeviceId
@@ -37,12 +37,7 @@ function CameraSelect({ allCameras }: { allCameras: MediaDeviceInfo[] }) {
   return (
     <div>
       <p className="text-sm mb-2">Select camera</p>
-      <Select
-        value={
-          allCameras.length === 1 ? allCameras[0].deviceId : cameraDeviceId
-        }
-        onValueChange={handlDeviceChange}
-      >
+      <Select value={allCameras[0].deviceId} onValueChange={handlDeviceChange}>
         <SelectTrigger className="w-[180px]">
           <SelectValue placeholder="Camera" />
         </SelectTrigger>
