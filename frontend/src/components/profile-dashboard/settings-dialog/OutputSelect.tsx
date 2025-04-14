@@ -45,6 +45,7 @@ function OutputSelect({ allOutputs }: { allOutputs: MediaDeviceInfo[] }) {
           {allDevices?.map((device) => {
             return (
               <SelectItem
+                key={device.deviceId}
                 value={device.deviceId || "default"}
                 className="hover:cursor-pointer hover:bg-[#323232]"
               >

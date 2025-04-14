@@ -124,8 +124,10 @@ export const setUpLocalStream = async () => {
     createPeerConection();
     store.dispatch(setCallStatus(callStatus.CALL_IN_PROGRESS));
   } catch (err) {
+    const error = err as Error;
     toast("Failed to get user media");
-    console.error(err);
+    clearAfterClosingConnection();
+    throw new Error(`Failed to get user media | ${error.message}`);
   }
 };
 

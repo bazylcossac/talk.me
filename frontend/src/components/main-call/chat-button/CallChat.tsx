@@ -13,6 +13,9 @@ import { cn } from "@/lib/utils";
 function CallChat() {
   const formRef = useRef<HTMLFormElement>(null);
   const user = useUser();
+  if (!user.user) {
+    throw new Error("SOMEHOW YOU ARE NOT LOGGED AND USE CHAT");
+  }
   const dispatch = useDispatch();
   const rightContainerVisible = useSelector(
     (state: RootState) => state.app.rightContainerVisible
@@ -27,7 +30,7 @@ function CallChat() {
     if (!message) return;
     const messageId = crypto.randomUUID();
     handleSendMessage({
-      username: user.user?.username! || user.user?.fullName!,
+      username: user.user.username! || user.user.fullName!,
       message,
       messageId,
     });
