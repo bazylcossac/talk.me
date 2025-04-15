@@ -1,4 +1,5 @@
-import { chatMessageType, userDataType } from "@/types/types";
+import { chatItemType } from "../../types/types";
+import { userDataType } from "@/types/types";
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
@@ -15,7 +16,7 @@ const initialState = {
   selectedInputDeviceId: "",
   selectedOutputDeviceId: "",
   selectedCameraDeviceId: "",
-  currentCallChatMessages: [] as chatMessageType[],
+  currentCallChatMessages: [] as chatItemType[],
   callingUsersData: [] as userDataType[],
 };
 

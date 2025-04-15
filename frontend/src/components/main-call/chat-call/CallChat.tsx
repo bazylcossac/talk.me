@@ -28,10 +28,12 @@ function CallChat() {
       username: user.user.username! || user.user.fullName!,
       message,
       messageId,
+      type: "message",
     });
-    
+
     dispatch(
       setCurrentCallMessages({
+        type: "message",
         your: true,
         username: user.user?.username || user.user?.fullName,
         message,

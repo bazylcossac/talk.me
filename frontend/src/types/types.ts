@@ -17,6 +17,14 @@ export type chatMessageType = {
   your: boolean;
   messageId: string;
 };
+export type chatFileType = {
+  username: string;
+  file: File;
+  your: boolean;
+  messageId: string;
+};
+
+export type chatItemType = chatMessageType | chatFileType;
 
 export type ActiveGroupType = {
   roomId: string;

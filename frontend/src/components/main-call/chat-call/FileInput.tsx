@@ -1,10 +1,16 @@
 import { sendFile } from "@/connection/webrtcConnection";
 import { ACCEPTED_FILES, MAX_FILE_SIZE } from "@/lib/constants";
+import { setCurrentCallMessages } from "@/store/slices/webrtc";
+import { useUser } from "@clerk/clerk-react";
 import { Ref, useState } from "react";
 import { toast } from "sonner";
+import { useDispatch } from "react-redux";
 
 function FileInput({ fileRef }: { fileRef: Ref<HTMLInputElement> }) {
+  const user = useUser();
+  const dispatch = useDispatch();
   const [file, setFile] = useState<File>();
+  if (!user.user) return; ///
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFile(e.target.files![0]);
@@ -17,8 +23,24 @@ function FileInput({ fileRef }: { fileRef: Ref<HTMLInputElement> }) {
       toast("Weird file type! Sorry!");
       return;
     }
+    const messageId = crypto.randomUUID();
+    sendFile({
+      selectedFile,
+      username:
+        (user.user.username as string) || (user.user.fullName as string),
+      type: "file",
+      messageId
+    });
 
-    sendFile(selectedFile);
+    dispatch(
+      setCurrentCallMessages({
+        type: "file",
+        your: true,
+        username: user.user?.username || user.user?.fullName,
+        url: "",
+        messageId,
+      })
+    );
   };
 
   return (

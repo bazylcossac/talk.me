@@ -30,6 +30,7 @@ import {
 } from "@/store/slices/webrtc";
 import { userDataType } from "@/types/types";
 import { toast } from "sonner";
+import { getCredentials } from "@/functions/getCredentials";
 
 let recivedBuffers = [] as ArrayBuffer[];
 let callerSocketId: string | null;
@@ -38,17 +39,7 @@ let currentRoomId: string | null;
 let currentDataChannel = null as RTCDataChannel | null;
 
 export const createPeerConection = async () => {
-  const response = await fetch("http://localhost:3000/api/getTURNCredentials", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-
-  const configuration = await response.json();
-  console.log("CREDENTIALS");
-  console.log(configuration);
-
+  const configuration = await getCredentials();
   peerConnection = new RTCPeerConnection(configuration);
   console.log(peerConnection);
   currentDataChannel = peerConnection?.createDataChannel("chat");
@@ -90,19 +81,28 @@ export const createPeerConection = async () => {
   };
 
   currentDataChannel.onmessage = (event) => {
-    // const { username, message, messageId } = JSON.parse(event.data);
-    // store.dispatch(
-    //   setCurrentCallMessages({ your: false, username, message, messageId })
-    // );
-    if (event.data === "END_OF_FILE") {
-      const blob = new Blob(recivedBuffers);
-      const url = URL.createObjectURL(blob);
+    if (event.data.type === "message") {
+      const { username, message, messageId } = JSON.parse(event.data);
+      store.dispatch(
+        setCurrentCallMessages({ your: false, username, message, messageId })
+      );
+    }
+    if (event.data.type === "file") {
+      const { username, messageId } = JSON.parse(event.data);
+      const file = new Blob(recivedBuffers);
+      const url = URL.createObjectURL(file);
+      console.log(file);
       console.log(url);
       recivedBuffers = [];
+      store.dispatch(
+        setCurrentCallMessages({ your: false, username, url, messageId })
+      );
+
       return;
     }
 
     recivedBuffers.push(event.data);
+    console.log(recivedBuffers);
   };
   currentDataChannel.onopen = () => {
     console.log("DATA CHANNEL OPPENED");
@@ -499,17 +499,29 @@ export const handleSendMessage = ({
   username,
   message,
   messageId,
+  type,
 }: {
   username: string;
   message: string;
   messageId: string;
+  type: "message";
 }) => {
-  const data = JSON.stringify({ username, message, messageId });
+  const data = JSON.stringify({ username, message, messageId, type });
   currentDataChannel?.send(data);
 };
 
-export const sendFile = (file: File) => {
-  const blob = new Blob([file], { type: "user/file" });
+export const sendFile = ({
+  selectedFile,
+  username,
+  type,
+  messageId,
+}: {
+  selectedFile: File;
+  username: string;
+  type: "file";
+  messageId: string;
+}) => {
+  const blob = new Blob([selectedFile], { type: "user/file" });
   const fileReader = new FileReader();
   let offset = 0;
 
@@ -523,7 +535,8 @@ export const sendFile = (file: File) => {
     if (offset < blob.size) {
       readSlice(offset);
     } else {
-      currentDataChannel?.send("END_OF_FILE");
+      const data = JSON.stringify({ username, messageId, type });
+      currentDataChannel?.send(data);
     }
   };
 

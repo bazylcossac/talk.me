@@ -24,8 +24,6 @@ app.use("/peerjs", peerServer);
 app.use(cors());
 
 app.post("/api/getTURNCredentials", async (req, res) => {
-  // const api_url =
-  //   "https://rtc.live.cloudflare.com/v1/turn/keys/e157aa2a8cfd036f299fe805766a5ae0/credentials/generate-ice-servers";
   const ttl = 86400;
   const response = await axios.post(
     dotenv.parsed.API_TURN_URL,
