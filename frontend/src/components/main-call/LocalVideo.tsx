@@ -41,7 +41,7 @@ function LocalVideo() {
         playsInline
         className="rounded-md max-w-[250px] relative"
       />
-      <p className="absolute bottom-0 p-1 text-xs  text-white text-shado-2xl  font-bold">
+      <p className="absolute bottom-0 p-1 text-xs text-white text-shado-2xl bg-gray-400/70 rounded-r-md ">
         {user.user?.username || user.user?.fullName}
       </p>
     </div>

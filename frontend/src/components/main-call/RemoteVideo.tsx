@@ -60,7 +60,7 @@ function LocalVideo() {
         playsInline
         className="rounded-md h-full w-full object-cover relative"
       />
-      <p className="absolute bottom-4 p-1 text-white text-shado-2xl text-xs font-bold">
+      <p className="absolute bottom-4 p-1 text-white text-shado-2xl text-xs bg-gray-400/70 rounded-r-md">
         {calleData.username}
       </p>
 

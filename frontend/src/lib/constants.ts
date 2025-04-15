@@ -64,7 +64,9 @@ export const screenSharingLowQualityOptions = {
   },
 };
 
-export const MAX_FILE_SIZE = 1024 * 1024 * 10; // 10mb
+export const MAX_FILE_SIZE = 1024 * 1024 * 100; // 100mb
+
+export const CHUNK_SIZE = 1024 * 64; // 64kb
 
 export const ACCEPTED_FILES = [
   "image/png",

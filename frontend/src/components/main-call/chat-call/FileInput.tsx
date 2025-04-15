@@ -1,6 +1,7 @@
-import { MAX_FILE_SIZE } from "@/lib/constants";
+import { sendFile } from "@/connection/webrtcConnection";
+import { ACCEPTED_FILES, MAX_FILE_SIZE } from "@/lib/constants";
 import { Ref, useState } from "react";
-import { IoMdSend } from "react-icons/io";
+import { toast } from "sonner";
 
 function FileInput({ fileRef }: { fileRef: Ref<HTMLInputElement> }) {
   const [file, setFile] = useState<File>();
@@ -9,8 +10,15 @@ function FileInput({ fileRef }: { fileRef: Ref<HTMLInputElement> }) {
     setFile(e.target.files![0]);
     const selectedFile = e.target.files![0];
     if (selectedFile.size > MAX_FILE_SIZE) {
-      //
+      toast("Ops! File is to heavy! Try something to 100mb");
+      return;
     }
+    if (!ACCEPTED_FILES.includes(selectedFile.type)) {
+      toast("Weird file type! Sorry!");
+      return;
+    }
+
+    sendFile(selectedFile);
   };
 
   return (

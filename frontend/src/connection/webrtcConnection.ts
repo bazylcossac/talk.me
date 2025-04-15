@@ -1,5 +1,6 @@
 import {
   callStatus,
+  CHUNK_SIZE,
   configuration,
   preOfferAnswerStatus,
   screenSharingHighQualityOptions,
@@ -31,6 +32,7 @@ import {
 import { userDataType } from "@/types/types";
 import { toast } from "sonner";
 
+let recivedBuffers = [] as ArrayBuffer[];
 let callerSocketId: string | null;
 let peerConnection = null as RTCPeerConnection | null;
 let currentRoomId: string | null;
@@ -73,10 +75,18 @@ export const createPeerConection = () => {
   };
 
   currentDataChannel.onmessage = (event) => {
-    const { username, message, messageId } = JSON.parse(event.data);
-    store.dispatch(
-      setCurrentCallMessages({ your: false, username, message, messageId })
-    );
+    // const { username, message, messageId } = JSON.parse(event.data);
+    // store.dispatch(
+    //   setCurrentCallMessages({ your: false, username, message, messageId })
+    // );
+    if (event.data === "END_OF_FILE") {
+      const blob = new Blob(recivedBuffers);
+      const url = URL.createObjectURL(blob);
+      console.log(url);
+      recivedBuffers = [];
+    }
+
+    recivedBuffers.push(event.data);
   };
   currentDataChannel.onopen = () => {
     console.log("DATA CHANNEL OPPENED");
@@ -480,4 +490,31 @@ export const handleSendMessage = ({
 }) => {
   const data = JSON.stringify({ username, message, messageId });
   currentDataChannel?.send(data);
+};
+
+export const sendFile = (file: File) => {
+  const blob = new Blob([file], { type: "user/file" });
+  const fileReader = new FileReader();
+  let offset = 0;
+
+  fileReader.onerror = (error) =>
+    console.log(`Error during sending file | ${error}`);
+
+  fileReader.onload = (e) => {
+    currentDataChannel?.send(e.target!.result as ArrayBuffer);
+    offset += CHUNK_SIZE;
+
+    if (offset < blob.size) {
+      readSlice(offset);
+    } else {
+      currentDataChannel?.send("END_OF_FILE");
+    }
+  };
+
+  const readSlice = (offset: number) => {
+    const slice = blob.slice(offset, offset + CHUNK_SIZE);
+    fileReader.readAsArrayBuffer(slice);
+  };
+
+  readSlice(0);
 };
