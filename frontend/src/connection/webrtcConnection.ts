@@ -1,7 +1,6 @@
 import {
   callStatus,
   CHUNK_SIZE,
-  configuration,
   preOfferAnswerStatus,
   screenSharingHighQualityOptions,
   screenSharingLowQualityOptions,
@@ -38,8 +37,20 @@ let peerConnection = null as RTCPeerConnection | null;
 let currentRoomId: string | null;
 let currentDataChannel = null as RTCDataChannel | null;
 
-export const createPeerConection = () => {
+export const createPeerConection = async () => {
+  const response = await fetch("http://localhost:3000/api/getTURNCredentials", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  const configuration = await response.json();
+  console.log("CREDENTIALS");
+  console.log(configuration);
+
   peerConnection = new RTCPeerConnection(configuration);
+  console.log(peerConnection);
   currentDataChannel = peerConnection?.createDataChannel("chat");
 
   const localStream = store.getState().webrtc.localStream;
@@ -53,7 +64,11 @@ export const createPeerConection = () => {
     store.dispatch(setRemoteStream(event.streams[0]));
   };
   peerConnection.onconnectionstatechange = () => {
-    if (peerConnection!.connectionState === "connected") {
+    const state = peerConnection!.connectionState;
+    if (state === "disconnected" || state === "failed") {
+      peerConnection!.restartIce();
+    }
+    if (state === "connected") {
       console.log("CONNECTED TO USER");
       console.log(store.getState().webrtc.remoteStream);
       console.log(store.getState().webrtc.localStream);
@@ -84,6 +99,7 @@ export const createPeerConection = () => {
       const url = URL.createObjectURL(blob);
       console.log(url);
       recivedBuffers = [];
+      return;
     }
 
     recivedBuffers.push(event.data);
@@ -132,7 +148,7 @@ export const setUpLocalStream = async () => {
       streamOptions
     );
     store.dispatch(setLocalStream(localStream));
-    createPeerConection();
+    await createPeerConection();
     store.dispatch(setCallStatus(callStatus.CALL_IN_PROGRESS));
   } catch (err) {
     const error = err as Error;
@@ -184,7 +200,7 @@ export const handlePreOffer = ({
   }
 };
 
-export const handlePreOfferAnswer = ({
+export const handlePreOfferAnswer = async ({
   answer,
   socketId,
   roomId,
@@ -196,7 +212,7 @@ export const handlePreOfferAnswer = ({
   if (answer === preOfferAnswerStatus.CALL_ACCEPTED) {
     console.log("ACCEPTED");
     console.log(socketId);
-    sendOffer(socketId, roomId!);
+    await sendOffer(socketId, roomId!);
   } else {
     if (answer === preOfferAnswerStatus.CALL_UNVAILABLE) {
       toast("User don't want any calls rn.");
@@ -292,7 +308,7 @@ export const handleSendAcceptCall = async ({
   );
   store.dispatch(setCallingUserData(filteredIncomingCalls));
   await setUpLocalStream();
-  createPeerConection();
+  await createPeerConection();
   handlePreOfferAnswer({
     answer: preOfferAnswerStatus.CALL_ACCEPTED,
     socketId: callerSocketID,

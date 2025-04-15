@@ -1,9 +1,12 @@
+const dotenv = require("dotenv").config();
 const express = require("express");
 const http = require("http");
 const socket = require("socket.io");
+const axios = require("axios");
 const { ExpressPeerServer } = require("peer");
 const { PrismaClient, Prisma } = require("@prisma/client");
 const uuid = require("uuid");
+const cors = require("cors");
 const PORT = 3000;
 
 const app = express();
@@ -15,7 +18,28 @@ peerServer.on("connection", (id) => {
   console.log(`user conencted with ${id} id`);
 });
 
+console.log(dotenv.parsed.API_TURN_URL);
+
 app.use("/peerjs", peerServer);
+app.use(cors());
+
+app.post("/api/getTURNCredentials", async (req, res) => {
+  // const api_url =
+  //   "https://rtc.live.cloudflare.com/v1/turn/keys/e157aa2a8cfd036f299fe805766a5ae0/credentials/generate-ice-servers";
+  const ttl = 86400;
+  const response = await axios.post(
+    dotenv.parsed.API_TURN_URL,
+    { ttl },
+    {
+      headers: {
+        Authorization: `Bearer ${dotenv.parsed.API_TURN_TOKEN}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  const { data } = response;
+  res.json(data);
+});
 
 const io = socket(server, {
   cors: {
@@ -74,8 +98,8 @@ io.on("connection", (socket) => {
   });
 
   socket.on("leave-call", (data) => {
-    socket.leave(data.currentRoomId)
-    roomId = ""
+    socket.leave(data.currentRoomId);
+    roomId = "";
     socket.to(data.socketId).emit("leave-call");
   });
 
@@ -90,7 +114,7 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", () => {
     const usersLeft = activeUsers.filter((user) => user.socketId !== socket.id);
-    
+
     activeUsers = usersLeft;
     io.sockets.emit("user-disconnected", usersLeft);
     io.sockets.to(roomId).emit("close-call-user-gone", roomId);
