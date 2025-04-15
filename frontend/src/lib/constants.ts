@@ -63,3 +63,16 @@ export const screenSharingLowQualityOptions = {
     cursor: "always",
   },
 };
+
+export const MAX_FILE_SIZE = 1024 * 1024 * 10; // 10mb
+
+export const ACCEPTED_FILES = [
+  "image/png",
+  "image/jpg",
+  "image/jpeg",
+  "image/gif",
+  "image/webp",
+  "video/mp4",
+  "video/webm",
+  "video/quicktime",
+];

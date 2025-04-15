@@ -22,7 +22,7 @@ function CameraSelect({ allCameras }: { allCameras: MediaDeviceInfo[] }) {
 
   const handlDeviceChange = (deviceId: string) => {
     console.log(deviceId);
-    dispatch(setSelectedCameraDeviceId(deviceId));
+    dispatch(setSelectedCameraDeviceId(deviceId)); 
     changeInputDevice(deviceId, "camera");
   };
 
@@ -37,7 +37,10 @@ function CameraSelect({ allCameras }: { allCameras: MediaDeviceInfo[] }) {
   return (
     <div>
       <p className="text-sm mb-2">Select camera</p>
-      <Select value={allCameras[0].deviceId} onValueChange={handlDeviceChange}>
+      <Select
+        value={cameraDeviceId || allCameras[0].deviceId}
+        onValueChange={handlDeviceChange}
+      >
         <SelectTrigger className="w-[180px]">
           <SelectValue placeholder="Camera" />
         </SelectTrigger>

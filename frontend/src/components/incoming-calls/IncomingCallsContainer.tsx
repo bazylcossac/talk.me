@@ -31,6 +31,7 @@ function IncomingCallContainer() {
           ),
           {
             id: toastId,
+            duration: Infinity,
             onDismiss: () => {
               toast.dismiss(toastId);
               deleteFromShownToastIds(user.socketId);
