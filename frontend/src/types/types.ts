@@ -16,12 +16,14 @@ export type chatMessageType = {
   message: string;
   your: boolean;
   messageId: string;
+  type: "message";
 };
 export type chatFileType = {
   username: string;
   file: File;
   your: boolean;
   messageId: string;
+  type: "file";
 };
 
 export type chatItemType = chatMessageType | chatFileType;

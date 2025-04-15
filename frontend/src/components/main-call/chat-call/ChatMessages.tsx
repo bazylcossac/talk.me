@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import { RootState } from "@/store/store";
-import { chatMessageType } from "@/types/types";
+import { chatItemType, chatMessageType } from "@/types/types";
 import { useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 
@@ -14,11 +14,12 @@ function ChatMessages() {
     lastElement.current?.scrollIntoView({ behavior: "smooth" });
   }, [allMessages]);
 
+  console.log(allMessages);
   return (
     <div className="mb-12 mt-6 overflow-y-auto w-full scrollbar-hide flex flex-col">
-      {allMessages
+      {/* {allMessages
         ?.filter((message) => message.message !== "")
-        .map((message: chatMessageType) => (
+        .map((message: chatItemType) => (
           <div
             key={message.messageId}
             className={cn("m-2 flex text-clip break-all")}
@@ -32,10 +33,10 @@ function ChatMessages() {
                 }
               )}
             >
-              {message.message}
+              {(message.type = "message" && <p>{message.message}</p>)}
             </p>
           </div>
-        ))}
+        ))} */}
       <div ref={lastElement} className="h-[5px]"></div>
     </div>
   );

@@ -81,26 +81,34 @@ export const createPeerConection = async () => {
   };
 
   currentDataChannel.onmessage = (event) => {
-    if (event.data.type === "message") {
-      const { username, message, messageId } = JSON.parse(event.data);
+    const { type } = JSON.parse(event.data);
+    if (type === "message") {
+      console.log("MESSAGE");
+      const { username, message, messageId, type } = JSON.parse(event.data);
       store.dispatch(
-        setCurrentCallMessages({ your: false, username, message, messageId })
+        setCurrentCallMessages({
+          your: false,
+          username,
+          message,
+          messageId,
+          type,
+        })
       );
+
+      return;
     }
-    if (event.data.type === "file") {
-      const { username, messageId } = JSON.parse(event.data);
+    if (type === "file") {
+      const { username, messageId, type } = JSON.parse(event.data);
       const file = new Blob(recivedBuffers);
       const url = URL.createObjectURL(file);
       console.log(file);
       console.log(url);
       recivedBuffers = [];
       store.dispatch(
-        setCurrentCallMessages({ your: false, username, url, messageId })
+        setCurrentCallMessages({ your: false, username, url, messageId, type })
       );
-
       return;
     }
-
     recivedBuffers.push(event.data);
     console.log(recivedBuffers);
   };
