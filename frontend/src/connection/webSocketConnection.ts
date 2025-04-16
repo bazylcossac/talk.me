@@ -144,17 +144,7 @@ export const sendPreOfferAnswer = ({
   socket.emit("pre-offer-answer", { answer: answer, callerSocketId, roomId });
 };
 
-export const handleUserActiveChange = (
-  newActivity: (typeof userStatus)[keyof typeof userStatus]
-) => {
-  const currentUser = store.getState().user.loggedUser;
-
-  socket.emit("activity-change", {
-    user: currentUser,
-    activity: newActivity,
-  });
-  store.dispatch(setUserActiveStatus(newActivity));
-};
+// sending offer / ice-candidates
 
 export const handleSendOffer = ({
   offer,
@@ -192,6 +182,9 @@ export const sendIceCandidate = ({
   socket.emit("send-candidate", { candidate, socketId });
 };
 
+
+// closing / disconnecting 
+
 export const sendCloseConnection = ({
   socketId,
   currentRoomId,
@@ -201,11 +194,24 @@ export const sendCloseConnection = ({
 }) => {
   socket.emit("leave-call", { socketId, currentRoomId });
 };
+export const handleDisconnectFromRoom = (roomId: string) => {
+  socket.emit("disconnect-from-room", roomId);
+};
 
 export const sendRejectAnswer = ({ socketId }: { socketId: string }) => {
   socket.emit("rejected-call", socketId);
 };
 
-export const handleDisconnectFromRoom = (roomId: string) => {
-  socket.emit("disconnect-from-room", roomId);
+// activity 
+
+export const handleUserActiveChange = (
+  newActivity: (typeof userStatus)[keyof typeof userStatus]
+) => {
+  const currentUser = store.getState().user.loggedUser;
+
+  socket.emit("activity-change", {
+    user: currentUser,
+    activity: newActivity,
+  });
+  store.dispatch(setUserActiveStatus(newActivity));
 };

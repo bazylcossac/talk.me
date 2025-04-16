@@ -5,10 +5,10 @@ import { setRightContainerVisible } from "@/store/slices/app";
 import { RootState } from "@/store/store";
 import { setCurrentCallMessages } from "@/store/slices/webrtc";
 import { useUser } from "@clerk/clerk-react";
-
 import ChatForm from "./ChatForm";
 import ChatMessages from "./ChatMessages";
 import { handleSendMessage } from "@/connection/dataChannelsFunc";
+
 function CallChat() {
   const dispatch = useDispatch();
   const rightContainerVisible = useSelector(

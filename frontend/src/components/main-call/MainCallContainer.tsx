@@ -11,11 +11,11 @@ function MainCallContainer() {
 
   if (callState !== callStatus.CALL_IN_PROGRESS) {
     return (
-      <section className="h-full w-full">
+      <section className="h-full w-full ">
         <div className="absolute right-0 mr-4">
           <Logo className="w-20" />
         </div>
-        <div className="flex flex-col h-full  items-center justify-center gap-2">
+        <div className="flex flex-col h-full  items-center justify-center gap-2 fixed right-1/2 transform translate-x-1/2">
           <p className="text-white/30 font-bold">Call someone</p>
           <p className="text-white/30 ">or</p>
           <Button className="hover:cursor-pointer hover:bg-[#303030]">

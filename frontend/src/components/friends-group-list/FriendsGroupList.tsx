@@ -49,7 +49,7 @@ function FriendsGroupList() {
   );
 
   return (
-    <table className="bg-[#222222] md:w-[250px] w-full  h-full rounded-md overflow-y-auto scrollbar-hide">
+    <section className="bg-[#222222] md:w-[250px] w-full  h-full rounded-md overflow-y-auto scrollbar-hide">
       <div className="p-1 flex items-center gap-4 z-10 bg-[#383838] absolute w-[250px] rounded-t-md">
         <p
           className={`text-xs  ml-2 cursor-pointer hover:text-white transition ${
@@ -97,7 +97,7 @@ function FriendsGroupList() {
           </section>
         )}
       </nav>
-    </table>
+    </section>
   );
 }
 

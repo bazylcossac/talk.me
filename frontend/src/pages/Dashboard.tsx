@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import LeftContainer from "@/components/LeftContainer";
 import RightContainer from "@/components/RightContainer";
+import Loading from "@/components/loading";
 
 function Dashboard() {
   const currentUser = useUser();
@@ -40,7 +41,11 @@ function Dashboard() {
   }, [isSignedIn, navigate, isLoaded, user]);
 
   if (!isLoaded) {
-    return <p>loading...</p>;
+    return (
+      <div className=" h-screen flex items-center justify-center">
+        <Loading />
+      </div>
+    );
   }
 
   return (
