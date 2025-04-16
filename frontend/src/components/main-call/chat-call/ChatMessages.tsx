@@ -47,12 +47,22 @@ function ChatMessages() {
               className={cn(
                 " inline-block px-2 py-1 rounded-md max-w-[200px] text-sm ",
                 {
-                  "ml-auto bg-blue-500": message.your,
-                  "bg-neutral-500": !message.your,
+                  "ml-auto bg-blue-500 p-1": message.your,
+                  "bg-neutral-500 p-1": !message.your,
                 }
               )}
             >
-              <img src={message.url} alt="image" />
+              <div className="relative">
+                <img src={message.url} alt="image" />
+                <div className="absolute top-2 right-2">
+                  <a
+                    href={message.url}
+                    download={`image.${message.fileType.split("/")[1]}`}
+                  >
+                    <FaDownload className="text-white/50 hover:text-white cursor-pointer" />
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
         );
@@ -71,12 +81,22 @@ function ChatMessages() {
                 }
               )}
             >
-              <video
-                src={message.url}
-                controls
-                muted
-                className="h-32 object-cover"
-              />
+              <div className="relative">
+                <video
+                  src={message.url}
+                  controls
+                  muted
+                  className="h-32 object-cover"
+                />
+                <div className="absolute top-3 right-2">
+                  <a
+                    href={message.url}
+                    download={`image.${message.fileType.split("/")[1]}`}
+                  >
+                    <FaDownload className="text-white/50 hover:text-white cursor-pointer" />
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
         );
