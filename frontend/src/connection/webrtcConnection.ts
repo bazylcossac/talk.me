@@ -37,6 +37,7 @@ let callerSocketId: string | null;
 let peerConnection = null as RTCPeerConnection | null;
 let currentRoomId: string | null;
 let currentDataChannel = null as RTCDataChannel | null;
+let fileSize = 0;
 
 export const createPeerConection = async () => {
   const configuration = await getCredentials();
@@ -81,34 +82,44 @@ export const createPeerConection = async () => {
   };
 
   currentDataChannel.onmessage = (event) => {
-    const { type } = JSON.parse(event.data);
-    if (type === "message") {
-      console.log("MESSAGE");
-      const { username, message, messageId, type } = JSON.parse(event.data);
-      store.dispatch(
-        setCurrentCallMessages({
-          your: false,
-          username,
-          message,
-          messageId,
-          type,
-        })
-      );
+    if (typeof event.data !== "object") {
+      if (JSON.parse(event.data).type === "message") {
+        console.log("MESSAGE");
+        const { username, message, messageId, type } = JSON.parse(event.data);
+        store.dispatch(
+          setCurrentCallMessages({
+            your: false,
+            username,
+            message,
+            messageId,
+            type,
+          })
+        );
 
-      return;
+        return;
+      }
+      if (JSON.parse(event.data).type === "file") {
+        const { username, messageId, type, fileType } = JSON.parse(event.data);
+
+        const file = new Blob(recivedBuffers, { type: fileType });
+        const url = URL.createObjectURL(file);
+        console.log(file);
+        console.log(url);
+        recivedBuffers = [];
+        store.dispatch(
+          setCurrentCallMessages({
+            your: false,
+            username,
+            url,
+            messageId,
+            type,
+          })
+        );
+        return;
+      }
     }
-    if (type === "file") {
-      const { username, messageId, type } = JSON.parse(event.data);
-      const file = new Blob(recivedBuffers);
-      const url = URL.createObjectURL(file);
-      console.log(file);
-      console.log(url);
-      recivedBuffers = [];
-      store.dispatch(
-        setCurrentCallMessages({ your: false, username, url, messageId, type })
-      );
-      return;
-    }
+
+    console.log("CHUNK");
     recivedBuffers.push(event.data);
     console.log(recivedBuffers);
   };
@@ -529,7 +540,8 @@ export const sendFile = ({
   type: "file";
   messageId: string;
 }) => {
-  const blob = new Blob([selectedFile], { type: "user/file" });
+  const blob = new Blob([selectedFile], { type: selectedFile.type });
+  console.log(blob.size);
   const fileReader = new FileReader();
   let offset = 0;
 
@@ -543,7 +555,12 @@ export const sendFile = ({
     if (offset < blob.size) {
       readSlice(offset);
     } else {
-      const data = JSON.stringify({ username, messageId, type });
+      const data = JSON.stringify({
+        username,
+        messageId,
+        type,
+        fileType: selectedFile.type,
+      });
       currentDataChannel?.send(data);
     }
   };
