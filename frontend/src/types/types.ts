@@ -20,8 +20,9 @@ export type chatMessageType = {
 };
 export type chatFileType = {
   username: string;
-  file: File;
+  url: string;
   your: boolean;
+  fileType: string;
   messageId: string;
   type: "file";
 };

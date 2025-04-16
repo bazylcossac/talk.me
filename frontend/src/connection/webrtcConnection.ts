@@ -113,6 +113,7 @@ export const createPeerConection = async () => {
             url,
             messageId,
             type,
+            fileType
           })
         );
         return;

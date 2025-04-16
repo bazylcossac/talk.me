@@ -65,3 +65,15 @@ export const ACCEPTED_FILES = [
   "video/webm",
   "video/quicktime",
 ];
+
+export const IMAGE_FILES = [
+  "image/png",
+  "image/jpg",
+  "image/jpeg",
+  "image/gif",
+  "image/webp",
+];
+
+export const VIDEO_FILES = ["video/mp4", "video/webm", "video/quicktime"];
+
+export const FILE_FILES = [];

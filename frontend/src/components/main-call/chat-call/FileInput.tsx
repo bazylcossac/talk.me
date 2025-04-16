@@ -9,7 +9,7 @@ import { useDispatch } from "react-redux";
 function FileInput({ fileRef }: { fileRef: Ref<HTMLInputElement> }) {
   const user = useUser();
   const dispatch = useDispatch();
-  const [file, setFile] = useState<File>();
+  const [file, setFile] = useState<File | null>(null);
   if (!user.user) return; ///
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,18 +29,21 @@ function FileInput({ fileRef }: { fileRef: Ref<HTMLInputElement> }) {
       username:
         (user.user.username as string) || (user.user.fullName as string),
       type: "file",
-      messageId
+      messageId,
     });
-
+    const url = URL.createObjectURL(selectedFile);
     dispatch(
       setCurrentCallMessages({
         type: "file",
         your: true,
         username: user.user?.username || user.user?.fullName,
-        url: "",
+        url: url,
         messageId,
+        fileType: selectedFile.type,
       })
     );
+
+    setFile(null);
   };
 
   return (
