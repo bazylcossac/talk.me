@@ -26,7 +26,7 @@ function RightContainer() {
 
   if (rightContainerVisible && callState === callStatus.CALL_IN_PROGRESS) {
     return (
-      <div className="h-full md:max-w-[250px] animate-fade-left animate-duration-300">
+      <div className="h-full md:max-w-[250px] animate-fade-left animate-duration-300 resize-y">
         <CallChat />
       </div>
     );

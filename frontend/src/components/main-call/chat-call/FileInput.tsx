@@ -10,7 +10,7 @@ function FileInput({ fileRef }: { fileRef: Ref<HTMLInputElement> }) {
   const user = useUser();
   const dispatch = useDispatch();
 
-  if (!user.user) return; ///
+  if (!user.user) return;
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files![0];

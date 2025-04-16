@@ -14,22 +14,24 @@ function ChatForm({
 }) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   return (
-    <div className="mt-auto w-full p-2 absolute bottom-0 z-10 bg-[#383838]">
-      <form action={sendMessage} className="flex flex-col" ref={formRef!}>
+    <div className="mt-auto w-full p-2 absolute bottom-0 z-10 bg-[#383838] flex flex-row gap-2">
+      <div>
         <FileInput fileRef={fileInputRef} />
+        <Button
+          className="bg-neutral-600 cursor-pointer"
+          onClick={() => {
+            fileInputRef.current!.click();
+          }}
+        >
+          <FaFileExport className=" hover:text-white/20 cursor-pointer transition " />
+        </Button>
+      </div>
+      <form action={sendMessage} className="flex flex-col" ref={formRef!}>
         <div className="flex flex-row items-center justify-between gap-2">
-          <Button
-            className="bg-neutral-600 cursor-pointer"
-            onClick={() => {
-              fileInputRef.current!.click();
-            }}
-          >
-            <FaFileExport className="text- hover:text-white/20 cursor-pointer transition " />
-          </Button>
-
           <Input
             className="border-1 border-white/30 focus-visible:ring-0"
             name="messageInput"
+            type="text"
           />
           <Button className="bg-neutral-600 cursor-pointer">
             <IoMdSend className="text-xl hover:text-white/30 cursor-pointer transition" />
