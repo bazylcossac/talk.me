@@ -56,7 +56,7 @@ function FileInput({ fileRef }: { fileRef: Ref<HTMLInputElement> }) {
           onChange={handleFileChange}
         />
         <div className="flex items-center">
-          <p className="text-xs mb-1 ">Selected:</p>
+          {file && <p className="text-xs mb-1 ">Selected:</p>}
           <p className="text-xs mb-1 px-1 truncate text-white/50">
             {file?.name}
           </p>

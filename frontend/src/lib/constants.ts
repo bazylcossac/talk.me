@@ -64,6 +64,7 @@ export const ACCEPTED_FILES = [
   "video/mp4",
   "video/webm",
   "video/quicktime",
+  "application/pdf",
 ];
 
 export const IMAGE_FILES = [
@@ -76,4 +77,4 @@ export const IMAGE_FILES = [
 
 export const VIDEO_FILES = ["video/mp4", "video/webm", "video/quicktime"];
 
-export const FILE_FILES = [];
+export const FILE_FILES = ["application/pdf"];
