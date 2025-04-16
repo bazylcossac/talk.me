@@ -37,7 +37,6 @@ let callerSocketId: string | null;
 let peerConnection = null as RTCPeerConnection | null;
 let currentRoomId: string | null;
 let currentDataChannel = null as RTCDataChannel | null;
-let fileSize = 0;
 
 export const createPeerConection = async () => {
   const configuration = await getCredentials();
@@ -113,7 +112,7 @@ export const createPeerConection = async () => {
             url,
             messageId,
             type,
-            fileType
+            fileType,
           })
         );
         return;
@@ -163,13 +162,11 @@ export const setUpLocalStream = async () => {
         : true,
     };
 
-    console.log(streamOptions);
     const localStream = await navigator.mediaDevices.getUserMedia(
       streamOptions
     );
     store.dispatch(setLocalStream(localStream));
     await createPeerConection();
-    store.dispatch(setCallStatus(callStatus.CALL_IN_PROGRESS));
   } catch (err) {
     const error = err as Error;
     toast("Failed to get user media");
@@ -368,7 +365,10 @@ export const handleCandidate = async (candidate: RTCIceCandidate) => {
 
 export const handleLeaveCall = () => {
   console.log(callerSocketId);
-  if (store.getState().user.userCallState === callStatus.CALL_IN_PROGRESS) {
+  if (
+    store.getState().user.userCallState === callStatus.CALL_IN_PROGRESS &&
+    peerConnection!.connectionState === "connected"
+  ) {
     sendCloseConnection({
       socketId: callerSocketId as string,
       currentRoomId: currentRoomId as string,
