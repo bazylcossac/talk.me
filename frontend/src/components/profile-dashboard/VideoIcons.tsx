@@ -48,20 +48,20 @@ function VideoIcons({
   return (
     <>
       <div className={className}>
-        <div onClick={handleMicEnabled}>
+        <button onClick={handleMicEnabled}>
           {micEnabled ? (
             <BiSolidMicrophone />
           ) : (
             <BiSolidMicrophoneOff className="text-red-500" />
           )}
-        </div>
-        <div onClick={handleCameraEnabled}>
+        </button>
+        <button onClick={handleCameraEnabled}>
           {cameraEnabled ? (
             <HiMiniVideoCamera />
           ) : (
             <HiMiniVideoCameraSlash className="text-red-500" />
           )}
-        </div>
+        </button>
         {optionsVisible && <IoMdSettings onClick={handleShowSettings} />}
       </div>
       {showOptions && (

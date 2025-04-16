@@ -49,7 +49,7 @@ function FriendsGroupList() {
   );
 
   return (
-    <div className="bg-[#222222] md:w-[250px] w-full  h-full rounded-md overflow-y-auto scrollbar-hide">
+    <table className="bg-[#222222] md:w-[250px] w-full  h-full rounded-md overflow-y-auto scrollbar-hide">
       <div className="p-1 flex items-center gap-4 z-10 bg-[#383838] absolute w-[250px] rounded-t-md">
         <p
           className={`text-xs  ml-2 cursor-pointer hover:text-white transition ${
@@ -78,26 +78,26 @@ function FriendsGroupList() {
           </div>
         </div>
       </div>
-      <div className="mt-8 animate-fade">
+      <nav className="mt-8 animate-fade">
         {/* FRIENDS LIST */}
         {friendsTableVisible && (
-          <div className="animate-fade animate-duration-300">
+          <section className="animate-fade animate-duration-300">
             {activeUsers?.map((user) => (
               <ActiveUser user={user} key={user.socketId} />
             ))}
-          </div>
+          </section>
         )}
         {/* GROUP LIST */}
 
         {!friendsTableVisible && (
-          <div className="animate-fade animate-duration-300">
+          <section className="animate-fade animate-duration-300">
             {groupsInfo.map((group) => (
               <ActiveGroup group={group} />
             ))}
-          </div>
+          </section>
         )}
-      </div>
-    </div>
+      </nav>
+    </table>
   );
 }
 

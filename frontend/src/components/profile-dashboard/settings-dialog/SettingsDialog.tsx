@@ -55,7 +55,7 @@ function SettingsDialog({
   console.log(allOutputs);
 
   return (
-    <div>
+    <dialog>
       <Dialog open={showOptions} onOpenChange={setShowOptions}>
         {!loadingSettings && (
           <DialogContent className="bg-[#0b0b0b] border-none shadow-md">
@@ -82,7 +82,7 @@ function SettingsDialog({
           </DialogContent>
         )}
       </Dialog>
-    </div>
+    </dialog>
   );
 }
 

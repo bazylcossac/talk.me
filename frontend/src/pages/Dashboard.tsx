@@ -44,18 +44,18 @@ function Dashboard() {
   }
 
   return (
-    <div className="p-4 h-screen flex flex-row gap-4 ">
-      <div>
+    <main className="p-4 h-screen flex flex-row gap-4 ">
+      <section>
         <LeftContainer />
-      </div>
-      <div className="w-full h-full">
+      </section>
+      <section className="w-full h-full flex-1">
         <MainCallContainer />
-      </div>
-      <div>
+      </section>
+      <section>
         <RightContainer />
-      </div>
+      </section>
       {userActivity !== userStatus.DONT_DISTURB && <IncomingCallsContainer />}
-    </div>
+    </main>
   );
 }
 

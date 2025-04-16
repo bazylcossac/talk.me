@@ -14,7 +14,7 @@ function ChatForm({
 }) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   return (
-    <div className="mt-auto w-full p-2 absolute bottom-0 z-10 bg-[#383838] flex flex-row gap-2">
+    <section className="mt-auto w-full p-2 absolute bottom-0 z-10 bg-[#383838] flex flex-row gap-2">
       <div>
         <FileInput fileRef={fileInputRef} />
         <Button
@@ -38,7 +38,7 @@ function ChatForm({
           </Button>
         </div>
       </form>
-    </div>
+    </section>
   );
 }
 

@@ -12,23 +12,23 @@ function LeftContainer() {
   );
   if (!leftContainerVisible)
     return (
-      <div
+      <button
         className="bg-[#222222] hover:bg-[#333333] hover:text-[#888888] rounded-sm p-0.25  cursor-pointer"
         onClick={() => dispatch(setLeftContainerVisible(!leftContainerVisible))}
       >
         <IoIosArrowForward className="text-md" />
-      </div>
-  );
+      </button>
+    );
 
   return (
-    <div className="h-full md:max-w-[250px] w-full flex flex-col gap-4 justify-between animate-fade-right animate-duration-300 ">
+    <aside className="h-full w-full flex flex-col gap-4 justify-between animate-fade-right animate-duration-300 ">
       {leftContainerVisible && (
         <>
           <FriendsList />
           <Profile />
         </>
       )}
-    </div>
+    </aside>
   );
 }
 

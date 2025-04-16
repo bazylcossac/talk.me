@@ -15,10 +15,10 @@ function ChatMessages() {
   }, [allMessages]);
 
   return (
-    <div className="mb-12 mt-6 overflow-y-auto w-full scrollbar-hide flex flex-col">
+    <section className="mb-12 mt-6 overflow-y-auto w-full scrollbar-hide flex flex-col">
       {allMessages.map((message: chatItemType) => renderMesage(message))}
       <div ref={lastElement} className="h-[5px]"></div>
-    </div>
+    </section>
   );
 }
 

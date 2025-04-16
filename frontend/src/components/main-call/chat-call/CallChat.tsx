@@ -44,21 +44,21 @@ function CallChat() {
   };
 
   return (
-    <div className="bg-[#222222] md:w-[250px] w-full h-full rounded-md overflow-y-auto scrollbar-hide flex relative">
-      <div className="p-1 flex items-center gap-4 z-10  bg-[#383838] absolute w-[250px] rounded-t-md">
-        <div
+    <section className="bg-[#222222] md:w-[250px] h-full rounded-md overflow-y-auto scrollbar-hide flex relative">
+      <div className="p-1 flex items-center gap-4 z-10  bg-[#383838] absolute w-full rounded-t-md">
+        <button
           onClick={() =>
             dispatch(setRightContainerVisible(!rightContainerVisible))
           }
         >
-          <div className="bg-[#222222] hover:bg-[#333333] hover:text-[#888888] rounded-sm p-0.25">
+          <div className="bg-[#222222] hover:bg-[#333333] hover:text-[#888888] rounded-sm p-0.25 ">
             <IoIosArrowForward className="text-md curor-pointer" />
           </div>
-        </div>
+        </button>
       </div>
       <ChatMessages />
       <ChatForm sendMessage={sendMessage} formRef={formRef} />
-    </div>
+    </section>
   );
 }
 

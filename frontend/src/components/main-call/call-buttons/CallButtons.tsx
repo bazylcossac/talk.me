@@ -34,18 +34,18 @@ function CallButtons({ className }: { className: string }) {
   };
 
   return (
-    <div className={className}>
+    <section className={className}>
       <VideoIcons
         optionsVisible={false}
         className="flex text-[20px] gap-4 bg-[#2c2c2c] rounded-md p-2"
       />
-      <div onClick={handleLocalCameraHide}>
+      <button onClick={handleLocalCameraHide}>
         {!localCameraHide ? (
           <FaRegEye className="text-green-600 bg-green-300 hover:text-green-300 hover:bg-green-600 rounded-md p-1.75" />
         ) : (
           <FaRegEyeSlash className="text-green-300 bg-green-600 hover:text-green-600 hover:bg-green-300 rounded-md p-1.75" />
         )}
-      </div>
+      </button>
 
       <div className="relative">
         <LuScreenShare
@@ -61,7 +61,7 @@ function CallButtons({ className }: { className: string }) {
         className="text-white bg-red-500 hover:text-red-400 hover:bg-red-700  rounded-md p-1.75"
         onClick={leaveCall}
       />
-    </div>
+    </section>
   );
 }
 

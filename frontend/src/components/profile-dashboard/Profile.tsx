@@ -7,7 +7,7 @@ function Profile() {
   console.log(user.user?.imageUrl);
 
   return (
-    <div>
+    <section>
       <div className="bg-[#222222] flex flex-row items-center justify-between rounded-md md:w-[250px] md:p-2 p-4 animate-fade">
         <div className="flex flex-row ">
           <div className="relative">
@@ -30,7 +30,7 @@ function Profile() {
           />
         </div>
       </div>
-    </div>
+    </section>
   );
 }
 
