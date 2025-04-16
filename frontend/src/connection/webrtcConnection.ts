@@ -1,11 +1,4 @@
-import {
-  callStatus,
-  CHUNK_SIZE,
-  preOfferAnswerStatus,
-  screenSharingHighQualityOptions,
-  screenSharingLowQualityOptions,
-  userStatus,
-} from "@/lib/constants";
+import { callStatus, preOfferAnswerStatus, userStatus } from "@/lib/constants";
 import { setCalleData, setCallStatus } from "@/store/slices/user";
 import store from "@/store/store";
 import {
@@ -26,7 +19,6 @@ import {
   setLocalStream,
   setRemoteStream,
   setScreenSharingEnabled,
-  setScreenSharingScreen,
 } from "@/store/slices/webrtc";
 import { userDataType } from "@/types/types";
 import { toast } from "sonner";
@@ -34,9 +26,9 @@ import { getCredentials } from "@/functions/getCredentials";
 
 let recivedBuffers = [] as ArrayBuffer[];
 let callerSocketId: string | null;
-let peerConnection = null as RTCPeerConnection | null;
+export let peerConnection = null as RTCPeerConnection | null;
 let currentRoomId: string | null;
-let currentDataChannel = null as RTCDataChannel | null;
+export let currentDataChannel = null as RTCDataChannel | null;
 
 export const createPeerConection = async () => {
   const configuration = await getCredentials();
@@ -398,178 +390,7 @@ export const clearAfterClosingConnection = () => {
   console.log(store.getState().webrtc.currentCallChatMessages);
 };
 
-export const handleScreenSharing = async (screenSharingEnabled: boolean) => {
-  if (screenSharingEnabled) {
-    const isLowMedia = store.getState().webrtc.screenSharingLowOptions;
-
-    const qualityMode = isLowMedia
-      ? screenSharingLowQualityOptions
-      : screenSharingHighQualityOptions;
-
-    const screenSharingStream = await navigator.mediaDevices.getDisplayMedia(
-      qualityMode
-    );
-    store.dispatch(setScreenSharingScreen(screenSharingStream));
-    const senders = await peerConnection!.getSenders();
-
-    const sender = senders.find(
-      (sender) =>
-        sender.track!.kind === screenSharingStream.getVideoTracks()[0].kind
-    );
-
-    if (!sender) {
-      toast("Failed to screern share");
-      return;
-    }
-    sender.replaceTrack(screenSharingStream.getVideoTracks()[0]);
-  } else if (!screenSharingEnabled) {
-    const localStream = store.getState().webrtc.localStream;
-    if (!localStream) {
-      setUpLocalStream();
-    }
-    const senders = await peerConnection!.getSenders();
-
-    const sender = senders.find(
-      (sender) => sender.track!.kind === localStream?.getVideoTracks()[0].kind
-    );
-
-    if (!sender) {
-      toast("Failed to switch back to camera");
-      return;
-    }
-
-    sender.replaceTrack(localStream!.getVideoTracks()[0]);
-    store.dispatch(setScreenSharingScreen(null));
-  }
-};
-
-export const changeScreenSharingResolution = async () => {
-  const callState = store.getState().user.userCallState;
-
-  if (callState === callStatus.CALL_IN_PROGRESS) {
-    const screenSharingStream = store.getState().webrtc.screenSharingStrem;
-    screenSharingStream?.getTracks().forEach((track) => track.stop);
-
-    handleScreenSharing(true);
-  }
-};
-
-export const changeInputDevice = async (
-  deviceId: string,
-  deviceType: "input" | "camera"
-) => {
-  const callState = store.getState().user.userCallState;
-  if (callState === callStatus.CALL_IN_PROGRESS) {
-    if (deviceType === "camera") {
-      console.log("camera ghange");
-      try {
-        const selectedInputDeviceId =
-          store.getState().webrtc.selectedInputDeviceId;
-        const stream = await navigator.mediaDevices.getUserMedia({
-          audio: selectedInputDeviceId
-            ? { deviceId: { exact: selectedInputDeviceId } }
-            : true,
-          video: { deviceId: { exact: deviceId } },
-        });
-
-        const videoTrack = stream.getVideoTracks()[0];
-
-        const senders = await peerConnection?.getSenders();
-
-        const sender = senders?.find(
-          (sender) => sender.track?.kind === "video"
-        );
-
-        if (!sender) {
-          toast("Failed to change camera");
-          return;
-        }
-
-        await sender?.replaceTrack(videoTrack);
-
-        store.dispatch(setLocalStream(stream));
-      } catch {
-        toast.error("Failed to change camera");
-      }
-    } else if (deviceType === "input") {
-      try {
-        const selectedCameraDeviceId =
-          store.getState().webrtc.selectedCameraDeviceId;
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: selectedCameraDeviceId
-            ? { deviceId: { exact: selectedCameraDeviceId } }
-            : true,
-          audio: { deviceId: { exact: deviceId } },
-        });
-
-        store.dispatch(setLocalStream(stream));
-      } catch {
-        toast.error("Failed to change camera");
-      }
-    }
-  }
-};
-
 export const disconnectFromRoom = (roomId: string) => {
   handleDisconnectFromRoom(roomId);
   store.dispatch(clearCurrentCallMessages());
-};
-
-export const handleSendMessage = ({
-  username,
-  message,
-  messageId,
-  type,
-}: {
-  username: string;
-  message: string;
-  messageId: string;
-  type: "message";
-}) => {
-  const data = JSON.stringify({ username, message, messageId, type });
-  currentDataChannel?.send(data);
-};
-
-export const sendFile = ({
-  selectedFile,
-  username,
-  type,
-  messageId,
-}: {
-  selectedFile: File;
-  username: string;
-  type: "file";
-  messageId: string;
-}) => {
-  const blob = new Blob([selectedFile], { type: selectedFile.type });
-  console.log(blob.size);
-  const fileReader = new FileReader();
-  let offset = 0;
-
-  fileReader.onerror = (error) =>
-    console.log(`Error during sending file | ${error}`);
-
-  fileReader.onload = (e) => {
-    currentDataChannel?.send(e.target!.result as ArrayBuffer);
-    offset += CHUNK_SIZE;
-
-    if (offset < blob.size) {
-      readSlice(offset);
-    } else {
-      const data = JSON.stringify({
-        username,
-        messageId,
-        type,
-        fileType: selectedFile.type,
-      });
-      currentDataChannel?.send(data);
-    }
-  };
-
-  const readSlice = (offset: number) => {
-    const slice = blob.slice(offset, offset + CHUNK_SIZE);
-    fileReader.readAsArrayBuffer(slice);
-  };
-
-  readSlice(0);
 };

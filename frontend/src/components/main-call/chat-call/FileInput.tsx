@@ -1,10 +1,10 @@
-import { sendFile } from "@/connection/webrtcConnection";
 import { ACCEPTED_FILES, MAX_FILE_SIZE } from "@/lib/constants";
 import { setCurrentCallMessages } from "@/store/slices/webrtc";
 import { useUser } from "@clerk/clerk-react";
 import { Ref } from "react";
 import { toast } from "sonner";
 import { useDispatch } from "react-redux";
+import { sendFile } from "@/connection/dataChannelsFunc";
 
 function FileInput({ fileRef }: { fileRef: Ref<HTMLInputElement> }) {
   const user = useUser();

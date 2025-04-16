@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/select";
 import { RootState } from "@/store/store";
 import { setSelectedInputDeviceId } from "@/store/slices/webrtc";
-import { changeInputDevice } from "@/connection/webrtcConnection";
+import { changeInputDevice } from "@/connection/webrtcDevicesFunc";
 
 function InputSelect({ allInputs }: { allInputs: MediaDeviceInfo[] }) {
   const allDevices = allInputs
@@ -47,7 +47,7 @@ function InputSelect({ allInputs }: { allInputs: MediaDeviceInfo[] }) {
           {allDevices.map((device) => {
             return (
               <SelectItem
-                key={device.deviceId }
+                key={device.deviceId}
                 value={device.deviceId || "default"}
                 className="hover:cursor-pointer hover:bg-[#323232]"
               >

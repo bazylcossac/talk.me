@@ -1,10 +1,7 @@
 import { FaRegEyeSlash } from "react-icons/fa";
 import { FaRegEye } from "react-icons/fa";
 import VideoIcons from "@/components/profile-dashboard/VideoIcons";
-import {
-  handleLeaveCall,
-  handleScreenSharing,
-} from "@/connection/webrtcConnection";
+import { handleLeaveCall } from "@/connection/webrtcConnection";
 import { useSelector, useDispatch } from "react-redux";
 import { IoClose } from "react-icons/io5";
 import { LuScreenShare } from "react-icons/lu";
@@ -13,6 +10,7 @@ import {
   setLocalCameraHide,
   setScreenSharingEnabled,
 } from "@/store/slices/webrtc";
+import { handleScreenSharing } from "@/connection/webrtcDevicesFunc";
 
 function CallButtons({ className }: { className: string }) {
   const dispatch = useDispatch();
@@ -49,10 +47,15 @@ function CallButtons({ className }: { className: string }) {
         )}
       </div>
 
-      <LuScreenShare
-        className="text-blue-500 bg-blue-300 hover:text-blue-300 hover:bg-blue-500  rounded-md p-1.75"
-        onClick={screenSharing}
-      />
+      <div className="relative">
+        <LuScreenShare
+          className="text-blue-500 bg-blue-300 hover:text-blue-300 hover:bg-blue-500  rounded-md p-1.75 "
+          onClick={screenSharing}
+        />
+        {screenSharingEnabled && (
+          <div className="absolute size-3 bg-red-500 rounded-full -top-1 -right-1 animate-pulse"></div>
+        )}
+      </div>
 
       <IoClose
         className="text-white bg-red-500 hover:text-red-400 hover:bg-red-700  rounded-md p-1.75"

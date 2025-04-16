@@ -5,7 +5,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { changeInputDevice } from "@/connection/webrtcConnection";
+import { changeInputDevice } from "@/connection/webrtcDevicesFunc";
+
 import { setSelectedCameraDeviceId } from "@/store/slices/webrtc";
 import { RootState } from "@/store/store";
 import { useDispatch, useSelector } from "react-redux";
@@ -22,7 +23,7 @@ function CameraSelect({ allCameras }: { allCameras: MediaDeviceInfo[] }) {
 
   const handlDeviceChange = (deviceId: string) => {
     console.log(deviceId);
-    dispatch(setSelectedCameraDeviceId(deviceId)); 
+    dispatch(setSelectedCameraDeviceId(deviceId));
     changeInputDevice(deviceId, "camera");
   };
 

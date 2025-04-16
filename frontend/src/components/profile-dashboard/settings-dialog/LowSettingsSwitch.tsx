@@ -2,7 +2,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/store/store";
 import { setScreenSharingLowOptions } from "@/store/slices/webrtc";
 import { Switch } from "@/components/ui/switch";
-import { changeScreenSharingResolution } from "@/connection/webrtcConnection";
+import { changeScreenSharingResolution } from "@/connection/webrtcDevicesFunc";
 
 function LowSettingsSwitch() {
   const dispatch = useDispatch();
