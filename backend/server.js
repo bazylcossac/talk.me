@@ -14,6 +14,7 @@ const prisma = new PrismaClient();
 const server = http.createServer(app);
 
 const peerServer = ExpressPeerServer(server, { debug: true });
+
 peerServer.on("connection", (id) => {
   console.log(`user conencted with ${id} id`);
 });

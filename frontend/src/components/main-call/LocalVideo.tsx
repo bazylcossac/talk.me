@@ -31,7 +31,7 @@ function LocalVideo() {
 
   return (
     <div
-      className={`ml-auto absolute right-0 top-0 m-8 z-10 shadow-2xl ${
+      className={`ml-auto absolute right-0 top-0 m-8  z-10 shadow-2xl ${
         localCameraHide ? "hidden" : "inline-block"
       }`}
     >
@@ -39,7 +39,7 @@ function LocalVideo() {
         ref={videoRef}
         autoPlay
         playsInline
-        className="rounded-md max-w-[250px] relative"
+        className="rounded-md max-w-[250px] relative border-1 border-black/50 "
       />
       <p className="absolute bottom-0 p-1 text-xs text-white text-shado-2xl bg-blue-400 rounded-md m-1 ">
         {user.user?.username || user.user?.fullName}

@@ -69,6 +69,12 @@ const webrtcSlice = createSlice({
     clearCurrentCallMessages: (state) => {
       state.currentCallChatMessages = [];
     },
+    setGroupCallStreams: (state, action) => {
+      const streams = state.groupCallStreams;
+      streams?.push(action.payload);
+
+      state.groupCallStreams = streams;
+    },
   },
 });
 
@@ -87,6 +93,7 @@ export const {
   setLocalCameraHide,
   setCurrentCallMessages,
   clearCurrentCallMessages,
+  setGroupCallStreams,
 } = webrtcSlice.actions;
 
 export default webrtcSlice.reducer;
