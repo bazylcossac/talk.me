@@ -1,5 +1,9 @@
 import { io, Socket } from "socket.io-client";
-import { preOfferDataType, userDataType } from "../types/types";
+import {
+  GroupCallDataType,
+  preOfferDataType,
+  userDataType,
+} from "../types/types";
 import store from "@/store/store";
 import {
   setActiveGroups,
@@ -109,7 +113,10 @@ export const connectToWebSocket = () => {
   // group calls
 
   socket.on("active-groups", (activeGroupCalls) => {
-    store.dispatch(setActiveGroups(activeGroupCalls));
+    const filteredActiveGroups = activeGroupCalls.filter(
+      (group: GroupCallDataType) => group.socketId !== mySocketId
+    );
+    store.dispatch(setActiveGroups(filteredActiveGroups));
   });
 
   socket.on("close-group-call-gone", (roomId) => {

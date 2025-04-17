@@ -24,8 +24,8 @@ function FriendsGroupList() {
     (state: RootState) => state.app.friendsTableVisible
   );
 
-  const hasCreatedGroupCall = useSelector(
-    (state: RootState) => state.user.hasCreatedGroupCall
+  const isInGroupCall = useSelector(
+    (state: RootState) => state.user.isInGroupCall
   );
 
   return (
@@ -74,9 +74,9 @@ function FriendsGroupList() {
             <Button
               className="m-1 cursor-pointer hover:bg-neutral-700"
               onClick={createGroupCall}
-              disabled={hasCreatedGroupCall}
+              disabled={isInGroupCall}
             >
-              {hasCreatedGroupCall ? "In group call" : "Create group"}
+              {isInGroupCall ? "In group call" : "Create group"}
             </Button>
             {activeGroups.map((group) => (
               <ActiveGroup group={group} />

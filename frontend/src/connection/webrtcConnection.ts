@@ -135,6 +135,7 @@ export const callToUser = async (calleSocketId: string) => {
     calleSocketId: calleSocketId,
   });
   await setUpLocalStream();
+  await createPeerConection();
 
   store.dispatch(setCallStatus(callStatus.CALL_IN_PROGRESS));
   handleUserActiveChange(userStatus.IN_CALL);
@@ -161,7 +162,6 @@ export const setUpLocalStream = async () => {
       streamOptions
     );
     store.dispatch(setLocalStream(localStream));
-    await createPeerConection();
   } catch (err) {
     const error = err as Error;
     toast("Failed to get user media");
