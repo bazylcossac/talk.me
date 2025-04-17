@@ -6,39 +6,10 @@ import {
   setFriendsTableVisible,
   setLeftContainerVisible,
 } from "@/store/slices/app";
-import { callStatus } from "@/lib/constants";
+
 import ActiveGroup from "./ActiveGroup";
 import { Button } from "../ui/button";
 import { createGroupCall } from "@/connection/webrtcGroupConnection";
-
-const groupsInfo = [
-  {
-    roomId: "231321",
-    host: {
-      imageUrl:
-        "https://img.clerk.com/eyJ0eXBlIjoicHJveHkiLCJzcmMiOiJodHRwczovL2ltYWdlcy5jbGVyay5kZXYvb2F1dGhfZ29vZ2xlL2ltZ18ydkRKTWR3UTZ3ZjA0OTVWMzVjVjFIQ2YxdHEifQ",
-      username: "dzikidzekson",
-      socketId: "321",
-      status: callStatus.CALL_IN_PROGRESS,
-    },
-    users: [
-      {
-        imageUrl:
-          "https://img.clerk.com/eyJ0eXBlIjoicHJveHkiLCJzcmMiOiJodHRwczovL2ltYWdlcy5jbGVyay5kZXYvb2F1dGhfZ29vZ2xlL2ltZ18ydkRKTWR3UTZ3ZjA0OTVWMzVjVjFIQ2YxdHEifQ",
-        username: "dzikidzekson",
-        socketId: "32131232",
-        status: callStatus.CALL_IN_PROGRESS,
-      },
-      {
-        imageUrl:
-          "https://img.clerk.com/eyJ0eXBlIjoicHJveHkiLCJzcmMiOiJodHRwczovL2ltYWdlcy5jbGVyay5kZXYvb2F1dGhfZ29vZ2xlL2ltZ18ydkRKTWR3UTZ3ZjA0OTVWMzVjVjFIQ2YxdHEifQ",
-        username: "dzikidzekson",
-        socketId: "3213123",
-        status: callStatus.CALL_IN_PROGRESS,
-      },
-    ],
-  },
-];
 
 function FriendsGroupList() {
   const dispatch = useDispatch();
@@ -51,6 +22,10 @@ function FriendsGroupList() {
   );
   const friendsTableVisible = useSelector(
     (state: RootState) => state.app.friendsTableVisible
+  );
+
+  const hasCreatedGroupCall = useSelector(
+    (state: RootState) => state.user.hasCreatedGroupCall
   );
 
   return (
@@ -99,13 +74,14 @@ function FriendsGroupList() {
             <Button
               className="m-1 cursor-pointer hover:bg-neutral-700"
               onClick={createGroupCall}
+              disabled={hasCreatedGroupCall}
             >
-              Create group
+              {hasCreatedGroupCall ? "In group call" : "Create group"}
             </Button>
             {activeGroups.map((group) => (
               <ActiveGroup group={group} />
             ))}
-        </section>
+          </section>
         )}
       </nav>
     </section>

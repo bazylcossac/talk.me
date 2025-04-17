@@ -8,6 +8,10 @@ import {
   setUserActiveStatus,
 } from "@/store/slices/user";
 import { callStatus, userStatus } from "@/lib/constants";
+import {
+  clearAfterClosingConnection,
+  disconnectFromRoom,
+} from "./webrtcConnection";
 
 let peerId: string;
 let peer;
@@ -32,4 +36,10 @@ export const createGroupCall = () => {
   store.dispatch(setIsInGroupCall(true));
   store.dispatch(setCallStatus(callStatus.CALL_IN_PROGRESS));
   store.dispatch(setUserActiveStatus(userStatus.IN_CALL));
+};
+
+export const handleDisconnectFromGroupCall = (roomId: string) => {
+  store.dispatch(setIsInGroupCall(false));
+  clearAfterClosingConnection();
+  disconnectFromRoom(roomId);
 };

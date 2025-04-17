@@ -114,6 +114,19 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", () => {
     const usersLeft = activeUsers.filter((user) => user.socketId !== socket.id);
+    const hostingGroupCall = activeGroupCalls.find(
+      (group) => group.socketId === socket.id
+    );
+    if (!!hostingGroupCall) {
+      const filteredGroups = activeGroupCalls.filter(
+        (group) => group.socketId !== hostingGroupCall.socketId
+      );
+      activeGroupCalls = filteredGroups;
+      io.sockets
+        .to(hostingGroupCall.roomId)
+        .emit("close-group-call-gone", hostingGroupCall.roomId);
+      io.sockets.emit("active-groups", filteredGroups);
+    }
 
     activeUsers = usersLeft;
     io.sockets.emit("user-disconnected", usersLeft);
@@ -132,7 +145,7 @@ io.on("connection", (socket) => {
     };
     activeGroupCalls.push(newGroupCall);
 
-    io.sockets.emit("create-group-call", activeGroupCalls);
+    io.sockets.emit("active-groups", activeGroupCalls);
   });
 });
 

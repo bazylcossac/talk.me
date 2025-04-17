@@ -19,6 +19,7 @@ import {
 } from "./webrtcConnection";
 import { preOfferAnswerStatus, userStatus } from "@/lib/constants";
 import { toast } from "sonner";
+import { handleDisconnectFromGroupCall } from "./webrtcGroupConnection";
 
 let socket: Socket;
 let mySocketId: string;
@@ -107,8 +108,12 @@ export const connectToWebSocket = () => {
 
   // group calls
 
-  socket.on("create-group-call", (activeGroupCalls) => {
-    store.dispatch(setActiveGroups(activeGroupCalls))
+  socket.on("active-groups", (activeGroupCalls) => {
+    store.dispatch(setActiveGroups(activeGroupCalls));
+  });
+
+  socket.on("close-group-call-gone", (roomId) => {
+    handleDisconnectFromGroupCall(roomId);
   });
 };
 
