@@ -1,14 +1,23 @@
 import Peer from "peerjs";
+import { sendRequestOpenGroupCall } from "./webSocketConnection";
 
-const peer = new Peer({
-  host: "localhost",
-  port: 3000,
-  path: "/peerjs",
-});
+let peerId: string;
+let peer;
 
-peer.on("open", (id) => {
-  console.log("PEER JS USER ", id);
-});
+export const createGroupPeerConnection = () => {
+  peer = new Peer({
+    host: "localhost",
+    port: 3000,
+    path: "/peerjs",
+  });
 
+  peer.on("open", (id) => {
+    console.log("PEER JS USER ", id);
+    peerId = id;
+  });
+};
 
-
+export const createGroupCall = () => {
+  createGroupPeerConnection();
+  sendRequestOpenGroupCall(peerId);
+};

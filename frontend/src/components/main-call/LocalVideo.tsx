@@ -14,7 +14,7 @@ function LocalVideo() {
     (state: RootState) => state.webrtc.selectedOutputDeviceId
   );
   const localCameraHide = useSelector(
-    (state: RootState) => state.webrtc.localCameraHide
+    (state: RootState) => state.user.localCameraHide
   );
 
   useEffect(() => {

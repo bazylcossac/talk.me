@@ -103,6 +103,12 @@ export const connectToWebSocket = () => {
     clearAfterClosingConnection();
     socket.emit("disconnect-from-room", roomId);
   });
+
+  // group calls
+
+  socket.on("create-group-call", (activeGroupCalls) => {
+    store.dispatch(setA)
+  });
 };
 
 // user join - disconnect
@@ -182,8 +188,7 @@ export const sendIceCandidate = ({
   socket.emit("send-candidate", { candidate, socketId });
 };
 
-
-// closing / disconnecting 
+// closing / disconnecting
 
 export const sendCloseConnection = ({
   socketId,
@@ -202,7 +207,7 @@ export const sendRejectAnswer = ({ socketId }: { socketId: string }) => {
   socket.emit("rejected-call", socketId);
 };
 
-// activity 
+// activity
 
 export const handleUserActiveChange = (
   newActivity: (typeof userStatus)[keyof typeof userStatus]
@@ -214,4 +219,18 @@ export const handleUserActiveChange = (
     activity: newActivity,
   });
   store.dispatch(setUserActiveStatus(newActivity));
+};
+
+// export const createGroupCall
+
+export const sendRequestOpenGroupCall = (peerId: string) => {
+  const user = store.getState().user.loggedUser;
+  const roomId = crypto.randomUUID();
+  const data = {
+    peerId,
+    user,
+    mySocketId,
+    roomId,
+  };
+  socket.emit("create-group-call", data);
 };

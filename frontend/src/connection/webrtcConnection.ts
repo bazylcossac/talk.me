@@ -1,5 +1,9 @@
 import { callStatus, preOfferAnswerStatus, userStatus } from "@/lib/constants";
-import { setCalleData, setCallStatus } from "@/store/slices/user";
+import {
+  setCalleData,
+  setCallStatus,
+  setScreenSharingEnabled,
+} from "@/store/slices/user";
 import store from "@/store/store";
 import {
   handleDisconnectFromRoom,
@@ -18,7 +22,6 @@ import {
   setCurrentCallMessages,
   setLocalStream,
   setRemoteStream,
-  setScreenSharingEnabled,
 } from "@/store/slices/webrtc";
 import { userDataType } from "@/types/types";
 import { toast } from "sonner";
@@ -301,7 +304,10 @@ export const handleSendAcceptCall = async ({
   callerSocketID: string;
   roomId: string;
 }) => {
-  if (store.getState().user.userCallState === callStatus.CALL_IN_PROGRESS) {
+  if (
+    store.getState().user.userCallState === callStatus.CALL_IN_PROGRESS &&
+    peerConnection?.connectionState === "connected"
+  ) {
     sendCloseConnection({
       socketId: callerSocketId as string,
       currentRoomId: roomId,

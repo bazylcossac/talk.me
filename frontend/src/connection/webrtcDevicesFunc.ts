@@ -3,21 +3,18 @@ import {
   screenSharingHighQualityOptions,
   screenSharingLowQualityOptions,
 } from "@/lib/constants";
-import {
-  setLocalStream,
-  setScreenSharingEnabled,
-  setScreenSharingScreen,
-} from "@/store/slices/webrtc";
+import { setScreenSharingEnabled } from "@/store/slices/user";
 import store from "@/store/store";
 import { peerConnection, setUpLocalStream } from "./webrtcConnection";
 import { toast } from "sonner";
+import { setLocalStream, setScreenSharingScreen } from "@/store/slices/webrtc";
 
 export const handleScreenSharing = async (
   screenSharingEnabled: boolean
 ): Promise<void> => {
   if (screenSharingEnabled) {
     try {
-      const isLowMedia = store.getState().webrtc.screenSharingLowOptions;
+      const isLowMedia = store.getState().user.screenSharingLowOptions;
 
       const qualityMode = isLowMedia
         ? screenSharingLowQualityOptions

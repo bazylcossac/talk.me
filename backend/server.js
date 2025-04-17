@@ -48,6 +48,7 @@ const io = socket(server, {
 });
 
 let activeUsers = [];
+let activeGroupCalls = [];
 let roomId;
 
 io.on("connection", (socket) => {
@@ -118,6 +119,19 @@ io.on("connection", (socket) => {
     io.sockets.emit("user-disconnected", usersLeft);
     io.sockets.to(roomId).emit("close-call-user-gone", roomId);
     roomId = "";
+  });
+
+  socket.on("create-group-call", (data) => {
+    socket.join(data.roomId);
+    const newGroupCall = {
+      peerId: data.peerId,
+      roomId: data.roomId,
+      socketId: data.mySocketId,
+      users: [data.user],
+    };
+    activeGroupCalls.push(newGroupCall);
+
+    socket.emit("create-group-call", activeGroupCalls);
   });
 });
 

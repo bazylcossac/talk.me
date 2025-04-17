@@ -5,9 +5,10 @@ import { HiMiniVideoCamera } from "react-icons/hi2";
 import { HiMiniVideoCameraSlash } from "react-icons/hi2";
 import { BiSolidMicrophoneOff } from "react-icons/bi";
 import { RootState } from "../../store/store";
-import { setCameraEnabled, setMicEnabled } from "../../store/slices/webrtc";
+
 import { useState } from "react";
 import SettingsDialog from "./settings-dialog/SettingsDialog";
+import { setCameraEnabled, setMicEnabled } from "@/store/slices/user";
 
 function VideoIcons({
   className,
@@ -18,9 +19,9 @@ function VideoIcons({
 }) {
   const [showOptions, setShowOptions] = useState(false);
   const dispatch = useDispatch();
-  const micEnabled = useSelector((state: RootState) => state.webrtc.micEnabled);
+  const micEnabled = useSelector((state: RootState) => state.user.micEnabled);
   const cameraEnabled = useSelector(
-    (state: RootState) => state.webrtc.cameraEnabled
+    (state: RootState) => state.user.cameraEnabled
   );
 
   const localStream = useSelector(

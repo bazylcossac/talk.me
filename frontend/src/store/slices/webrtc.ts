@@ -7,12 +7,12 @@ const initialState = {
   remoteStream: null as MediaStream | null,
   screenSharingStrem: null as MediaStream | null,
   groupCallStreams: null as MediaStream[] | null,
-  micEnabled: true,
-  cameraEnabled: true,
+  // micEnabled: true,
+  // cameraEnabled: true,
   showCallButtons: false,
-  localCameraHide: false,
-  screenSharingEnabled: false,
-  screenSharingLowOptions: false,
+  // localCameraHide: false,
+  // screenSharingEnabled: false,
+  // screenSharingLowOptions: false,
   selectedInputDeviceId: "",
   selectedOutputDeviceId: "",
   selectedCameraDeviceId: "",
@@ -33,19 +33,19 @@ const webrtcSlice = createSlice({
     setScreenSharingScreen: (state, action) => {
       state.screenSharingStrem = action.payload;
     },
-    setMicEnabled: (state, action) => {
-      state.micEnabled = action.payload;
-    },
-    setCameraEnabled: (state, action) => {
-      state.cameraEnabled = action.payload;
-    },
-    setScreenSharingEnabled: (state, action) => {
-      state.screenSharingEnabled = action.payload;
-    },
-    setScreenSharingLowOptions: (state, action) => {
-      console.log(action.payload);
-      state.screenSharingLowOptions = action.payload;
-    },
+    // setMicEnabled: (state, action) => {
+    //   state.micEnabled = action.payload;
+    // },
+    // setCameraEnabled: (state, action) => {
+    //   state.cameraEnabled = action.payload;
+    // },
+    // setScreenSharingEnabled: (state, action) => {
+    //   state.screenSharingEnabled = action.payload;
+    // },
+    // setScreenSharingLowOptions: (state, action) => {
+    //   console.log(action.payload);
+    //   state.screenSharingLowOptions = action.payload;
+    // },
     setSelectedInputDeviceId: (state, action) => {
       state.selectedInputDeviceId = action.payload;
     },
@@ -58,9 +58,9 @@ const webrtcSlice = createSlice({
     setCallingUserData: (state, action) => {
       state.callingUsersData = action.payload;
     },
-    setLocalCameraHide: (state, action) => {
-      state.localCameraHide = action.payload;
-    },
+    // setLocalCameraHide: (state, action) => {
+    //   state.localCameraHide = action.payload;
+    // },
     setCurrentCallMessages: (state, action) => {
       const newMessages = state.currentCallChatMessages;
       newMessages.push(action.payload);
@@ -79,18 +79,13 @@ const webrtcSlice = createSlice({
 });
 
 export const {
-  setMicEnabled,
-  setCameraEnabled,
   setCallingUserData,
   setLocalStream,
   setRemoteStream,
   setScreenSharingScreen,
-  setScreenSharingEnabled,
-  setScreenSharingLowOptions,
   setSelectedInputDeviceId,
   setSelectedOutputDeviceId,
   setSelectedCameraDeviceId,
-  setLocalCameraHide,
   setCurrentCallMessages,
   clearCurrentCallMessages,
   setGroupCallStreams,

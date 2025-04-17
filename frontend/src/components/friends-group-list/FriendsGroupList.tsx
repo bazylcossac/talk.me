@@ -8,6 +8,8 @@ import {
 } from "@/store/slices/app";
 import { callStatus } from "@/lib/constants";
 import ActiveGroup from "./ActiveGroup";
+import { Button } from "../ui/button";
+import { createGroupCall } from "@/connection/webrtcGroupConnection";
 
 const groupsInfo = [
   {
@@ -91,6 +93,12 @@ function FriendsGroupList() {
 
         {!friendsTableVisible && (
           <section className="animate-fade animate-duration-300">
+            <Button
+              className="m-1 cursor-pointer hover:bg-neutral-700"
+              onClick={createGroupCall}
+            >
+              Create group
+            </Button>
             {groupsInfo.map((group) => (
               <ActiveGroup group={group} />
             ))}

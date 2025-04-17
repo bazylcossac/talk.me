@@ -8,6 +8,11 @@ const initialState = {
   userActiveStatus: userStatus.ACTIVE,
   activeUsers: [] as userDataType[],
   userCallState: callStatus.CALL_AVAILABLE,
+  micEnabled: true,
+  cameraEnabled: true,
+  screenSharingEnabled: false,
+  screenSharingLowOptions: false,
+  localCameraHide: false,
 };
 
 const userSlice = createSlice({
@@ -32,6 +37,22 @@ const userSlice = createSlice({
     setCalleData: (state, action) => {
       state.calleData = action.payload;
     },
+    setMicEnabled: (state, action) => {
+      state.micEnabled = action.payload;
+    },
+    setCameraEnabled: (state, action) => {
+      state.cameraEnabled = action.payload;
+    },
+    setScreenSharingEnabled: (state, action) => {
+      state.screenSharingEnabled = action.payload;
+    },
+    setScreenSharingLowOptions: (state, action) => {
+      console.log(action.payload);
+      state.screenSharingLowOptions = action.payload;
+    },
+    setLocalCameraHide: (state, action) => {
+      state.localCameraHide = action.payload;
+    },
   },
 });
 
@@ -41,6 +62,11 @@ export const {
   setActiveUsers,
   setCallStatus,
   setCalleData,
+  setMicEnabled,
+  setCameraEnabled,
+  setScreenSharingEnabled,
+  setScreenSharingLowOptions,
+  setLocalCameraHide,
 } = userSlice.actions;
 
 export default userSlice.reducer;

@@ -9,16 +9,16 @@ import { RootState } from "@/store/store";
 import {
   setLocalCameraHide,
   setScreenSharingEnabled,
-} from "@/store/slices/webrtc";
+} from "@/store/slices/user";
 import { handleScreenSharing } from "@/connection/webrtcDevicesFunc";
 
 function CallButtons({ className }: { className: string }) {
   const dispatch = useDispatch();
   const screenSharingEnabled = useSelector(
-    (state: RootState) => state.webrtc.screenSharingEnabled
+    (state: RootState) => state.user.screenSharingEnabled
   );
   const localCameraHide = useSelector(
-    (state: RootState) => state.webrtc.localCameraHide
+    (state: RootState) => state.user.localCameraHide
   );
   const leaveCall = () => {
     handleLeaveCall();
