@@ -1,5 +1,13 @@
 import Peer from "peerjs";
 import { sendRequestOpenGroupCall } from "./webSocketConnection";
+import store from "@/store/store";
+import {
+  setCallStatus,
+  setHasCreatedGroupCall,
+  setIsInGroupCall,
+  setUserActiveStatus,
+} from "@/store/slices/user";
+import { callStatus, userStatus } from "@/lib/constants";
 
 let peerId: string;
 let peer;
@@ -20,4 +28,8 @@ export const createGroupPeerConnection = () => {
 export const createGroupCall = () => {
   createGroupPeerConnection();
   sendRequestOpenGroupCall(peerId);
+  store.dispatch(setHasCreatedGroupCall(true));
+  store.dispatch(setIsInGroupCall(true));
+  store.dispatch(setCallStatus(callStatus.CALL_IN_PROGRESS));
+  store.dispatch(setUserActiveStatus(userStatus.IN_CALL));
 };

@@ -46,6 +46,9 @@ function FriendsGroupList() {
   const leftContainerVisible = useSelector(
     (state: RootState) => state.app.leftContainerVisible
   );
+  const activeGroups = useSelector(
+    (state: RootState) => state.user.activeGroups
+  );
   const friendsTableVisible = useSelector(
     (state: RootState) => state.app.friendsTableVisible
   );
@@ -99,10 +102,10 @@ function FriendsGroupList() {
             >
               Create group
             </Button>
-            {groupsInfo.map((group) => (
+            {activeGroups.map((group) => (
               <ActiveGroup group={group} />
             ))}
-          </section>
+        </section>
         )}
       </nav>
     </section>

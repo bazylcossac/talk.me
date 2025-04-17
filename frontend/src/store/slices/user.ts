@@ -1,18 +1,21 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { callStatus, userStatus } from "../../lib/constants";
-import { userDataType } from "@/types/types";
+import { GroupCallDataType, userDataType } from "@/types/types";
 
 const initialState = {
   loggedUser: {} as userDataType,
   calleData: {} as userDataType,
   userActiveStatus: userStatus.ACTIVE,
   activeUsers: [] as userDataType[],
+  activeGroups: [] as GroupCallDataType[],
   userCallState: callStatus.CALL_AVAILABLE,
   micEnabled: true,
   cameraEnabled: true,
   screenSharingEnabled: false,
   screenSharingLowOptions: false,
   localCameraHide: false,
+  hasCreatedGroupCall: false,
+  isInGroupCall: false,
 };
 
 const userSlice = createSlice({
@@ -53,6 +56,15 @@ const userSlice = createSlice({
     setLocalCameraHide: (state, action) => {
       state.localCameraHide = action.payload;
     },
+    setActiveGroups: (state, action) => {
+      state.activeGroups = action.payload;
+    },
+    setHasCreatedGroupCall: (state, action: { payload: boolean }) => {
+      state.hasCreatedGroupCall = action.payload;
+    },
+    setIsInGroupCall: (state, action: { payload: boolean }) => {
+      state.isInGroupCall = action.payload;
+    },
   },
 });
 
@@ -67,6 +79,9 @@ export const {
   setScreenSharingEnabled,
   setScreenSharingLowOptions,
   setLocalCameraHide,
+  setActiveGroups,
+  setHasCreatedGroupCall,
+  setIsInGroupCall,
 } = userSlice.actions;
 
 export default userSlice.reducer;

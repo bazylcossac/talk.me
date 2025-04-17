@@ -2,6 +2,7 @@ import { io, Socket } from "socket.io-client";
 import { preOfferDataType, userDataType } from "../types/types";
 import store from "@/store/store";
 import {
+  setActiveGroups,
   setActiveUsers,
   setCurrentlyLoggedUser,
   setUserActiveStatus,
@@ -107,7 +108,7 @@ export const connectToWebSocket = () => {
   // group calls
 
   socket.on("create-group-call", (activeGroupCalls) => {
-    store.dispatch(setA)
+    store.dispatch(setActiveGroups(activeGroupCalls))
   });
 };
 

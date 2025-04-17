@@ -1,9 +1,23 @@
+import { userStatus } from "@/lib/constants";
+
 export type userDataType = {
   username: string;
   imageUrl: string;
   status: string;
-  socketId: string;
+  socketId?: string;
   roomId?: string;
+};
+
+export type GroupCallDataType = {
+  peerId: string;
+  roomId: string;
+  socketId: string;
+  hostUser: userDataType;
+  users: {
+    username: string;
+    imageUrl: string;
+    status: (typeof userStatus)[keyof typeof userStatus];
+  }[];
 };
 
 export type preOfferDataType = {
@@ -28,9 +42,3 @@ export type chatFileType = {
 };
 
 export type chatItemType = chatMessageType | chatFileType;
-
-export type ActiveGroupType = {
-  roomId: string;
-  host: userDataType;
-  users: userDataType[];
-};

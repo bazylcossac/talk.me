@@ -8,6 +8,9 @@ import Logo from "../Logo";
 
 function MainCallContainer() {
   const callState = useSelector((state: RootState) => state.user.userCallState);
+  const isInGroupCall = useSelector(
+    (state: RootState) => state.user.isInGroupCall
+  );
 
   if (callState !== callStatus.CALL_IN_PROGRESS) {
     return (
@@ -26,14 +29,25 @@ function MainCallContainer() {
     );
   }
 
-  return (
+  if (isInGroupCall && callState === callStatus.CALL_IN_PROGRESS) {
     <section className=" w-full h-full  rounded-md flex flex-row gap-4">
       <div className="bg-[#222222] relative flex flex-row rounded-md w-full">
         <RemoteVideo />
         <LocalVideo />
       </div>
-    </section>
-  );
+    </section>;
+  }
+
+  if (!isInGroupCall && callState === callStatus.CALL_IN_PROGRESS) {
+    return (
+      <section className=" w-full h-full  rounded-md flex flex-row gap-4">
+        <div className="bg-[#222222] relative flex flex-row rounded-md w-full">
+          <RemoteVideo />
+          <LocalVideo />
+        </div>
+      </section>
+    );
+  }
 }
 
 export default MainCallContainer;

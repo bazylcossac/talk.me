@@ -126,12 +126,13 @@ io.on("connection", (socket) => {
     const newGroupCall = {
       peerId: data.peerId,
       roomId: data.roomId,
+      hostUser: data.user,
       socketId: data.mySocketId,
-      users: [data.user],
+      users: [],
     };
     activeGroupCalls.push(newGroupCall);
 
-    socket.emit("create-group-call", activeGroupCalls);
+    io.sockets.emit("create-group-call", activeGroupCalls);
   });
 });
 

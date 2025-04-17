@@ -201,13 +201,13 @@ export const handlePreOffer = ({
     ) {
       sendPreOfferAnswer({
         answer: preOfferAnswerStatus.USER_CALL_IN_PROGRESS,
-        callerSocketId: caller.socketId,
+        callerSocketId: caller.socketId as string,
       });
     }
     if (activeStatus === userStatus.DONT_DISTURB)
       sendPreOfferAnswer({
         answer: preOfferAnswerStatus.CALL_UNVAILABLE,
-        callerSocketId: caller.socketId,
+        callerSocketId: caller.socketId as string,
       });
   }
 };
