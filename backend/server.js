@@ -147,6 +147,11 @@ io.on("connection", (socket) => {
 
     io.sockets.emit("active-groups", activeGroupCalls);
   });
+
+  socket.on("join-group-call-request", (data) => {
+    socket.join(data.roomId);
+    socket.to(data.roomId).emit("join-group-call-request", data);
+  });
 });
 
 server.listen(PORT, () => {

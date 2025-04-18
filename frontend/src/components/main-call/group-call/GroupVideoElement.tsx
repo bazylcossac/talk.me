@@ -1,6 +1,12 @@
 import { useEffect, useRef } from "react";
 
-function GroupVideoElement({ stream }: { stream: MediaStream }) {
+function GroupVideoElement({
+  stream,
+  user,
+}: {
+  stream: MediaStream;
+  user: any;
+}) {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -12,13 +18,14 @@ function GroupVideoElement({ stream }: { stream: MediaStream }) {
   }, [stream]);
 
   return (
-    <div className="place-self-center ">
+    <div className="">
       <video
         ref={videoRef}
         autoPlay
         playsInline
-        className="rounded-md w-full max-h-[400px]"
+        className="rounded-md max-h-[400px] w-full"
       />
+      <p>{user.user.username}</p>
     </div>
   );
 }

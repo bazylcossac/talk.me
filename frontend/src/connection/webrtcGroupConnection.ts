@@ -1,5 +1,8 @@
 import Peer from "peerjs";
-import { sendRequestOpenGroupCall } from "./webSocketConnection";
+import {
+  sendJoinRequest,
+  sendRequestOpenGroupCall,
+} from "./webSocketConnection";
 import store from "@/store/store";
 import {
   setCallStatus,
@@ -15,8 +18,9 @@ import {
 } from "./webrtcConnection";
 import { getCredentials } from "@/functions/getCredentials";
 import { setGroupCallStreams } from "@/store/slices/webrtc";
+import { toast } from "sonner";
 
-let peerId: string;
+let myPeerId: string;
 let peer: any;
 
 export const createGroupPeerConnection = async () => {
@@ -30,7 +34,7 @@ export const createGroupPeerConnection = async () => {
 
   peer.on("open", (id: string) => {
     console.log("PEER JS USER ", id);
-    peerId = id;
+    myPeerId = id;
   });
   peer.on("call", (call) => {
     const localStream = store.getState().webrtc.localStream;
@@ -53,7 +57,7 @@ export const createGroupPeerConnection = async () => {
 export const createGroupCall = async () => {
   await createGroupPeerConnection();
   await setUpLocalStream();
-  sendRequestOpenGroupCall(peerId);
+  sendRequestOpenGroupCall(myPeerId);
   store.dispatch(setHasCreatedGroupCall(true));
   store.dispatch(setIsInGroupCall(true));
   store.dispatch(setCallStatus(callStatus.CALL_IN_PROGRESS));
@@ -69,8 +73,20 @@ export const handleDisconnectFromGroupCall = (roomId: string) => {
 export const joinGroupCall = async (peerId: string, roomId: string) => {
   await createGroupPeerConnection();
   await setUpLocalStream();
+  const user = store.getState().user.loggedUser;
   const localStream = store.getState().webrtc.localStream;
+  if (!localStream) {
+    toast("Failed to get media devices");
+    return;
+  }
+
   console.log("CONECTING TO: ", peerId);
   peer.call(peerId, localStream);
+  sendJoinRequest({
+    streamId: localStream.id,
+    user: user,
+    roomId,
+    myPeerId,
+  });
   /// CONNECT TO ROOM, send my data to show me in groups
 };

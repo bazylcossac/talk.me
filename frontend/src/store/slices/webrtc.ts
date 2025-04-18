@@ -7,6 +7,7 @@ const initialState = {
   remoteStream: null as MediaStream | null,
   screenSharingStrem: null as MediaStream | null,
   groupCallStreams: [] as MediaStream[],
+  groupCallUsers: [],
   showCallButtons: false,
   selectedInputDeviceId: "",
   selectedOutputDeviceId: "",
@@ -55,6 +56,11 @@ const webrtcSlice = createSlice({
 
       state.groupCallStreams = streams;
     },
+    setGroupCallUsers: (state, action) => {
+      const users = state.groupCallUsers;
+      users.push(action.payload);
+      state.groupCallUsers = users;
+    },
   },
 });
 
@@ -69,6 +75,7 @@ export const {
   setCurrentCallMessages,
   clearCurrentCallMessages,
   setGroupCallStreams,
+  setGroupCallUsers,
 } = webrtcSlice.actions;
 
 export default webrtcSlice.reducer;
