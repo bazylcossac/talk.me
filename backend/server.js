@@ -150,7 +150,11 @@ io.on("connection", (socket) => {
 
   socket.on("join-group-call-request", (data) => {
     socket.join(data.roomId);
-    socket.to(data.roomId).emit("join-group-call-request", data);
+    io.sockets.to(data.roomId).emit("join-group-call-request", data);
+    io.sockets.emit("user-joined-group-call-update", {
+      user: data.user,
+      roomId: data.roomId,
+    });
   });
 });
 

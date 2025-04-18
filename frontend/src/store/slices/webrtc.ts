@@ -1,4 +1,4 @@
-import { chatItemType } from "../../types/types";
+import { chatItemType, groupCallUserDataType } from "../../types/types";
 import { userDataType } from "@/types/types";
 import { createSlice } from "@reduxjs/toolkit";
 
@@ -7,7 +7,7 @@ const initialState = {
   remoteStream: null as MediaStream | null,
   screenSharingStrem: null as MediaStream | null,
   groupCallStreams: [] as MediaStream[],
-  groupCallUsers: [],
+  groupCallUsers: [] as groupCallUserDataType[],
   showCallButtons: false,
   selectedInputDeviceId: "",
   selectedOutputDeviceId: "",

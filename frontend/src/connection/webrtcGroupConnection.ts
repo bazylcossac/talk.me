@@ -79,14 +79,37 @@ export const joinGroupCall = async (peerId: string, roomId: string) => {
     toast("Failed to get media devices");
     return;
   }
+  const call = peer.call(peerId, localStream);
 
   console.log("CONECTING TO: ", peerId);
-  peer.call(peerId, localStream);
   sendJoinRequest({
     streamId: localStream.id,
     user: user,
     roomId,
     myPeerId,
   });
+  store.dispatch(setIsInGroupCall(true));
+  store.dispatch(setCallStatus(callStatus.CALL_IN_PROGRESS));
+  store.dispatch(setUserActiveStatus(userStatus.IN_CALL));
+
+  call.on("stream", (stream: MediaStream) => {
+    const groupCallStreams = store.getState().webrtc.groupCallStreams;
+
+    const isStreamAdded = groupCallStreams.find(
+      (groupStreams) => groupStreams.id === stream.id
+    );
+
+    if (!isStreamAdded) {
+      store.dispatch(setGroupCallStreams(stream));
+    }
+  });
   /// CONNECT TO ROOM, send my data to show me in groups
 };
+
+// export const connectToGroupCall = (data) => {
+//     const localStream = store.getState().webrtc.localStream;
+//     if (!localStream) {
+//       toast("Failed to get media devices");
+//       return;
+//     }
+// }

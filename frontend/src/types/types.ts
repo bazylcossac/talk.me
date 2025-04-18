@@ -3,9 +3,20 @@ import { userStatus } from "@/lib/constants";
 export type userDataType = {
   username: string;
   imageUrl: string;
-  status?: string;
+  status: string;
   socketId?: string;
   roomId?: string;
+};
+
+export type groupCallUserDataType = {
+  streamId: string;
+  user: {
+    username: string;
+    imageUrl: string;
+    status: (typeof userStatus)[keyof typeof userStatus];
+  };
+  roomId: string;
+  myPeerId: string;
 };
 
 export type GroupCallDataType = {

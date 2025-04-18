@@ -1,6 +1,7 @@
 import { io, Socket } from "socket.io-client";
 import {
   GroupCallDataType,
+  groupCallUserDataType,
   preOfferDataType,
   userDataType,
 } from "../types/types";
@@ -126,6 +127,26 @@ export const connectToWebSocket = () => {
 
   socket.on("join-group-call-request", (data) => {
     store.dispatch(setGroupCallUsers(data));
+  });
+
+  socket.on("user-joined-group-call-update", ({ user, roomId }) => {
+    const groups = store.getState().user.activeGroups;
+
+    const group = groups.find((group) => group.roomId === roomId);
+    if (!group) {
+      /// do some logic when user try to join group that does not exist
+      return;
+    }
+    const updatedUsersGroup = {
+      ...group,
+      users: [...group!.users, user],
+    };
+
+    const filteredGroups = groups.filter(
+      (activeGroup) => activeGroup.roomId !== group.roomId
+    );
+    const newGroups = [...filteredGroups, updatedUsersGroup];
+    store.dispatch(setActiveGroups(newGroups));
   });
 };
 
@@ -253,6 +274,6 @@ export const sendRequestOpenGroupCall = (peerId: string) => {
   socket.emit("create-group-call", data);
 };
 
-export const sendJoinRequest = (data) => {
+export const sendJoinRequest = (data: groupCallUserDataType) => {
   socket.emit("join-group-call-request", data);
 };
