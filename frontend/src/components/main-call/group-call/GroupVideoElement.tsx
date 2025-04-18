@@ -7,6 +7,7 @@ function GroupVideoElement({
   stream: MediaStream;
   user: any;
 }) {
+  console.log(user);
   const videoRef = useRef<HTMLVideoElement>(null);
   console.log(user);
   useEffect(() => {
@@ -18,7 +19,7 @@ function GroupVideoElement({
   }, [stream]);
 
   return (
-    <div className="relative m-2 ">
+    <div className="relative m-2">
       <video
         ref={videoRef}
         autoPlay
@@ -26,7 +27,7 @@ function GroupVideoElement({
         className="rounded-md max-h-[400px] w-full object-cover"
       />
       <p className="absolute bottom-0 p-1 text-xs text-white text-shado-2xl bg-blue-400 rounded-md m-1 ">
-        {/* {user.user?.username || user.user?.fullName} */}
+        {user?.user?.username}
       </p>
     </div>
   );

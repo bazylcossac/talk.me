@@ -61,6 +61,9 @@ const webrtcSlice = createSlice({
       users.push(action.payload);
       state.groupCallUsers = users;
     },
+    setNewGroupCallUsers: (state, action) => {
+      state.groupCallUsers = action.payload;
+    },
   },
 });
 
@@ -76,6 +79,7 @@ export const {
   clearCurrentCallMessages,
   setGroupCallStreams,
   setGroupCallUsers,
+  setNewGroupCallUsers,
 } = webrtcSlice.actions;
 
 export default webrtcSlice.reducer;

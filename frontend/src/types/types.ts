@@ -16,7 +16,7 @@ export type groupCallUserDataType = {
     status: (typeof userStatus)[keyof typeof userStatus];
   };
   roomId: string;
-  myPeerId: string;
+  peerId: string;
 };
 
 export type GroupCallDataType = {

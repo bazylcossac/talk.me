@@ -12,6 +12,8 @@ function MainGroupCallContainer() {
     (state: RootState) => state.webrtc.groupCallUsers
   );
 
+  console.log(groupCallUsers);
+
   const getGridClasses = () => {
     switch (groupCallStreams.length) {
       case 2:

@@ -149,12 +149,17 @@ io.on("connection", (socket) => {
   });
 
   socket.on("join-group-call-request", (data) => {
+    console.log(data);
     socket.join(data.roomId);
-    io.sockets.to(data.roomId).emit("join-group-call-request", data);
+    socket.to(data.roomId).emit("join-group-call-request", data);
     io.sockets.emit("user-joined-group-call-update", {
       user: data.user,
       roomId: data.roomId,
     });
+  });
+
+  socket.on("user-join-users-update", ({ users, roomId }) => {
+    socket.to(roomId).emit("user-join-users-update", users);
   });
 });
 

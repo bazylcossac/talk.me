@@ -24,8 +24,11 @@ import {
 } from "./webrtcConnection";
 import { preOfferAnswerStatus, userStatus } from "@/lib/constants";
 import { toast } from "sonner";
-import { handleDisconnectFromGroupCall } from "./webrtcGroupConnection";
-import { setGroupCallUsers } from "@/store/slices/webrtc";
+import {
+  connectToGroupCall,
+  handleDisconnectFromGroupCall,
+} from "./webrtcGroupConnection";
+import { setGroupCallUsers, setNewGroupCallUsers } from "@/store/slices/webrtc";
 
 let socket: Socket;
 let mySocketId: string;
@@ -126,7 +129,12 @@ export const connectToWebSocket = () => {
   });
 
   socket.on("join-group-call-request", (data) => {
+    console.log("JOIN REQUEST");
+    console.log(data);
     store.dispatch(setGroupCallUsers(data));
+    const users = store.getState().webrtc.groupCallUsers;
+    connectToGroupCall(data);
+    socket.emit("user-join-users-update", { users, roomId: data.roomId });
   });
 
   socket.on("user-joined-group-call-update", ({ user, roomId }) => {
@@ -147,6 +155,12 @@ export const connectToWebSocket = () => {
     );
     const newGroups = [...filteredGroups, updatedUsersGroup];
     store.dispatch(setActiveGroups(newGroups));
+  });
+
+  socket.on("user-join-users-update", (users) => {
+    console.log("USERS");
+    console.log(users);
+    store.dispatch(setNewGroupCallUsers(users));
   });
 };
 
@@ -262,9 +276,9 @@ export const handleUserActiveChange = (
 
 // export const createGroupCall
 
-export const sendRequestOpenGroupCall = (peerId: string) => {
+export const sendRequestOpenGroupCall = (peerId: string, roomId: string) => {
   const user = store.getState().user.loggedUser;
-  const roomId = crypto.randomUUID();
+
   const data = {
     peerId,
     user,
