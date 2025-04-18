@@ -3,7 +3,7 @@ import { useRef, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import CallButtons from "./call-buttons/CallButtons";
 
-function LocalVideo() {
+function RemoteVideo() {
   const dispatch = useDispatch();
   const videoRef = useRef<HTMLVideoElement>(null);
   const divRef = useRef<HTMLDivElement>(null);
@@ -12,6 +12,12 @@ function LocalVideo() {
   );
   const calleData = useSelector((state: RootState) => state.user.calleData);
   const [isVisible, setIsVisible] = useState(false);
+
+  const groupCallStreams = useSelector(
+    (state: RootState) => state.webrtc.groupCallStreams
+  );
+
+  console.log(groupCallStreams);
 
   useEffect(() => {
     if (videoRef.current && remoteStream)
@@ -75,4 +81,4 @@ function LocalVideo() {
   );
 }
 
-export default LocalVideo;
+export default RemoteVideo;

@@ -38,8 +38,14 @@ export const createGroupPeerConnection = async () => {
 
     call.on("stream", (stream: MediaStream) => {
       console.log("recived stream");
-
-      store.dispatch(setGroupCallStreams(stream));
+      console.log(stream);
+      const groupCallStreams = store.getState().webrtc.groupCallStreams;
+      const isStreamAdded = groupCallStreams.find(
+        (groupStreams) => groupStreams.id === stream.id
+      );
+      if (!isStreamAdded) {
+        store.dispatch(setGroupCallStreams(stream));
+      }
     });
   });
 };
@@ -66,5 +72,5 @@ export const joinGroupCall = async (peerId: string, roomId: string) => {
   const localStream = store.getState().webrtc.localStream;
   console.log("CONECTING TO: ", peerId);
   peer.call(peerId, localStream);
-  /// CONNECT TO ROOM
+  /// CONNECT TO ROOM, send my data to show me in groups
 };

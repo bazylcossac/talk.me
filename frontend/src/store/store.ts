@@ -16,11 +16,13 @@ const store = configureStore({
           "webrtc/setLocalStream",
           "webrtc/setRemoteStream",
           "webrtc/setScreenSharingScreen",
+          "webrtc/setGroupCallStreams",
         ],
         ignoredPaths: [
           "webrtc.localStream",
           "webrtc.remoteStream",
           "webrtc.screenSharingStrem",
+          "webrtc.groupCallStreams",
         ],
       },
     }),

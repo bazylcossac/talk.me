@@ -2,8 +2,15 @@ import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 import { useRef, useEffect } from "react";
 import { useUser } from "@clerk/clerk-react";
+import { cn } from "@/lib/utils";
 
-function LocalVideo() {
+function LocalVideo({
+  divClassName,
+  videoClassName,
+}: {
+  divClassName: string;
+  videoClassName: string;
+}) {
   const user = useUser();
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -31,16 +38,12 @@ function LocalVideo() {
 
   return (
     <div
-      className={`ml-auto absolute right-0 top-0 m-8  z-10 shadow-2xl ${
-        localCameraHide ? "hidden" : "inline-block"
-      }`}
+      className={cn(divClassName, {
+        hidden: localCameraHide,
+        "inline-block": !localCameraHide,
+      })}
     >
-      <video
-        ref={videoRef}
-        autoPlay
-        playsInline
-        className="rounded-md max-w-[250px] relative border-1 border-black/50 "
-      />
+      <video ref={videoRef} autoPlay playsInline className={videoClassName} />
       <p className="absolute bottom-0 p-1 text-xs text-white text-shado-2xl bg-blue-400 rounded-md m-1 ">
         {user.user?.username || user.user?.fullName}
       </p>

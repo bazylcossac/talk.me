@@ -6,7 +6,7 @@ const initialState = {
   localStream: null as MediaStream | null,
   remoteStream: null as MediaStream | null,
   screenSharingStrem: null as MediaStream | null,
-  groupCallStreams: null as MediaStream[] | null,
+  groupCallStreams: [] as MediaStream[],
   showCallButtons: false,
   selectedInputDeviceId: "",
   selectedOutputDeviceId: "",
@@ -51,7 +51,7 @@ const webrtcSlice = createSlice({
     },
     setGroupCallStreams: (state, action) => {
       const streams = state.groupCallStreams;
-      streams?.push(action.payload);
+      streams.push(action.payload);
 
       state.groupCallStreams = streams;
     },
