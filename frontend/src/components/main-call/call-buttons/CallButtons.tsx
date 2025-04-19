@@ -11,8 +11,17 @@ import {
   setScreenSharingEnabled,
 } from "@/store/slices/user";
 import { handleScreenSharing } from "@/connection/webrtcDevicesFunc";
+import { Ref, useEffect, useState } from "react";
+import { cn } from "@/lib/utils";
 
-function CallButtons({ className }: { className: string }) {
+function CallButtons({
+  className,
+  divRef,
+}: {
+  className: string;
+  divRef: Ref<HTMLDivElement>;
+}) {
+  const [buttonsVisible, setButtonsVisible] = useState(false);
   const dispatch = useDispatch();
   const screenSharingEnabled = useSelector(
     (state: RootState) => state.user.screenSharingEnabled
@@ -33,8 +42,33 @@ function CallButtons({ className }: { className: string }) {
     dispatch(setLocalCameraHide(!localCameraHide));
   };
 
+  useEffect(() => {
+    const div = divRef.current!;
+
+    const mouseEnter = () => {
+      setButtonsVisible(true);
+    };
+
+    const mouseLeave = () => {
+      setButtonsVisible(false);
+    };
+
+    div.addEventListener("mouseenter", mouseEnter);
+    div.addEventListener("mouseleave", mouseLeave);
+
+    return () => {
+      div.removeEventListener("mouseenter", mouseEnter);
+      div.removeEventListener("mouseleave", mouseLeave);
+    };
+  }, [divRef]);
+
   return (
-    <section className={className}>
+    <section
+      className={cn(className, {
+        "animate-fade-up": buttonsVisible,
+        " animate-fade-down animate-reverse": !buttonsVisible,
+      })}
+    >
       <VideoIcons
         optionsVisible={false}
         className="flex text-[20px] gap-4 bg-[#2c2c2c] rounded-md p-2"

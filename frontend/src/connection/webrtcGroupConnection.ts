@@ -13,6 +13,7 @@ import {
 import { callStatus, userStatus } from "@/lib/constants";
 import {
   clearAfterClosingConnection,
+  createPeerConection,
   disconnectFromRoom,
   setUpLocalStream,
 } from "./webrtcConnection";
@@ -55,6 +56,7 @@ export const createGroupPeerConnection = async () => {
 
 export const createGroupCall = async () => {
   await createGroupPeerConnection();
+
   await setUpLocalStream();
   const roomId = crypto.randomUUID();
   currentGroupId = roomId;
@@ -88,6 +90,7 @@ export const handleDisconnectFromGroupCall = (roomId: string) => {
 
 export const joinGroupCall = async (peerId: string, roomId: string) => {
   await createGroupPeerConnection();
+
   await setUpLocalStream();
   currentGroupId = roomId;
   const loggedUser = store.getState().user.loggedUser;

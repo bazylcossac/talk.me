@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 import LocalVideo from "../LocalVideo";
@@ -7,7 +7,6 @@ import { getGridClasses } from "@/functions/getGridClasses";
 import CallButtons from "../call-buttons/CallButtons";
 
 function MainGroupCallContainer() {
-  const [buttonsVisible, setButtonsVisible] = useState(false);
   const divRef = useRef<HTMLDivElement>(null);
 
   const groupCallStreams = useSelector(
@@ -17,28 +16,8 @@ function MainGroupCallContainer() {
     (state: RootState) => state.webrtc.groupCallUsers
   );
 
-  useEffect(() => {
-    const div = divRef.current!;
-
-    const mouseEnter = () => {
-      setButtonsVisible(true);
-    };
-
-    const mouseLeave = () => {
-      setButtonsVisible(false);
-    };
-
-    div.addEventListener("mouseenter", mouseEnter);
-    div.addEventListener("mouseleave", mouseLeave);
-
-    return () => {
-      div.removeEventListener("mouseenter", mouseEnter);
-      div.removeEventListener("mouseleave", mouseLeave);
-    };
-  }, []);
-
   return (
-    <div ref={divRef}>
+    <div ref={divRef} className="w-full h-full relative">
       <div
         className={`w-full h-full transition-none ${getGridClasses(
           groupCallStreams.length
@@ -62,13 +41,12 @@ function MainGroupCallContainer() {
           videoClassName="rounded-md border-1 border-black/50 w-full max-h-[400px] object-cover"
         />
       </div>
-      <div>
+      <div className="mt-auto p-2 absolute bottom-5 w-full">
         <CallButtons
-          className={`flex flex-row items-center justify-center gap-4 text-3xl [&>*]:hover:cursor-pointer animate-duration-300 mb-24 ${
-            buttonsVisible
-              ? "animate-fade-up"
-              : " animate-fade-down animate-reverse"
-          }`}
+          className={
+            "flex flex-row items-center justify-center gap-4 text-3xl [&>*]:hover:cursor-pointer animate-duration-300"
+          }
+          divRef={divRef}
         />
       </div>
     </div>

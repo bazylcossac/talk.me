@@ -1,17 +1,15 @@
 import { RootState } from "@/store/store";
-import { useRef, useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useRef, useEffect } from "react";
+import { useSelector } from "react-redux";
 import CallButtons from "./call-buttons/CallButtons";
 
 function RemoteVideo() {
-  const dispatch = useDispatch();
   const videoRef = useRef<HTMLVideoElement>(null);
   const divRef = useRef<HTMLDivElement>(null);
   const remoteStream = useSelector(
     (state: RootState) => state.webrtc.remoteStream
   );
   const calleData = useSelector((state: RootState) => state.user.calleData);
-  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     if (videoRef.current && remoteStream)
@@ -21,25 +19,6 @@ function RemoteVideo() {
       videoRef!.current!.play();
     };
   }, [remoteStream]);
-
-  useEffect(() => {
-    const divElement = divRef.current!;
-    const handleMouseEnter = () => {
-      setIsVisible(true);
-    };
-
-    const handleMouseLeave = () => {
-      setIsVisible(false);
-    };
-
-    divElement.addEventListener("mouseenter", handleMouseEnter);
-    divElement.addEventListener("mouseleave", handleMouseLeave);
-
-    return () => {
-      divElement.removeEventListener("mouseenter", handleMouseEnter);
-      divElement.removeEventListener("mouseleave", handleMouseLeave);
-    };
-  }, [dispatch]);
 
   return (
     <div
@@ -66,9 +45,10 @@ function RemoteVideo() {
 
       <div className="mt-auto p-2 absolute bottom-5 w-full   ">
         <CallButtons
-          className={`flex flex-row items-center justify-center gap-4 text-3xl [&>*]:hover:cursor-pointer animate-duration-300 mb-4 ${
-            isVisible ? "animate-fade-up" : " animate-fade-down animate-reverse"
-          }`}
+          className={
+            "flex flex-row items-center justify-center gap-4 text-3xl [&>*]:hover:cursor-pointer animate-duration-300 mb-4"
+          }
+          divRef={divRef}
         />
       </div>
     </div>
