@@ -11,7 +11,7 @@ import {
   setScreenSharingEnabled,
 } from "@/store/slices/user";
 import { handleScreenSharing } from "@/connection/webrtcDevicesFunc";
-import { Ref, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 
 function CallButtons({
@@ -19,7 +19,7 @@ function CallButtons({
   divRef,
 }: {
   className: string;
-  divRef: Ref<HTMLDivElement>;
+  divRef: React.RefObject<HTMLDivElement>;
 }) {
   const [buttonsVisible, setButtonsVisible] = useState(false);
   const dispatch = useDispatch();

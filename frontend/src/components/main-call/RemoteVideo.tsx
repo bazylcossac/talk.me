@@ -43,12 +43,12 @@ function RemoteVideo() {
         {calleData.username}
       </p>
 
-      <div className="mt-auto p-2 absolute bottom-5 w-full   ">
+      <div className="mt-auto  absolute bottom-5 right-1/2 translate-x-1/2 z-10 ">
         <CallButtons
           className={
-            "flex flex-row items-center justify-center gap-4 text-3xl [&>*]:hover:cursor-pointer animate-duration-300 mb-4"
+            "flex flex-row items-center justify-center gap-4 text-3xl [&>*]:hover:cursor-pointer animate-duration-300  bg-[#101010] rounded-md p-2"
           }
-          divRef={divRef}
+          divRef={divRef as React.RefObject<HTMLDivElement>}
         />
       </div>
     </div>

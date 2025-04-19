@@ -12,41 +12,42 @@ function MainGroupCallContainer() {
   const groupCallStreams = useSelector(
     (state: RootState) => state.webrtc.groupCallStreams
   );
+  const localStream = useSelector(
+    (state: RootState) => state.webrtc.localStream
+  );
+
+  const allStreams = [...groupCallStreams, localStream!];
+
   const groupCallUsers = useSelector(
     (state: RootState) => state.webrtc.groupCallUsers
   );
 
   return (
-    <div ref={divRef} className="w-full h-full relative">
+    <div ref={divRef} className="w-full h-full relative overflow-hidden">
       <div
-        className={`w-full h-full transition-none ${getGridClasses(
-          groupCallStreams.length
+        className={`w-full h-full transition-none p-2 ${getGridClasses(
+          allStreams.length
         )}`}
       >
-        {groupCallStreams?.map((stream: MediaStream) => {
+        {allStreams?.map((stream: MediaStream) => {
           const user = groupCallUsers?.find(
             (user) => user.streamId === stream.id
           );
           return (
             <GroupVideoElement
               stream={stream}
-              user={user?.user.username || "unknown"}
+              user={user!.user}
               key={stream.id}
             />
           );
         })}
-
-        <LocalVideo
-          divClassName="relative z-10 shadow-2xl m-2"
-          videoClassName="rounded-md border-1 border-black/50 w-full max-h-[400px] object-cover"
-        />
       </div>
-      <div className="mt-auto p-2 absolute bottom-5 w-full">
+      <div className="mt-auto  absolute bottom-5 right-1/2 translate-x-1/2 z-10 ">
         <CallButtons
           className={
-            "flex flex-row items-center justify-center gap-4 text-3xl [&>*]:hover:cursor-pointer animate-duration-300"
+            "flex flex-row items-center justify-center gap-4 text-3xl [&>*]:hover:cursor-pointer animate-duration-300  bg-[#101010] rounded-md p-2"
           }
-          divRef={divRef}
+          divRef={divRef as React.RefObject<HTMLDivElement>}
         />
       </div>
     </div>

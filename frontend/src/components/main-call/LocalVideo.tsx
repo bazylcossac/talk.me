@@ -43,8 +43,15 @@ function LocalVideo({
         "inline-block": !localCameraHide,
       })}
     >
+      <div className="absolute right-0 m-1">
+        <img
+          src={user.user?.imageUrl}
+          alt="local user image"
+          className="size-10 rounded-md"
+        />
+      </div>
       <video ref={videoRef} autoPlay playsInline className={videoClassName} />
-      <p className="absolute bottom-0 p-1 text-xs text-white text-shado-2xl bg-blue-400 rounded-md m-1 ">
+      <p className="absolute bottom-0 right-0  text-xs text-white text-shado-2xl bg-[#222222] p-2 rounded-md m-1 border-1 border-white/20">
         {user.user?.username || user.user?.fullName}
       </p>
     </div>

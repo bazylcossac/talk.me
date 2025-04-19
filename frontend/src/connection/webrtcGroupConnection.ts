@@ -13,7 +13,6 @@ import {
 import { callStatus, userStatus } from "@/lib/constants";
 import {
   clearAfterClosingConnection,
-  createPeerConection,
   disconnectFromRoom,
   setUpLocalStream,
 } from "./webrtcConnection";
