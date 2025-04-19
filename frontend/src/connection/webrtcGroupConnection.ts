@@ -1,6 +1,7 @@
 import Peer from "peerjs";
 import {
   sendCloseGroupCallRequest,
+  sendGroupUsersUpdate,
   sendJoinRequest,
   sendLeaveGroupCallRequest,
   sendRequestOpenGroupCall,
@@ -162,8 +163,9 @@ export const handleDisconnectMeFromGroupCall = (roomId: string) => {
 
 export const leaveGroupCall = () => {
   const localStream = store.getState().webrtc.localStream;
-  if (!localStream) return;
 
+  if (!localStream) return;
+  // dodac od razu zalogowanego uzytkownika bedzie latwiej>??
   sendLeaveGroupCallRequest({
     streamId: localStream.id,
     roomId: currentGroupId,
@@ -172,7 +174,7 @@ export const leaveGroupCall = () => {
   handleDisconnectFromGroupCall(currentGroupId);
 };
 
-export const handleUserGroupCallDisconnect = (streamId: string) => {
+export const handleUserGroupCallLeave = (streamId: string, roomId: string) => {
   const groupCallUsers = store.getState().webrtc.groupCallUsers;
   const userToRemove = groupCallUsers.find(
     (user) => user.streamId === streamId
@@ -187,4 +189,10 @@ export const handleUserGroupCallDisconnect = (streamId: string) => {
 
   store.dispatch(setNewGroupCallUsers(newUsers));
   store.dispatch(setNewGroupCallStreams(newStreams));
+
+  sendGroupUsersUpdate({
+    user: userToRemove!,
+    roomId,
+    type: "remove",
+  });
 };

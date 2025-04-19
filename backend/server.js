@@ -154,9 +154,10 @@ io.on("connection", (socket) => {
     console.log(data);
     socket.join(data.roomId);
     socket.to(data.roomId).emit("join-group-call-request", data);
-    io.sockets.emit("user-joined-group-call-update", {
+    io.sockets.emit("group-users-change-update", {
       user: data.user,
       roomId: data.roomId,
+      type: "add",
     });
   });
 
@@ -170,7 +171,16 @@ io.on("connection", (socket) => {
   });
 
   socket.on("leave-group-call", ({ streamId, roomId }) => {
-    socket.to(roomId).emit("leave-group-call", streamId);
+    socket.to(roomId).emit("leave-group-call", { streamId, roomId });
+  });
+
+  socket.on("group-users-change-update", ({ user, roomId, type }) => {
+    console.log({ user, roomId, type });
+    io.sockets.emit("group-users-change-update", {
+      user,
+      roomId,
+      type,
+    });
   });
 });
 

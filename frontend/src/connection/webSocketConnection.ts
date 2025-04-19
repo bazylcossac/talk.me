@@ -28,7 +28,7 @@ import {
   connectToGroupCall,
   handleDisconnectFromGroupCall,
   handleDisconnectMeFromGroupCall,
-  handleUserGroupCallDisconnect,
+  handleUserGroupCallLeave,
   leaveGroupCall,
 } from "./webrtcGroupConnection";
 import { setGroupCallUsers, setNewGroupCallUsers } from "@/store/slices/webrtc";
@@ -137,7 +137,7 @@ export const connectToWebSocket = () => {
   socket.on(
     "group-call-user-disconnect",
     ({ roomId, socketId }: { roomId: string; socketId: string }) => {
-      handleUserGroupCallDisconnect(socketId);
+      handleUserGroupCallLeave(socketId);
     }
   );
 
@@ -150,24 +150,51 @@ export const connectToWebSocket = () => {
     socket.emit("user-join-users-update", { users, roomId: data.roomId });
   });
 
-  socket.on("user-joined-group-call-update", ({ user, roomId }) => {
+  socket.on("group-users-change-update", ({ user, roomId, type }) => {
     const groups = store.getState().user.activeGroups;
-
     const group = groups.find((group) => group.roomId === roomId);
-    if (!group) {
-      /// do some logic when user try to join group that does not exist
-      return;
-    }
-    const updatedUsersGroup = {
-      ...group,
-      users: [...group!.users, user],
-    };
+    switch (type) {
+      case "add": {
+        if (!group) {
+          /// do some logic when user try to join group that does not exist
+          return;
+        }
+        const updatedUsersGroup = {
+          ...group,
+          users: [...group!.users, user],
+        };
 
-    const filteredGroups = groups.filter(
-      (activeGroup) => activeGroup.roomId !== group.roomId
-    );
-    const newGroups = [...filteredGroups, updatedUsersGroup];
-    store.dispatch(setActiveGroups(newGroups));
+        const filteredGroups = groups.filter(
+          (activeGroup) => activeGroup.roomId !== group.roomId
+        );
+        const newGroups = [...filteredGroups, updatedUsersGroup];
+        store.dispatch(setActiveGroups(newGroups));
+        break;
+      }
+      case "remove": {
+        // remove user
+        if (!group) {
+          /// do some logic when user try to join group that does not exist
+          return;
+        }
+        const filteredUsers = group.users.filter(
+          (groupUser) => groupUser.socketId !== user.user.socketId
+        );
+
+        const updatedUsersGroup = {
+          ...group,
+          users: [...filteredUsers],
+        };
+
+        console.log("UPPDATES USERS");
+        console.log(updatedUsersGroup);
+        const filteredGroups = groups.filter(
+          (activeGroup) => activeGroup.roomId !== group.roomId
+        );
+        const newGroups = [...filteredGroups, updatedUsersGroup];
+        store.dispatch(setActiveGroups(newGroups));
+      }
+    }
   });
 
   socket.on("user-join-users-update", (users) => {
@@ -187,9 +214,12 @@ export const connectToWebSocket = () => {
     store.dispatch(setActiveGroups(newGroups));
   });
 
-  socket.on("leave-group-call", (streamId) => {
-    handleUserGroupCallDisconnect(streamId);
-  });
+  socket.on(
+    "leave-group-call",
+    ({ streamId, roomId }: { streamId: string; roomId: string }) => {
+      handleUserGroupCallLeave(streamId, roomId);
+    }
+  );
 };
 
 // user join - disconnect
@@ -332,4 +362,20 @@ export const sendLeaveGroupCallRequest = ({
   roomId: string;
 }) => {
   socket.emit("leave-group-call", { streamId, roomId });
+};
+
+export const sendGroupUsersUpdate = ({
+  user,
+  roomId,
+  type,
+}: {
+  user: groupCallUserDataType;
+  roomId: string;
+  type: "add" | "remove";
+}) => {
+  socket.emit("group-users-change-update", {
+    user,
+    roomId,
+    type,
+  });
 };

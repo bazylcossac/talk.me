@@ -29,6 +29,7 @@ export type GroupCallDataType = {
     username: string;
     imageUrl: string;
     status: (typeof userStatus)[keyof typeof userStatus];
+    socketId: string
   }[];
 };
 
