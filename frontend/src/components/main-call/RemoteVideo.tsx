@@ -13,12 +13,6 @@ function RemoteVideo() {
   const calleData = useSelector((state: RootState) => state.user.calleData);
   const [isVisible, setIsVisible] = useState(false);
 
-  const groupCallStreams = useSelector(
-    (state: RootState) => state.webrtc.groupCallStreams
-  );
-
-  console.log(groupCallStreams);
-
   useEffect(() => {
     if (videoRef.current && remoteStream)
       videoRef!.current!.srcObject = remoteStream;

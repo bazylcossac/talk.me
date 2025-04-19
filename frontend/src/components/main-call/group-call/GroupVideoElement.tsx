@@ -5,7 +5,7 @@ function GroupVideoElement({
   user,
 }: {
   stream: MediaStream;
-  user: any;
+  user: string;
 }) {
   console.log(user);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -27,7 +27,7 @@ function GroupVideoElement({
         className="rounded-md max-h-[400px] w-full object-cover"
       />
       <p className="absolute bottom-0 p-1 text-xs text-white text-shado-2xl bg-blue-400 rounded-md m-1 ">
-        {user?.user?.username}
+        {user}
       </p>
     </div>
   );
