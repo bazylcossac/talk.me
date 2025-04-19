@@ -1,5 +1,6 @@
 import Peer from "peerjs";
 import {
+  sendCloseGroupCallRequest,
   sendJoinRequest,
   sendRequestOpenGroupCall,
 } from "./webSocketConnection";
@@ -22,7 +23,7 @@ import { toast } from "sonner";
 
 let myPeerId: string;
 let peer: any;
-let currentGroupId: string | null;
+let currentGroupId: string;
 
 export const createGroupPeerConnection = async () => {
   const credentials = await getCredentials();
@@ -78,13 +79,15 @@ export const createGroupCall = async () => {
   store.dispatch(setGroupCallUsers(data));
 };
 
+// cleanup function after disconnecting from group call
 export const handleDisconnectFromGroupCall = (roomId: string) => {
+  console.log("CLOSING CALL");
   store.dispatch(setIsInGroupCall(false));
   clearAfterClosingConnection();
   disconnectFromRoom(roomId);
   store.dispatch(setGroupCallStreams([]));
   store.dispatch(setGroupCallUsers([]));
-  currentGroupId = null;
+  currentGroupId = "";
 };
 
 export const joinGroupCall = async (peerId: string, roomId: string) => {
@@ -140,4 +143,13 @@ export const connectToGroupCall = (data) => {
       store.dispatch(setGroupCallStreams(stream));
     }
   });
+};
+
+export const closeGroupCallByHost = () => {
+  sendCloseGroupCallRequest(currentGroupId);
+  handleDisconnectFromGroupCall(currentGroupId);
+};
+
+export const handleDisconnectMeFromGroupCall = (roomId: string) => {
+  handleDisconnectFromGroupCall(roomId);
 };

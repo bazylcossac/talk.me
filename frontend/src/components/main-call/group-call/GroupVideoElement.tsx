@@ -28,8 +28,8 @@ function GroupVideoElement({
   return (
     <div className="relative m-2 z-1 w-full h-full overflow-hidden rounded-md">
       <img
-        src={user.imageUrl}
-        alt={`${user.username} image`}
+        src={user?.imageUrl}
+        alt={`${user?.username} image`}
         className="absolute size-10 rounded-md right-0 m-1"
       />
 
@@ -45,7 +45,7 @@ function GroupVideoElement({
         className="rounded-md object-cover w-full h-full"
       />
       <p className="absolute bottom-0 right-0  text-xs text-white text-shado-2xl bg-[#222222] p-2 rounded-md m-1 border-1 border-white/20">
-        {user.username}
+        {user?.username}
       </p>
     </div>
   );

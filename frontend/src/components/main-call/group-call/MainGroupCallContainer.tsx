@@ -1,10 +1,11 @@
 import { useRef } from "react";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
-import LocalVideo from "../LocalVideo";
+
 import GroupVideoElement from "./GroupVideoElement";
 import { getGridClasses } from "@/functions/getGridClasses";
-import CallButtons from "../call-buttons/CallButtons";
+
+import GroupCallButtons from "./GroupCallButtons";
 
 function MainGroupCallContainer() {
   const divRef = useRef<HTMLDivElement>(null);
@@ -43,7 +44,7 @@ function MainGroupCallContainer() {
         })}
       </div>
       <div className="mt-auto  absolute bottom-5 right-1/2 translate-x-1/2 z-10 ">
-        <CallButtons
+        <GroupCallButtons
           className={
             "flex flex-row items-center justify-center gap-4 text-3xl [&>*]:hover:cursor-pointer animate-duration-300  bg-[#101010] rounded-md p-2"
           }

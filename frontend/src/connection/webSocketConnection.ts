@@ -27,6 +27,7 @@ import { toast } from "sonner";
 import {
   connectToGroupCall,
   handleDisconnectFromGroupCall,
+  handleDisconnectMeFromGroupCall,
 } from "./webrtcGroupConnection";
 import { setGroupCallUsers, setNewGroupCallUsers } from "@/store/slices/webrtc";
 
@@ -125,7 +126,8 @@ export const connectToWebSocket = () => {
   });
 
   socket.on("close-group-call-gone", (roomId) => {
-    handleDisconnectFromGroupCall(roomId);
+    // handleDisconnectFromGroupCall(roomId);
+    // handle removing steram from current group call
   });
 
   socket.on("join-group-call-request", (data) => {
@@ -161,6 +163,16 @@ export const connectToWebSocket = () => {
     console.log("USERS");
     console.log(users);
     store.dispatch(setNewGroupCallUsers(users));
+  });
+
+  socket.on("close-group-call-by-host", (roomId: string) => {
+    handleDisconnectMeFromGroupCall(roomId);
+  });
+
+  socket.on("remove-group-call", (roomId) => {
+    const activeGroups = store.getState().user.activeGroups;
+    const newGroups = activeGroups.filter((group) => group.roomId !== roomId);
+    store.dispatch(setActiveGroups(newGroups));
   });
 };
 
@@ -290,4 +302,8 @@ export const sendRequestOpenGroupCall = (peerId: string, roomId: string) => {
 
 export const sendJoinRequest = (data: groupCallUserDataType) => {
   socket.emit("join-group-call-request", data);
+};
+
+export const sendCloseGroupCallRequest = (roomId: string) => {
+  socket.emit("close-group-call-by-host", roomId);
 };

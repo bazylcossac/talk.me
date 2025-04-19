@@ -161,6 +161,11 @@ io.on("connection", (socket) => {
   socket.on("user-join-users-update", ({ users, roomId }) => {
     socket.to(roomId).emit("user-join-users-update", users);
   });
+
+  socket.on("close-group-call-by-host", (roomId) => {
+    socket.to(roomId).emit("close-group-call-by-host", roomId);
+    io.sockets.emit("remove-group-call", roomId);
+  });
 });
 
 server.listen(PORT, () => {
