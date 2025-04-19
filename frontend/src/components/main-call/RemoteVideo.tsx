@@ -39,7 +39,7 @@ function RemoteVideo() {
         playsInline
         className="rounded-md h-full w-full object-cover relative"
       />
-      <p className="absolute bottom-4 p-1 text-white text-shado-2xl text-xs bg-blue-400 rounded-md m-1">
+      <p className="absolute bottom-4 right-4  text-xs text-white text-shado-2xl bg-[#222222] p-2 rounded-md m-1 border-1 border-white/20">
         {calleData.username}
       </p>
 

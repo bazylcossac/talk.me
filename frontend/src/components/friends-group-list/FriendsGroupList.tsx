@@ -10,6 +10,7 @@ import {
 import ActiveGroup from "./ActiveGroup";
 import { Button } from "../ui/button";
 import { createGroupCall } from "@/connection/webrtcGroupConnection";
+import { callStatus } from "@/lib/constants";
 
 function FriendsGroupList() {
   const dispatch = useDispatch();
@@ -27,6 +28,7 @@ function FriendsGroupList() {
   const isInGroupCall = useSelector(
     (state: RootState) => state.user.isInGroupCall
   );
+  const callState = useSelector((state: RootState) => state.user.userCallState);
 
   return (
     <section className="bg-[#222222] md:w-[250px] w-full  h-full rounded-md overflow-y-auto scrollbar-hide">
@@ -74,12 +76,18 @@ function FriendsGroupList() {
             <Button
               className="m-1 cursor-pointer hover:bg-neutral-700"
               onClick={createGroupCall}
-              disabled={isInGroupCall}
+              disabled={
+                isInGroupCall || callState === callStatus.CALL_IN_PROGRESS
+              }
             >
-              {isInGroupCall ? "In group call" : "Create group"}
+              {isInGroupCall
+                ? "In group call"
+                : callState === callStatus.CALL_IN_PROGRESS
+                ? "In call"
+                : "Create group"}
             </Button>
             {activeGroups.map((group) => (
-              <ActiveGroup group={group} />
+              <ActiveGroup group={group} callState={callState} />
             ))}
           </section>
         )}

@@ -4,8 +4,15 @@ import { cn } from "@/lib/utils";
 import { GroupCallDataType } from "@/types/types";
 import { RxEnter } from "react-icons/rx";
 import { RootState } from "@/store/store";
+import { callStatus } from "@/lib/constants";
 
-function ActiveGroup({ group }: { group: GroupCallDataType }) {
+function ActiveGroup({
+  group,
+  callState,
+}: {
+  group: GroupCallDataType;
+  callState: (typeof callStatus)[keyof typeof callStatus];
+}) {
   const isInGroupCall = useSelector(
     (state: RootState) => state.user.isInGroupCall
   );
@@ -41,7 +48,13 @@ function ActiveGroup({ group }: { group: GroupCallDataType }) {
               }
             )}
           >
-            <button onClick={() => joinGroupCall(group.peerId, group.roomId)}>
+            <button
+              onClick={() => joinGroupCall(group.peerId, group.roomId)}
+              disabled={
+                callState === callStatus.CALL_IN_PROGRESS ||
+                callState === callStatus.CALL_REQUESTED
+              }
+            >
               <RxEnter />
             </button>
           </div>
