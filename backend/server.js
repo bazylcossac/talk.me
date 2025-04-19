@@ -130,7 +130,9 @@ io.on("connection", (socket) => {
 
     activeUsers = usersLeft;
     io.sockets.emit("user-disconnected", usersLeft);
-    io.sockets.to(roomId).emit("close-call-user-gone", roomId);
+    socket
+      .to(roomId)
+      .emit("group-call-user-disconnect", { roomId, socketId: socket.id });
     roomId = "";
   });
 
@@ -165,6 +167,10 @@ io.on("connection", (socket) => {
   socket.on("close-group-call-by-host", (roomId) => {
     socket.to(roomId).emit("close-group-call-by-host", roomId);
     io.sockets.emit("remove-group-call", roomId);
+  });
+
+  socket.on("leave-group-call", ({ streamId, roomId }) => {
+    socket.to(roomId).emit("leave-group-call", streamId);
   });
 });
 

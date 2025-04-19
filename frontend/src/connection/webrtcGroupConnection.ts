@@ -2,6 +2,7 @@ import Peer from "peerjs";
 import {
   sendCloseGroupCallRequest,
   sendJoinRequest,
+  sendLeaveGroupCallRequest,
   sendRequestOpenGroupCall,
 } from "./webSocketConnection";
 import store from "@/store/store";
@@ -18,7 +19,12 @@ import {
   setUpLocalStream,
 } from "./webrtcConnection";
 import { getCredentials } from "@/functions/getCredentials";
-import { setGroupCallStreams, setGroupCallUsers } from "@/store/slices/webrtc";
+import {
+  setGroupCallStreams,
+  setGroupCallUsers,
+  setNewGroupCallStreams,
+  setNewGroupCallUsers,
+} from "@/store/slices/webrtc";
 import { toast } from "sonner";
 
 let myPeerId: string;
@@ -152,4 +158,33 @@ export const closeGroupCallByHost = () => {
 
 export const handleDisconnectMeFromGroupCall = (roomId: string) => {
   handleDisconnectFromGroupCall(roomId);
+};
+
+export const leaveGroupCall = () => {
+  const localStream = store.getState().webrtc.localStream;
+  if (!localStream) return;
+
+  sendLeaveGroupCallRequest({
+    streamId: localStream.id,
+    roomId: currentGroupId,
+  });
+
+  handleDisconnectFromGroupCall(currentGroupId);
+};
+
+export const handleUserGroupCallDisconnect = (streamId: string) => {
+  const groupCallUsers = store.getState().webrtc.groupCallUsers;
+  const userToRemove = groupCallUsers.find(
+    (user) => user.streamId === streamId
+  );
+  // const streamid = userToRemove?.streamId;
+
+  const newUsers = groupCallUsers.filter((user) => user.streamId !== streamId);
+
+  const streams = store.getState().webrtc.groupCallStreams;
+
+  const newStreams = streams.filter((stream) => stream.id !== streamId);
+
+  store.dispatch(setNewGroupCallUsers(newUsers));
+  store.dispatch(setNewGroupCallStreams(newStreams));
 };

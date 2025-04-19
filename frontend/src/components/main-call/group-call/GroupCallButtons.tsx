@@ -14,7 +14,10 @@ import { handleScreenSharing } from "@/connection/webrtcDevicesFunc";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { MdExitToApp } from "react-icons/md";
-import { closeGroupCallByHost } from "@/connection/webrtcGroupConnection";
+import {
+  closeGroupCallByHost,
+  leaveGroupCall,
+} from "@/connection/webrtcGroupConnection";
 
 function GroupCallButtons({
   className,
@@ -39,10 +42,6 @@ function GroupCallButtons({
   const isInGroupCall = useSelector(
     (state: RootState) => state.user.isInGroupCall
   );
-
-  const leaveCall = () => {
-    handleLeaveCall();
-  };
 
   const screenSharing = () => {
     dispatch(setScreenSharingEnabled(!screenSharingEnabled));
@@ -112,7 +111,7 @@ function GroupCallButtons({
       ) : (
         <MdExitToApp
           className="text-white bg-red-500 hover:text-red-400 hover:bg-red-700  rounded-md p-1.75"
-          onClick={leaveCall}
+          onClick={leaveGroupCall}
         />
       )}
     </section>

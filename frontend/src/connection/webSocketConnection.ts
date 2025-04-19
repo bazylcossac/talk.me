@@ -28,6 +28,8 @@ import {
   connectToGroupCall,
   handleDisconnectFromGroupCall,
   handleDisconnectMeFromGroupCall,
+  handleUserGroupCallDisconnect,
+  leaveGroupCall,
 } from "./webrtcGroupConnection";
 import { setGroupCallUsers, setNewGroupCallUsers } from "@/store/slices/webrtc";
 
@@ -126,9 +128,18 @@ export const connectToWebSocket = () => {
   });
 
   socket.on("close-group-call-gone", (roomId) => {
-    // handleDisconnectFromGroupCall(roomId);
+    handleDisconnectFromGroupCall(roomId);
+    toast("Host left");
     // handle removing steram from current group call
+    // leaveGroupCall()
   });
+
+  socket.on(
+    "group-call-user-disconnect",
+    ({ roomId, socketId }: { roomId: string; socketId: string }) => {
+      handleUserGroupCallDisconnect(socketId);
+    }
+  );
 
   socket.on("join-group-call-request", (data) => {
     console.log("JOIN REQUEST");
@@ -167,12 +178,17 @@ export const connectToWebSocket = () => {
 
   socket.on("close-group-call-by-host", (roomId: string) => {
     handleDisconnectMeFromGroupCall(roomId);
+    toast("Group call closed by host");
   });
 
   socket.on("remove-group-call", (roomId) => {
     const activeGroups = store.getState().user.activeGroups;
     const newGroups = activeGroups.filter((group) => group.roomId !== roomId);
     store.dispatch(setActiveGroups(newGroups));
+  });
+
+  socket.on("leave-group-call", (streamId) => {
+    handleUserGroupCallDisconnect(streamId);
   });
 };
 
@@ -306,4 +322,14 @@ export const sendJoinRequest = (data: groupCallUserDataType) => {
 
 export const sendCloseGroupCallRequest = (roomId: string) => {
   socket.emit("close-group-call-by-host", roomId);
+};
+
+export const sendLeaveGroupCallRequest = ({
+  streamId,
+  roomId,
+}: {
+  streamId: string;
+  roomId: string;
+}) => {
+  socket.emit("leave-group-call", { streamId, roomId });
 };

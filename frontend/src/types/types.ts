@@ -12,6 +12,7 @@ export type groupCallUserDataType = {
   streamId: string;
   user: {
     username: string;
+    socketId: string;
     imageUrl: string;
     status: (typeof userStatus)[keyof typeof userStatus];
   };
