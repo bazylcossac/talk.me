@@ -7,7 +7,13 @@ import { setScreenSharingEnabled } from "@/store/slices/user";
 import store from "@/store/store";
 import { peerConnection, setUpLocalStream } from "./webrtcConnection";
 import { toast } from "sonner";
-import { setLocalStream, setScreenSharingScreen } from "@/store/slices/webrtc";
+import {
+  setGroupCallUsers,
+  setLocalStream,
+  setNewGroupCallUsers,
+  setScreenSharingScreen,
+} from "@/store/slices/webrtc";
+import { currentGroupId, myPeerId } from "./webrtcGroupConnection";
 
 export const handleScreenSharing = async (
   screenSharingEnabled: boolean
@@ -121,9 +127,28 @@ export const changeInputDevice = async (
           audio: { deviceId: { exact: deviceId } },
         });
 
+        if (store.getState().user.isInGroupCall) {
+          const groupUsers = store.getState().webrtc.groupCallUsers;
+
+          const user = groupUsers.find((user) => user.peerId === myPeerId);
+          if (!user) {
+            throw new Error("Error failed to change input");
+          }
+
+          const newUser = {
+            ...user,
+            streamId: stream.id,
+          };
+
+          const newGroupUsers = [...groupUsers, newUser];
+
+          store.dispatch(setNewGroupCallUsers(newGroupUsers));
+        }
+
         store.dispatch(setLocalStream(stream));
-      } catch {
-        toast.error("Failed to change camera");
+      } catch (err) {
+        toast.error("Failed to change input");
+        console.error(err);
       }
     }
   }

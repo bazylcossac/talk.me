@@ -33,7 +33,7 @@ function MainGroupCallContainer() {
           allStreams.length
         )}`}
       >
-        {allStreams?.map((stream: MediaStream) => {
+        {allStreams?.map((stream) => {
           const user = groupCallUsers?.find(
             (user) => user.streamId === stream.id
           );

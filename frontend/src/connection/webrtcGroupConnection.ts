@@ -28,9 +28,9 @@ import {
 } from "@/store/slices/webrtc";
 import { toast } from "sonner";
 
-let myPeerId: string;
-let peer: any;
-let currentGroupId: string;
+export let myPeerId: string;
+export let peer: any;
+export let currentGroupId: string;
 
 export const createGroupPeerConnection = async () => {
   const credentials = await getCredentials();
@@ -101,7 +101,6 @@ export const handleDisconnectFromGroupCall = (roomId: string) => {
 export const joinGroupCall = async (peerId: string, roomId: string) => {
   handleDisconnectFromGroupCall(currentGroupId);
   await createGroupPeerConnection();
-
   await setUpLocalStream();
   currentGroupId = roomId;
   const loggedUser = store.getState().user.loggedUser;
@@ -113,7 +112,7 @@ export const joinGroupCall = async (peerId: string, roomId: string) => {
   const data = {
     peerId: myPeerId,
     roomId: roomId,
-    streamId: localStream!.id,
+    streamId: localStream.id,
     user: { ...loggedUser },
   };
   store.dispatch(setGroupCallUsers(data));
