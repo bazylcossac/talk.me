@@ -92,8 +92,8 @@ export const handleDisconnectFromGroupCall = (roomId: string) => {
   store.dispatch(setIsInGroupCall(false));
   clearAfterClosingConnection();
   disconnectFromRoom(roomId);
-  store.dispatch(setGroupCallStreams([]));
-  store.dispatch(setGroupCallUsers([]));
+  store.dispatch(setNewGroupCallStreams([]));
+  store.dispatch(setNewGroupCallUsers([]));
   currentGroupId = "";
 };
 

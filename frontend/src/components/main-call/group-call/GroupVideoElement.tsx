@@ -18,10 +18,16 @@ function GroupVideoElement({
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    videoRef.current!.srcObject = stream;
+    const ref = videoRef.current;
+    if (stream && ref) {
+      ref.srcObject = stream;
 
-    videoRef.current!.onloadedmetadata = () => {
-      videoRef.current!.play();
+      ref.onloadedmetadata = () => {
+        ref.play();
+      };
+    }
+    return () => {
+      ref!.srcObject = null;
     };
   }, [stream]);
 

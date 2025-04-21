@@ -29,7 +29,6 @@ import {
   handleDisconnectFromGroupCall,
   handleDisconnectMeFromGroupCall,
   handleUserGroupCallLeave,
-  leaveGroupCall,
 } from "./webrtcGroupConnection";
 import { setGroupCallUsers, setNewGroupCallUsers } from "@/store/slices/webrtc";
 
