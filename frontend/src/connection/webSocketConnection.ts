@@ -207,9 +207,12 @@ export const connectToWebSocket = () => {
     toast("Group call closed by host");
   });
 
-  socket.on("remove-group-call", (roomId) => {
-    const activeGroups = store.getState().user.activeGroups;
-    const newGroups = activeGroups.filter((group) => group.roomId !== roomId);
+  socket.on("remove-group-call", (newGroups) => {
+    console.log("USUN TA GRUPE");
+    // console.log(roomId);
+    // const activeGroups = store.getState().user.activeGroups;
+    // const newGroups = activeGroups.filter((group) => group.roomId !== roomId);
+    // console.log(newGroups);
     store.dispatch(setActiveGroups(newGroups));
   });
 

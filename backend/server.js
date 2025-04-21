@@ -57,7 +57,7 @@ io.on("connection", (socket) => {
 
   socket.on("user-join", (data) => {
     activeUsers.push(data);
-    io.sockets.emit("user-join", {activeUsers, activeGroupCalls});
+    io.sockets.emit("user-join", { activeUsers, activeGroupCalls });
   });
 
   socket.on("send-pre-offer", (data) => {
@@ -108,6 +108,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect-from-room", (roomID) => {
+    // remove user from roomId via SOCKET ID
     socket.leave(roomID);
     roomId = "";
   });
@@ -166,8 +167,12 @@ io.on("connection", (socket) => {
   });
 
   socket.on("close-group-call-by-host", (roomId) => {
+    const newGroups = activeGroupCalls.filter(
+      (group) => group.roomId !== roomId
+    );
+    activeGroupCalls = newGroups;
     socket.to(roomId).emit("close-group-call-by-host", roomId);
-    io.sockets.emit("remove-group-call", roomId);
+    io.sockets.emit("remove-group-call", newGroups);
   });
 
   socket.on("leave-group-call", ({ streamId, roomId }) => {

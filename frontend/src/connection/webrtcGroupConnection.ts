@@ -88,6 +88,7 @@ export const createGroupCall = async () => {
 
 // cleanup function after disconnecting from group call
 export const handleDisconnectFromGroupCall = (roomId: string) => {
+  if (!roomId) return;
   console.log("CLOSING CALL");
   store.dispatch(setIsInGroupCall(false));
   clearAfterClosingConnection();
@@ -98,6 +99,7 @@ export const handleDisconnectFromGroupCall = (roomId: string) => {
 };
 
 export const joinGroupCall = async (peerId: string, roomId: string) => {
+  handleDisconnectFromGroupCall(currentGroupId);
   await createGroupPeerConnection();
 
   await setUpLocalStream();
