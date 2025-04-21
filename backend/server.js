@@ -57,7 +57,7 @@ io.on("connection", (socket) => {
 
   socket.on("user-join", (data) => {
     activeUsers.push(data);
-    io.sockets.emit("user-join", activeUsers);
+    io.sockets.emit("user-join", {activeUsers, activeGroupCalls});
   });
 
   socket.on("send-pre-offer", (data) => {

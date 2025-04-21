@@ -44,12 +44,12 @@ export const connectToWebSocket = () => {
     console.log(socketId);
   });
 
-  socket.on("user-join", (activeUsers) => {
+  socket.on("user-join", ({ activeUsers, activeGroupCalls }) => {
     const activeUsersButMe = activeUsers.filter(
       (user: userDataType) => user.socketId !== mySocketId
     );
 
-    handleUserJoin(activeUsersButMe);
+    handleUserJoin(activeUsersButMe, activeGroupCalls);
   });
 
   socket.on("user-disconnected", (activeUsers) => {
@@ -229,8 +229,12 @@ export const userJoin = (userData: Omit<userDataType, "socketId">) => {
   store.dispatch(setCurrentlyLoggedUser({ ...userData, socketId: mySocketId }));
 };
 
-export const handleUserJoin = (activeUsers: userDataType[]) => {
+export const handleUserJoin = (
+  activeUsers: userDataType[],
+  activeGroupCalls: GroupCallDataType[]
+) => {
   store.dispatch(setActiveUsers(activeUsers));
+  store.dispatch(setActiveGroups(activeGroupCalls));
 };
 
 export const handleUserDisconnect = (activeUsers: userDataType[]) => {
