@@ -64,13 +64,16 @@ export const createGroupPeerConnection = async () => {
   });
 };
 
-export const createGroupCall = async () => {
+export const createGroupCall = async (
+  groupName: string,
+  groupPassword: string | null
+) => {
   await createGroupPeerConnection();
 
   await setUpLocalStream();
   const roomId = crypto.randomUUID();
   currentGroupId = roomId;
-  sendRequestOpenGroupCall(myPeerId, roomId);
+  sendRequestOpenGroupCall(myPeerId, roomId, groupName, groupPassword);
   store.dispatch(setHasCreatedGroupCall(true));
   store.dispatch(setIsInGroupCall(true));
   store.dispatch(setCallStatus(callStatus.CALL_IN_PROGRESS));

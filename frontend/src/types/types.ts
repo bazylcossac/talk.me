@@ -29,8 +29,10 @@ export type GroupCallDataType = {
     username: string;
     imageUrl: string;
     status: (typeof userStatus)[keyof typeof userStatus];
-    socketId: string
+    socketId: string;
   }[];
+  groupName: string;
+  groupPassword: string | null;
 };
 
 export type preOfferDataType = {

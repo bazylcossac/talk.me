@@ -13,8 +13,9 @@ import OutputSelect from "../../profile-dashboard/settings-dialog/OutputSelect";
 import InputSelect from "../../profile-dashboard/settings-dialog/InputSelect";
 import CameraSelect from "../../profile-dashboard/settings-dialog/CameraSelect";
 import LowSettingsSwitch from "../../profile-dashboard/settings-dialog/LowSettingsSwitch";
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { Input } from "@/components/ui/input";
+import { createGroupCall } from "@/connection/webrtcGroupConnection";
 
 function SettingsDialog({
   createDialogVisible,
@@ -28,11 +29,12 @@ function SettingsDialog({
   const [allInputs, setAllInputs] = useState<MediaDeviceInfo[]>([]);
   const [allOutputs, setAllOutputs] = useState<MediaDeviceInfo[]>([]);
   const [allCameras, setAllCamers] = useState<MediaDeviceInfo[]>([]);
-  const [groupName, setGroupName] = useState("");
-  const [groupPassword, setGroupPassword] = useState("");
   const [passwordInputType, setPasswordInputType] = useState<
     "text" | "password"
   >("password");
+
+  const nameInputRef = useRef<HTMLInputElement>(null);
+  const passwordInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const getMediaDevices = async () => {
@@ -59,6 +61,16 @@ function SettingsDialog({
     });
   }, [allDevices]);
 
+  const handleCreateGroup = async (e: FormEvent) => {
+    e.preventDefault();
+    const form = e.target as HTMLFormElement;
+    const formData = new FormData(form);
+    const groupName = formData.get("group-name");
+    const groupPassword = formData.get("group-password") || null;
+
+    await createGroupCall(groupName, groupPassword);
+  };
+
   return (
     <dialog>
       <Dialog open={createDialogVisible} onOpenChange={setCreateDialogVisible}>
@@ -70,60 +82,62 @@ function SettingsDialog({
               </DialogTitle>
               <DialogDescription></DialogDescription>
             </DialogHeader>
-
-            <div className="flex flex-col gap-4">
-              <div>
-                <label htmlFor="group-name" className="text-xs">
-                  Group name
-                </label>
-                <Input
-                  type="text"
-                  id="group-password"
-                  placeholder="Group name"
-                  value={groupName}
-                  onChange={(e) => setGroupName(e.target.value)}
-                />
+            <form onSubmit={handleCreateGroup}>
+              <div className="flex flex-col gap-4">
+                <div>
+                  <label htmlFor="group-name" className="text-xs">
+                    Group name
+                  </label>
+                  <Input
+                    type="text"
+                    id="group-name"
+                    name="group-name"
+                    placeholder="Group name"
+                    ref={nameInputRef}
+                    required
+                  />
+                </div>
+                <div className="relative">
+                  <label htmlFor="group-password" className="text-xs">
+                    Group password
+                  </label>
+                  <Input
+                    type={passwordInputType}
+                    id="group-password"
+                    placeholder="Group password"
+                    name="group-password"
+                    ref={passwordInputRef}
+                  />
+                  <button
+                    onClick={() =>
+                      setPasswordInputType((prev) =>
+                        prev === "password" ? "text" : "password"
+                      )
+                    }
+                  >
+                    {passwordInputType === "password" ? (
+                      <FaRegEyeSlash className="absolute right-4 top-8.5 text-white/70 hover:text-white  cursor-pointer" />
+                    ) : (
+                      <FaRegEye className="absolute right-4 top-8.5 text-white/70 hover:text-white cursor-pointer" />
+                    )}
+                  </button>
+                </div>
               </div>
-              <div className="relative">
-                <label htmlFor="group-name" className="text-xs">
-                  Group password
-                </label>
-                <Input
-                  type={passwordInputType}
-                  id="group-password"
-                  placeholder="Group password"
-                  value={groupPassword}
-                  onChange={(e) => setGroupPassword(e.target.value)}
-                />
-                <button
-                  onClick={() =>
-                    setPasswordInputType((prev) =>
-                      prev === "password" ? "text" : "password"
-                    )
-                  }
-                >
-                  {passwordInputType === "password" ? (
-                    <FaRegEyeSlash className="absolute right-4 top-8.25 text-white/70 hover:text-white  " />
-                  ) : (
-                    <FaRegEye className="absolute right-4 top-8.25 text-white/70" />
-                  )}
-                </button>
+              <p className="font-bold">Your devices</p>
+              <div className="flex flex-row justify-between items-center">
+                <InputSelect allInputs={allInputs} />
+                <OutputSelect allOutputs={allOutputs} />
               </div>
-            </div>
-            <p className="font-bold">Your devices</p>
-            <div className="flex flex-row justify-between items-center">
-              <InputSelect allInputs={allInputs} />
-              <OutputSelect allOutputs={allOutputs} />
-            </div>
-            <CameraSelect allCameras={allCameras} />
+              <CameraSelect allCameras={allCameras} />
 
-            <LowSettingsSwitch />
-            <Button
-              className="hover:cursor-pointer hover:bg-[#121212]"
-              onClick={() => setCreateDialogVisible(false)}
-            >
-              Create Group
-            </Button>
+              <LowSettingsSwitch />
+              <Button
+                className="hover:cursor-pointer hover:bg-[#121212]"
+                type="submit"
+              >
+                Create Group
+              </Button>
+            </form>
           </DialogContent>
         )}
       </Dialog>

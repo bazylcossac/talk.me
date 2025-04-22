@@ -19,7 +19,7 @@ function ActiveGroup({
   return (
     <div className="p-2">
       <p className="text-[10px] text-white/30">{group.users.length + 1}/4</p>
-      <p className="text-sm">{group.hostUser.username}'s group</p>
+      <p className="text-sm">{group.groupName}</p>
       <div className="flex flex-row justify-between relative h-8 mt-1">
         <div className="flex flex-row">
           <img

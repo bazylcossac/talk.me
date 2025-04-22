@@ -145,7 +145,7 @@ export const connectToWebSocket = () => {
     console.log(data);
     store.dispatch(setGroupCallUsers(data));
     const users = store.getState().webrtc.groupCallUsers;
-    connectToGroupCall(data); 
+    connectToGroupCall(data);
     socket.emit("user-join-users-update", { users, roomId: data.roomId });
   });
 
@@ -335,7 +335,12 @@ export const handleUserActiveChange = (
 
 // export const createGroupCall
 
-export const sendRequestOpenGroupCall = (peerId: string, roomId: string) => {
+export const sendRequestOpenGroupCall = (
+  peerId: string,
+  roomId: string,
+  groupName: string,
+  groupPassword: string | null
+) => {
   const user = store.getState().user.loggedUser;
 
   const data = {
@@ -343,6 +348,8 @@ export const sendRequestOpenGroupCall = (peerId: string, roomId: string) => {
     user,
     mySocketId,
     roomId,
+    groupName,
+    groupPassword,
   };
   socket.emit("create-group-call", data);
 };

@@ -6,12 +6,8 @@ import {
   setFriendsTableVisible,
   setLeftContainerVisible,
 } from "@/store/slices/app";
-
-import ActiveGroup from "./ActiveGroup";
-import { Button } from "../ui/button";
-import { createGroupCall } from "@/connection/webrtcGroupConnection";
-import { callStatus } from "@/lib/constants";
 import GroupList from "./GroupList";
+
 
 function FriendsGroupList() {
   const dispatch = useDispatch();

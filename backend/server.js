@@ -144,6 +144,8 @@ io.on("connection", (socket) => {
       roomId: data.roomId,
       hostUser: data.user,
       socketId: data.mySocketId,
+      groupName: data.groupName,
+      groupPassword: data.groupPassword,
       users: [],
     };
     activeGroupCalls.push(newGroupCall);
