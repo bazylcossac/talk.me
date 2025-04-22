@@ -22,7 +22,6 @@ function CameraSelect({ allCameras }: { allCameras: MediaDeviceInfo[] }) {
   );
 
   const handlDeviceChange = (deviceId: string) => {
-    console.log(deviceId);
     dispatch(setSelectedCameraDeviceId(deviceId));
     changeInputDevice(deviceId, "camera");
   };

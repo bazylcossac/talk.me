@@ -136,7 +136,7 @@ export const connectToWebSocket = () => {
   socket.on(
     "group-call-user-disconnect",
     ({ roomId, socketId }: { roomId: string; socketId: string }) => {
-      handleUserGroupCallLeave(socketId);
+      handleUserGroupCallLeave(socketId, roomId);
     }
   );
 
@@ -145,7 +145,7 @@ export const connectToWebSocket = () => {
     console.log(data);
     store.dispatch(setGroupCallUsers(data));
     const users = store.getState().webrtc.groupCallUsers;
-    connectToGroupCall(data);
+    connectToGroupCall(data); 
     socket.emit("user-join-users-update", { users, roomId: data.roomId });
   });
 

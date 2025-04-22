@@ -1,5 +1,5 @@
 import { IoIosArrowForward } from "react-icons/io";
-import FriendsList from "./friends-group-list/FriendsGroupList";
+import FriendsList from "./friends-group-list/Friends-GroupList";
 import Profile from "./profile-dashboard/Profile";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";

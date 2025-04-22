@@ -31,6 +31,8 @@ import { toast } from "sonner";
 export let myPeerId: string;
 export let peer: any;
 export let currentGroupId: string;
+export let callPeerId: string;
+export let currentCall;
 
 export const createGroupPeerConnection = async () => {
   const credentials = await getCredentials();
@@ -47,6 +49,7 @@ export const createGroupPeerConnection = async () => {
   });
   peer.on("call", (call) => {
     const localStream = store.getState().webrtc.localStream;
+    currentCall = call;
     call.answer(localStream);
 
     call.on("stream", (stream: MediaStream) => {
@@ -138,7 +141,11 @@ export const connectToGroupCall = (data) => {
     return;
   }
 
+  callPeerId = data.peerId;
+
   const call = peer.call(data.peerId, localStream);
+  console.log("CURRENT CALL");
+  console.log(currentCall);
 
   call.on("stream", (stream: MediaStream) => {
     const groupCallStreams = store.getState().webrtc.groupCallStreams;

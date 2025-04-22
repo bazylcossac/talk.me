@@ -11,6 +11,7 @@ import ActiveGroup from "./ActiveGroup";
 import { Button } from "../ui/button";
 import { createGroupCall } from "@/connection/webrtcGroupConnection";
 import { callStatus } from "@/lib/constants";
+import GroupList from "./GroupList";
 
 function FriendsGroupList() {
   const dispatch = useDispatch();
@@ -18,17 +19,12 @@ function FriendsGroupList() {
   const leftContainerVisible = useSelector(
     (state: RootState) => state.app.leftContainerVisible
   );
-  const activeGroups = useSelector(
-    (state: RootState) => state.user.activeGroups
-  );
+
   const friendsTableVisible = useSelector(
     (state: RootState) => state.app.friendsTableVisible
   );
 
-  const isInGroupCall = useSelector(
-    (state: RootState) => state.user.isInGroupCall
-  );
-  const callState = useSelector((state: RootState) => state.user.userCallState);
+
 
   return (
     <section className="bg-[#222222] md:w-[250px] w-full  h-full rounded-md overflow-y-auto scrollbar-hide">
@@ -70,27 +66,7 @@ function FriendsGroupList() {
           </section>
         )}
         {/* GROUP LIST */}
-
-        {!friendsTableVisible && (
-          <section className="animate-fade animate-duration-300">
-            <Button
-              className="m-1 cursor-pointer hover:bg-neutral-700"
-              onClick={createGroupCall}
-              disabled={
-                isInGroupCall || callState === callStatus.CALL_IN_PROGRESS
-              }
-            >
-              {isInGroupCall
-                ? "In group call"
-                : callState === callStatus.CALL_IN_PROGRESS
-                ? "In call"
-                : "Create group"}
-            </Button>
-            {activeGroups.map((group) => (
-              <ActiveGroup group={group} callState={callState} />
-            ))}
-          </section>
-        )}
+        <GroupList friendsTableVisible={friendsTableVisible} />
       </nav>
     </section>
   );
