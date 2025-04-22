@@ -22,6 +22,7 @@ peerServer.on("connection", (id) => {
 console.log(dotenv.parsed.API_TURN_URL);
 
 app.use("/peerjs", peerServer);
+app.use(express.json());
 app.use(cors());
 
 app.post("/api/getTURNCredentials", async (req, res) => {
@@ -38,6 +39,20 @@ app.post("/api/getTURNCredentials", async (req, res) => {
   );
   const { data } = response;
   res.json(data);
+});
+
+app.post("/api/verifyPassword", (req, res) => {
+  const { password, roomId } = req.body;
+  console.log(roomId);
+  const room = activeGroupCalls.find((group) => group.roomId === roomId);
+  if (!room) {
+    res.json({ verified: false });
+  }
+  if (room.groupPassword === password) {
+    res.json({ verified: true });
+  } else {
+    res.json({ verified: false });
+  }
 });
 
 const io = socket(server, {

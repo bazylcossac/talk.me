@@ -18,13 +18,13 @@ function ActiveGroup({
   const isInGroupCall = useSelector(
     (state: RootState) => state.user.isInGroupCall
   );
-
   const [passwordDialogVisible, setPasswordDialogVisible] = useState(false);
 
   return (
     <section className="p-2">
       <p className="text-[10px] text-white/30">{group.users.length + 1}/4</p>
       <div className="flex items-center gap-2">
+        <p>{group?.groupPassword}</p>
         <p className="text-sm  max-w-[220px] truncate">{group.groupName}</p>
         {group.groupPassword && <FaLock className="text-neutral-600 text-xs" />}
       </div>
@@ -52,10 +52,7 @@ function ActiveGroup({
             <button
               onClick={() => {
                 if (group.groupPassword) {
-                  <PasswordDialog
-                    passwordDialogVisible={passwordDialogVisible}
-                    setPasswordDialogVisible={setPasswordDialogVisible}
-                  />;
+                  setPasswordDialogVisible(true);
                 } else {
                   joinGroupCall(group.peerId, group.roomId);
                 }
@@ -73,6 +70,12 @@ function ActiveGroup({
             >
               <RxEnter />
             </button>
+            <PasswordDialog
+              passwordDialogVisible={passwordDialogVisible}
+              setPasswordDialogVisible={setPasswordDialogVisible}
+              roomId={group.roomId}
+              peerId={group.peerId}
+            />
           </div>
         )}
       </div>
