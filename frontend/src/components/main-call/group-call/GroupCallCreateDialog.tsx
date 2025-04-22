@@ -65,10 +65,11 @@ function SettingsDialog({
     e.preventDefault();
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
-    const groupName = formData.get("group-name");
-    const groupPassword = formData.get("group-password") || null;
+    const groupName = formData.get("group-name") as string;
+    const groupPassword = formData.get("group-password") as string | null;
 
     await createGroupCall(groupName, groupPassword);
+    setCreateDialogVisible(false);
   };
 
   return (

@@ -40,7 +40,7 @@ function MainGroupCallContainer() {
           return (
             <GroupVideoElement
               stream={stream}
-              user={user!.user}
+              user={user?.user}
               key={stream.id}
             />
           );

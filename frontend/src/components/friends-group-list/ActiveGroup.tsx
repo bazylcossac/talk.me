@@ -5,7 +5,9 @@ import { GroupCallDataType } from "@/types/types";
 import { RxEnter } from "react-icons/rx";
 import { RootState } from "@/store/store";
 import { callStatus } from "@/lib/constants";
-
+import { FaLock } from "react-icons/fa6";
+import { useState } from "react";
+import PasswordDialog from "../main-call/group-call/joinPasswordDialog";
 function ActiveGroup({
   group,
   callState,
@@ -16,10 +18,16 @@ function ActiveGroup({
   const isInGroupCall = useSelector(
     (state: RootState) => state.user.isInGroupCall
   );
+
+  const [passwordDialogVisible, setPasswordDialogVisible] = useState(false);
+
   return (
-    <div className="p-2">
+    <section className="p-2">
       <p className="text-[10px] text-white/30">{group.users.length + 1}/4</p>
-      <p className="text-sm">{group.groupName}</p>
+      <div className="flex items-center gap-2">
+        <p className="text-sm  max-w-[220px] truncate">{group.groupName}</p>
+        {group.groupPassword && <FaLock className="text-neutral-600 text-xs" />}
+      </div>
       <div className="flex flex-row justify-between relative h-8 mt-1">
         <div className="flex flex-row">
           <img
@@ -40,16 +48,24 @@ function ActiveGroup({
           ))}
         </div>
         {!isInGroupCall && (
-          <div
-            className={cn(
-              "bg-[#333333] p-2 rounded-md cursor-pointer hover:bg-[#222222]",
-              {
-                hidden: group.users.length + 1 === 4,
-              }
-            )}
-          >
+          <div>
             <button
-              onClick={() => joinGroupCall(group.peerId, group.roomId)}
+              onClick={() => {
+                if (group.groupPassword) {
+                  <PasswordDialog
+                    passwordDialogVisible={passwordDialogVisible}
+                    setPasswordDialogVisible={setPasswordDialogVisible}
+                  />;
+                } else {
+                  joinGroupCall(group.peerId, group.roomId);
+                }
+              }}
+              className={cn(
+                "bg-[#333333] p-2 rounded-md cursor-pointer hover:bg-[#222222]",
+                {
+                  hidden: group.users.length + 1 === 4,
+                }
+              )}
               disabled={
                 callState === callStatus.CALL_IN_PROGRESS ||
                 callState === callStatus.CALL_REQUESTED
@@ -60,7 +76,7 @@ function ActiveGroup({
           </div>
         )}
       </div>
-    </div>
+    </section>
   );
 }
 

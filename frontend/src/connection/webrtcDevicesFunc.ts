@@ -102,48 +102,46 @@ export const changeInputDevice = async (
           video: { deviceId: { exact: deviceId } },
         });
 
-        if (!store.getState().user.isInGroupCall) {
-          const videoTrack = stream.getVideoTracks()[0];
+        const videoTrack = stream.getVideoTracks()[0];
 
-          const senders = await peerConnection?.getSenders();
-          if (!senders) {
-            toast("Failed to change camera, no senders");
-            return;
-          }
-          const sender = senders.find(
-            (sender) => sender.track.kind === videoTrack.kind
-          );
-
-          if (!sender) {
-            toast("Failed to change camera, no sender");
-            return;
-          }
-          await sender?.replaceTrack(videoTrack);
-          store.dispatch(setLocalStream(stream));
+        const senders = await peerConnection?.getSenders();
+        if (!senders) {
+          toast("Failed to change camera, no senders");
+          return;
         }
+        const sender = senders.find(
+          (sender) => sender.track!.kind === videoTrack.kind
+        );
 
-        if (store.getState().user.isInGroupCall) {
-          console.log("CURRENT CALL");
-          console.log(currentCall);
-          currentCall.close();
-          const groupUsers = store.getState().webrtc.groupCallUsers;
-          
-          const user = groupUsers.find((user) => user.peerId === myPeerId);
-          if (!user) {
-            throw new Error("Error failed to change input");
-          }
-
-          const newUser = {
-            ...user,
-            streamId: stream.id,
-          };
-
-          const newGroupUsers = [...groupUsers, newUser];
-          store.dispatch(setLocalStream(stream));
-          store.dispatch(setNewGroupCallUsers(newGroupUsers));
-          // currentCall.call(callPeerId, stream);
-          connectToGroupCall({ peerId: callPeerId });
+        if (!sender) {
+          toast("Failed to change camera, no sender");
+          return;
         }
+        await sender?.replaceTrack(videoTrack);
+        store.dispatch(setLocalStream(stream));
+
+        // if (store.getState().user.isInGroupCall) {
+        //   console.log("CURRENT CALL");
+        //   console.log(currentCall);
+        //   currentCall.close();
+        //   const groupUsers = store.getState().webrtc.groupCallUsers;
+
+        //   const user = groupUsers.find((user) => user.peerId === myPeerId);
+        //   if (!user) {
+        //     throw new Error("Error failed to change input");
+        //   }
+
+        //   const newUser = {
+        //     ...user,
+        //     streamId: stream.id,
+        //   };
+
+        //   const newGroupUsers = [...groupUsers, newUser];
+        //   store.dispatch(setLocalStream(stream));
+        //   store.dispatch(setNewGroupCallUsers(newGroupUsers));
+        //   // currentCall.call(callPeerId, stream);
+        //   connectToGroupCall({ peerId: callPeerId });
+        // }
 
         // store
         //   .getState()
