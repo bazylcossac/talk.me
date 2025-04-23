@@ -1,6 +1,6 @@
-let sharedState = {
+let state = {
   activeGroupCalls: [],
   activeUsers: [],
 };
 
-module.exports = sharedState;
+module.exports = state;

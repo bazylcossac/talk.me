@@ -313,6 +313,9 @@ export const handleSendAcceptCall = async ({
       currentRoomId: roomId,
     });
   }
+  // if(store.getState().user.isInGroupCall){
+  //   store.getState().user. /// dodac do reux aktualna grupe
+  // }
 
   store.dispatch(setCallStatus(callStatus.CALL_IN_PROGRESS));
   callerSocketId = callerSocketID;

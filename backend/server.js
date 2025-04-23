@@ -1,6 +1,4 @@
-// const { activeGroupCalls, activeUsers } = require("./state");
 const state = require("./state");
-const dotenv = require("dotenv").config();
 const express = require("express");
 const http = require("http");
 const socket = require("socket.io");
@@ -97,6 +95,7 @@ io.on("connection", (socket) => {
       users: [],
     };
     state.activeGroupCalls.push(newGroupCall);
+    console.log(state.activeGroupCalls);
 
     io.sockets.emit("active-groups", state.activeGroupCalls);
   });

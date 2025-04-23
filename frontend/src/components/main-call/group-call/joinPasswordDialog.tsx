@@ -55,7 +55,7 @@ function PasswordDialog({
         <DialogContent className="bg-[#0b0b0b] border-none shadow-md">
           <DialogHeader>
             <DialogTitle className="flex flex-row items-center gap-4 ">
-              <p>Create group</p>
+              <p>Join group</p>
             </DialogTitle>
             <DialogDescription></DialogDescription>
           </DialogHeader>

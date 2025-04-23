@@ -24,7 +24,6 @@ function MainGroupCallContainer() {
   );
 
   console.log(groupCallUsers);
-  console.log(allStreams);
 
   return (
     <div ref={divRef} className="w-full h-full relative overflow-hidden">

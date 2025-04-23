@@ -144,8 +144,6 @@ export const joinGroupCall = async (peerId: string, roomId: string) => {
   store.dispatch(setIsInGroupCall(true));
   store.dispatch(setCallStatus(callStatus.CALL_IN_PROGRESS));
   store.dispatch(setUserActiveStatus(userStatus.IN_CALL));
-
-  /// CONNECT TO ROOM, send my data to show me in groups
 };
 
 export const connectToGroupCall = (data: {

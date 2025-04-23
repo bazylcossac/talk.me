@@ -7,7 +7,7 @@ import { RootState } from "@/store/store";
 import { callStatus } from "@/lib/constants";
 import { FaLock } from "react-icons/fa6";
 import { useRef, useState } from "react";
-import PasswordDialog from "../main-call/group-call/joinPasswordDialog";
+import PasswordDialog from "../main-call/group-call/JoinPasswordDialog";
 function ActiveGroup({
   group,
   callState,
@@ -40,7 +40,7 @@ function ActiveGroup({
             <img
               src={user.imageUrl}
               alt={`${user.username}'s image`}
-              className="size-8 rounded-full absolute border-2 border-[#222222] "
+              className="size-8 rounded-full absolute border-2 border-[#222222]"
               style={{
                 left: `${(index + 1) * 25}px`,
                 zIndex: 50 - (index + 1),

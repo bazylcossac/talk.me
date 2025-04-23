@@ -1,8 +1,9 @@
-import { RootState } from "@/store/store";
+import store, { RootState } from "@/store/store";
 import { userDataType } from "@/types/types";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BsThreeDots } from "react-icons/bs";
 import { useSelector } from "react-redux";
+import UserDropMenu from "./GroupCallUserSettingsDialog";
 
 function GroupVideoElement({
   stream,
@@ -11,6 +12,8 @@ function GroupVideoElement({
   stream: MediaStream;
   user?: userDataType;
 }) {
+  const [dropMenuVisible, setDropMenuVisible] = useState(false);
+  const loggedUser = store.getState().user.loggedUser;
   const isUserHosting = useSelector(
     (state: RootState) => state.user.hasCreatedGroupCall
   );
@@ -43,13 +46,16 @@ function GroupVideoElement({
         <div className="size-10 bg-blue-500"></div>
       )}
 
-      {isUserHosting && (
-        <button className="absolute top-0 left-0 m-2">
+      {isUserHosting && user?.socketId !== loggedUser.socketId && (
+        <button
+          className="absolute top-0 left-0 m-2"
+          onClick={() => setDropMenuVisible(true)}
+        >
           <BsThreeDots className="text-white/50 hover:text-white transition cursor-pointer" />
         </button>
       )}
-      <p>Socket id: ${user?.socketId}</p>
-      <p>Stream id: ${stream.id}</p>
+      {/* <p>Socket id: ${user?.socketId}</p>
+      <p>Stream id: ${stream.id}</p> */}
       <video
         ref={videoRef}
         autoPlay
@@ -59,6 +65,12 @@ function GroupVideoElement({
       <p className="absolute bottom-0 right-0  text-xs text-white text-shado-2xl bg-[#222222] p-2 rounded-md m-1 border-1 border-white/20">
         {user?.username || "guest"}
       </p>
+      {isUserHosting && (
+        <UserDropMenu
+          dropMenuVisible={dropMenuVisible}
+          setDropMenuVisible={setDropMenuVisible}
+        />
+      )}
     </div>
   );
 }
