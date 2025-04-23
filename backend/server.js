@@ -58,8 +58,10 @@ app.post("/api/verifyPassword", (req, res) => {
 
 app.post("/api/isCallPossible", (req, res) => {
   const { roomId } = req.body;
+  console.log(roomId);
   const room = activeGroupCalls.find((group) => group.roomId === roomId);
-  if (room.users.leave + 1 <= 4) {
+  console.log(room);
+  if (room.users.length + 1 >= 4) {
     res.json({ possible: false });
   } else {
     res.json({ possible: true });
@@ -84,6 +86,7 @@ io.on("connection", (socket) => {
   socket.on("user-join", (data) => {
     activeUsers.push(data);
     io.sockets.emit("user-join", { activeUsers, activeGroupCalls });
+    console.log(activeUsers);
   });
 
   socket.on("send-pre-offer", (data) => {
@@ -120,6 +123,22 @@ io.on("connection", (socket) => {
   });
 
   socket.on("activity-change", (data) => {
+    const user = activeUsers.find((user) => user.socketId === socket.id);
+
+    if (user) {
+      const newUser = {
+        ...user,
+        status: data.activity,
+      };
+
+      const usersLeft = activeUsers.filter(
+        (user) => user.socketId !== socket.id
+      );
+
+      const newUsers = [...usersLeft, newUser];
+      activeUsers = newUsers;
+    }
+
     io.sockets.emit("activity-change", data);
   });
 

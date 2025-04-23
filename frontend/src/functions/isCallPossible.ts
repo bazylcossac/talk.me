@@ -5,7 +5,7 @@ export async function isCallPossible(roomId: string) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(roomId),
+      body: JSON.stringify({ roomId }),
     });
 
     const { possible } = await response.json();

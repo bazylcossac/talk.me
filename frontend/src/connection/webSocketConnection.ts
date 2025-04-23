@@ -41,6 +41,7 @@ export const connectToWebSocket = () => {
   socket.on("connection", (socketId) => {
     mySocketId = socketId;
     console.log(socketId);
+    
   });
 
   socket.on("user-join", ({ activeUsers, activeGroupCalls }) => {
