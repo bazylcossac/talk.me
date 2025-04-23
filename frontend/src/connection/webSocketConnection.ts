@@ -354,7 +354,12 @@ export const sendRequestOpenGroupCall = (
   socket.emit("create-group-call", data);
 };
 
-export const sendJoinRequest = (data: groupCallUserDataType) => {
+export const sendJoinRequest = (data: {
+  streamId: string;
+  user: userDataType;
+  roomId: string;
+  peerId: string;
+}) => {
   socket.emit("join-group-call-request", data);
 };
 

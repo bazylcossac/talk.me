@@ -1,4 +1,4 @@
-import Peer from "peerjs";
+import Peer, { MediaConnection } from "peerjs";
 import {
   sendCloseGroupCallRequest,
   sendGroupUsersUpdate,
@@ -28,12 +28,13 @@ import {
 } from "@/store/slices/webrtc";
 import { toast } from "sonner";
 import { isCallPossible } from "@/functions/isCallPossible";
+import { userDataType } from "@/types/types";
 
 export let myPeerId: string;
-export let peer: any;
+export let peer: Peer;
 export let currentGroupId: string;
 export let callPeerId: string;
-export let currentCall;
+export let currentCall: MediaConnection | null;
 
 export const createGroupPeerConnection = async () => {
   const credentials = await getCredentials();
@@ -48,10 +49,13 @@ export const createGroupPeerConnection = async () => {
     console.log("PEER JS USER ", id);
     myPeerId = id;
   });
-  peer.on("call", (call) => {
+  peer.on("call", async (call) => {
     const localStream = store.getState().webrtc.localStream;
+    if (!localStream) {
+      toast.error("Failed to get media devicess");
+    }
     currentCall = call;
-    call.answer(localStream);
+    call.answer(localStream!);
 
     call.on("stream", (stream: MediaStream) => {
       const groupCallStreams = store.getState().webrtc.groupCallStreams;
@@ -103,6 +107,7 @@ export const handleDisconnectFromGroupCall = (roomId: string) => {
   store.dispatch(setNewGroupCallStreams([]));
   store.dispatch(setNewGroupCallUsers([]));
   currentGroupId = "";
+  currentCall = null;
 };
 
 export const joinGroupCall = async (peerId: string, roomId: string) => {
@@ -143,7 +148,12 @@ export const joinGroupCall = async (peerId: string, roomId: string) => {
   /// CONNECT TO ROOM, send my data to show me in groups
 };
 
-export const connectToGroupCall = (data) => {
+export const connectToGroupCall = (data: {
+  user: userDataType;
+  streamId: string;
+  roomId: string;
+  peerId: string;
+}) => {
   const localStream = store.getState().webrtc.localStream;
   if (!localStream) {
     toast("Failed to get media devices");
