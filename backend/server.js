@@ -19,8 +19,6 @@ peerServer.on("connection", (id) => {
   console.log(`user conencted with ${id} id`);
 });
 
-console.log(dotenv.parsed.API_TURN_URL);
-
 app.use("/peerjs", peerServer);
 app.use(express.json());
 app.use(cors());
@@ -43,7 +41,7 @@ app.post("/api/getTURNCredentials", async (req, res) => {
 
 app.post("/api/verifyPassword", (req, res) => {
   const { password, roomId } = req.body;
-  console.log(roomId);
+
   const room = activeGroupCalls.find((group) => group.roomId === roomId);
   if (!room) {
     res.json({ verified: false });
@@ -58,9 +56,9 @@ app.post("/api/verifyPassword", (req, res) => {
 
 app.post("/api/isCallPossible", (req, res) => {
   const { roomId } = req.body;
-  console.log(roomId);
+
   const room = activeGroupCalls.find((group) => group.roomId === roomId);
-  console.log(room);
+
   if (room.users.length + 1 >= 4) {
     res.json({ possible: false });
   } else {
@@ -86,14 +84,13 @@ io.on("connection", (socket) => {
   socket.on("user-join", (data) => {
     activeUsers.push(data);
     io.sockets.emit("user-join", { activeUsers, activeGroupCalls });
-    console.log(activeUsers);
   });
 
   socket.on("send-pre-offer", (data) => {
     const newRoomId = uuid.v4();
     roomId = newRoomId;
     socket.join(roomId);
-    console.log(`${socket.id} is connected to ${roomId}`);
+
     socket
       .to(data.calleSocketId)
       .emit("send-pre-offer", { caller: data.caller, roomId });
@@ -108,7 +105,7 @@ io.on("connection", (socket) => {
   socket.on("send-offer", (data) => {
     socket.join(data.roomId);
     roomId = data.roomId;
-    console.log(`${socket.id} is connected to ${roomId}`);
+
     socket
       .to(data.calleSocketId)
       .emit("send-offer", { offer: data.offer, socketId: socket.id, roomId });
@@ -158,30 +155,6 @@ io.on("connection", (socket) => {
     roomId = "";
   });
 
-  socket.on("disconnect", () => {
-    const usersLeft = activeUsers.filter((user) => user.socketId !== socket.id);
-    const hostingGroupCall = activeGroupCalls.find(
-      (group) => group.socketId === socket.id
-    );
-    if (!!hostingGroupCall) {
-      const filteredGroups = activeGroupCalls.filter(
-        (group) => group.socketId !== hostingGroupCall.socketId
-      );
-      activeGroupCalls = filteredGroups;
-      io.sockets
-        .to(hostingGroupCall.roomId)
-        .emit("close-group-call-gone", hostingGroupCall.roomId);
-      io.sockets.emit("active-groups", filteredGroups);
-    }
-
-    activeUsers = usersLeft;
-    io.sockets.emit("user-disconnected", usersLeft);
-    socket
-      .to(roomId)
-      .emit("group-call-user-disconnect", { roomId, socketId: socket.id });
-    roomId = "";
-  });
-
   socket.on("create-group-call", (data) => {
     socket.join(data.roomId);
     const newGroupCall = {
@@ -199,8 +172,8 @@ io.on("connection", (socket) => {
   });
 
   socket.on("join-group-call-request", (data) => {
-    console.log(data);
     socket.join(data.roomId);
+    roomId = data.roomId;
     socket.to(data.roomId).emit("join-group-call-request", data);
     io.sockets.emit("group-users-change-update", {
       user: data.user,
@@ -222,17 +195,45 @@ io.on("connection", (socket) => {
     io.sockets.emit("remove-group-call", newGroups);
   });
 
-  socket.on("leave-group-call", ({ streamId, roomId }) => {
-    socket.to(roomId).emit("leave-group-call", { streamId, roomId });
+  socket.on("leave-group-call", ({ socketId, roomId }) => {
+    socket.to(roomId).emit("leave-group-call", { socketId, roomId });
   });
 
   socket.on("group-users-change-update", ({ user, roomId, type }) => {
-    console.log({ user, roomId, type });
     io.sockets.emit("group-users-change-update", {
       user,
       roomId,
       type,
     });
+  });
+
+  socket.on("disconnect", () => {
+    console.log("roomid");
+    console.log(roomId);
+    console.log(socket.id);
+    const usersLeft = activeUsers.filter((user) => user.socketId !== socket.id);
+    const hostingGroupCall = activeGroupCalls.find(
+      (group) => group.socketId === socket.id
+    );
+    if (!!hostingGroupCall) {
+      const filteredGroups = activeGroupCalls.filter(
+        (group) => group.socketId !== hostingGroupCall.socketId
+      );
+      activeGroupCalls = filteredGroups;
+      io.sockets
+        .to(hostingGroupCall.roomId)
+        .emit("close-group-call-gone", hostingGroupCall.roomId);
+      io.sockets.emit("active-groups", filteredGroups);
+    }
+
+    activeUsers = usersLeft;
+    io.sockets.emit("user-disconnected", usersLeft);
+    socket
+      .to(roomId)
+      .emit("group-call-user-disconnect", { roomId, socketId: socket.id });
+
+    socket.leave(roomId);
+    roomId = "";
   });
 });
 

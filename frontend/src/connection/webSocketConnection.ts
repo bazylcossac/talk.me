@@ -28,7 +28,7 @@ import {
   connectToGroupCall,
   handleDisconnectFromGroupCall,
   handleDisconnectMeFromGroupCall,
-  handleUserGroupCallLeave,
+  handleUserGroupCallDisconnect,
 } from "./webrtcGroupConnection";
 import { setGroupCallUsers, setNewGroupCallUsers } from "@/store/slices/webrtc";
 
@@ -41,7 +41,6 @@ export const connectToWebSocket = () => {
   socket.on("connection", (socketId) => {
     mySocketId = socketId;
     console.log(socketId);
-    
   });
 
   socket.on("user-join", ({ activeUsers, activeGroupCalls }) => {
@@ -137,7 +136,7 @@ export const connectToWebSocket = () => {
   socket.on(
     "group-call-user-disconnect",
     ({ roomId, socketId }: { roomId: string; socketId: string }) => {
-      handleUserGroupCallLeave(socketId, roomId);
+      handleUserGroupCallDisconnect(socketId, roomId);
     }
   );
 
@@ -172,6 +171,7 @@ export const connectToWebSocket = () => {
         break;
       }
       case "remove": {
+        console.log(user);
         // remove user
         if (!group) {
           /// do some logic when user try to join group that does not exist
@@ -214,8 +214,8 @@ export const connectToWebSocket = () => {
 
   socket.on(
     "leave-group-call",
-    ({ streamId, roomId }: { streamId: string; roomId: string }) => {
-      handleUserGroupCallLeave(streamId, roomId);
+    ({ socketId, roomId }: { socketId: string; roomId: string }) => {
+      handleUserGroupCallDisconnect(socketId, roomId);
     }
   );
 };
@@ -369,13 +369,13 @@ export const sendCloseGroupCallRequest = (roomId: string) => {
 };
 
 export const sendLeaveGroupCallRequest = ({
-  streamId,
+  socketId,
   roomId,
 }: {
-  streamId: string;
+  socketId: string;
   roomId: string;
 }) => {
-  socket.emit("leave-group-call", { streamId, roomId });
+  socket.emit("leave-group-call", { socketId, roomId });
 };
 
 export const sendGroupUsersUpdate = ({

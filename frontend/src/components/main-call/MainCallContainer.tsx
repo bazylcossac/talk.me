@@ -3,9 +3,8 @@ import { RootState } from "@/store/store";
 import LocalVideo from "./LocalVideo";
 import RemoteVideo from "./RemoteVideo";
 import { useSelector } from "react-redux";
-import { Button } from "../ui/button";
-import Logo from "../Logo";
 import MainGroupCallContainer from "./group-call/MainGroupCallContainer";
+import MainCallContNoCall from "./MainCallContNoCall";
 
 function MainCallContainer() {
   const callState = useSelector((state: RootState) => state.user.userCallState);
@@ -13,19 +12,11 @@ function MainCallContainer() {
     (state: RootState) => state.user.isInGroupCall
   );
 
+  // no call
   if (callState !== callStatus.CALL_IN_PROGRESS) {
     return (
       <section className="h-full w-full ">
-        <div className="absolute right-0 mr-4">
-          <Logo className="w-20" />
-        </div>
-        <div className="flex flex-col h-full  items-center justify-center gap-2 fixed right-1/2 transform translate-x-1/2">
-          <p className="text-white/30 font-bold">Call someone</p>
-          <p className="text-white/30 ">or</p>
-          <Button className="hover:cursor-pointer hover:bg-[#303030]">
-            Start group call
-          </Button>
-        </div>
+        <MainCallContNoCall />
       </section>
     );
   }

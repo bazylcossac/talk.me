@@ -190,29 +190,40 @@ export const handleDisconnectMeFromGroupCall = (roomId: string) => {
 
 export const leaveGroupCall = () => {
   const localStream = store.getState().webrtc.localStream;
+  const user = store.getState().user.loggedUser;
 
   if (!localStream) return;
   // dodac od razu zalogowanego uzytkownika bedzie latwiej>??
+
   sendLeaveGroupCallRequest({
-    streamId: localStream.id,
+    socketId: user.socketId!,
     roomId: currentGroupId,
   });
 
   handleDisconnectFromGroupCall(currentGroupId);
 };
 
-export const handleUserGroupCallLeave = (streamId: string, roomId: string) => {
+export const handleUserGroupCallDisconnect = (
+  socketId: string,
+  roomId: string
+) => {
   const groupCallUsers = store.getState().webrtc.groupCallUsers;
   const userToRemove = groupCallUsers.find(
-    (user) => user.streamId === streamId
+    (user) => user.user.socketId === socketId
   );
-  // const streamid = userToRemove?.streamId;
+  console.log("USER TO REMOVE");
+  console.log(socketId);
+  console.log(userToRemove);
+  const streamid = userToRemove?.streamId;
 
-  const newUsers = groupCallUsers.filter((user) => user.streamId !== streamId);
+  const newUsers = groupCallUsers.filter(
+    (user) => user.user.socketId !== socketId
+  );
 
   const streams = store.getState().webrtc.groupCallStreams;
+  console.log(streams);
 
-  const newStreams = streams.filter((stream) => stream.id !== streamId);
+  const newStreams = streams.filter((stream) => stream.id !== streamid);
 
   store.dispatch(setNewGroupCallUsers(newUsers));
   store.dispatch(setNewGroupCallStreams(newStreams));

@@ -133,7 +133,7 @@ function SettingsDialog({
 
               <LowSettingsSwitch />
               <Button
-                className="hover:cursor-pointer hover:bg-[#121212]"
+                className="hover:cursor-pointer hover:bg-[#121212] mt-4 w-full"
                 type="submit"
               >
                 Create Group

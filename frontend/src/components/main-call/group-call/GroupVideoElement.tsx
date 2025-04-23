@@ -48,6 +48,8 @@ function GroupVideoElement({
           <BsThreeDots className="text-white/50 hover:text-white transition cursor-pointer" />
         </button>
       )}
+      <p>Socket id: ${user?.socketId}</p>
+      <p>Stream id: ${stream.id}</p>
       <video
         ref={videoRef}
         autoPlay
