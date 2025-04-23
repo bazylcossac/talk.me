@@ -48,10 +48,21 @@ app.post("/api/verifyPassword", (req, res) => {
   if (!room) {
     res.json({ verified: false });
   }
+
   if (room.groupPassword === password) {
     res.json({ verified: true });
   } else {
     res.json({ verified: false });
+  }
+});
+
+app.post("/api/isCallPossible", (req, res) => {
+  const { roomId } = req.body;
+  const room = activeGroupCalls.find((group) => group.roomId === roomId);
+  if (room.users.leave + 1 <= 4) {
+    res.json({ possible: false });
+  } else {
+    res.json({ possible: true });
   }
 });
 

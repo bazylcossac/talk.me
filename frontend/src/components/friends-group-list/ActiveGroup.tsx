@@ -24,7 +24,6 @@ function ActiveGroup({
     <section className="p-2">
       <p className="text-[10px] text-white/30">{group.users.length + 1}/4</p>
       <div className="flex items-center gap-2">
-        <p>{group?.groupPassword}</p>
         <p className="text-sm  max-w-[220px] truncate">{group.groupName}</p>
         {group.groupPassword && <FaLock className="text-neutral-600 text-xs" />}
       </div>

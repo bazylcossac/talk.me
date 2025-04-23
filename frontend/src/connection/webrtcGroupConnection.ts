@@ -27,6 +27,7 @@ import {
   setNewGroupCallUsers,
 } from "@/store/slices/webrtc";
 import { toast } from "sonner";
+import { isCallPossible } from "@/functions/isCallPossible";
 
 export let myPeerId: string;
 export let peer: any;
@@ -105,6 +106,11 @@ export const handleDisconnectFromGroupCall = (roomId: string) => {
 };
 
 export const joinGroupCall = async (peerId: string, roomId: string) => {
+  const possible = await isCallPossible(roomId);
+  if (!possible) {
+    toast.error("Already max users in call!");
+    return;
+  }
   handleDisconnectFromGroupCall(currentGroupId);
   await createGroupPeerConnection();
   await setUpLocalStream();
