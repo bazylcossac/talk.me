@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { joinGroupCall } from "@/connection/webrtcGroupConnection";
 import { verifyPassword } from "@/functions/verifyPassword";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
 import { toast } from "sonner";
 
@@ -30,17 +30,20 @@ function PasswordDialog({
   >("password");
 
   const [passwordValue, setPasswordValue] = useState("");
+  const isJoining = useRef(false);
 
   const handleJoinGroup = async (e: FormEvent) => {
     e.preventDefault();
-
     const { verified } = await verifyPassword(passwordValue, roomId);
-    if (verified) {
+    if (verified && !isJoining.current) {
+      isJoining.current = true;
       await joinGroupCall(peerId, roomId);
+      isJoining.current = false;
     } else {
       toast.error("Wrong password");
       setPasswordValue("");
     }
+    setPasswordDialogVisible(false);
   };
 
   return (

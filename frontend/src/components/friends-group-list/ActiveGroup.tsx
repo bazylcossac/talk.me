@@ -56,6 +56,7 @@ function ActiveGroup({
                   isJoining.current = true;
                   if (group.groupPassword) {
                     setPasswordDialogVisible(true);
+                    isJoining.current = false;
                   } else {
                     await joinGroupCall(group.peerId, group.roomId);
                     isJoining.current = false;
@@ -65,13 +66,12 @@ function ActiveGroup({
               className={cn(
                 "bg-[#333333] p-2 rounded-md cursor-pointer hover:bg-[#222222]",
                 {
-                  hidden: group.users.length + 1 === 4 || isJoining.current,
+                  hidden: group.users.length + 1 === 4,
                 }
               )}
               disabled={
                 callState === callStatus.CALL_IN_PROGRESS ||
-                callState === callStatus.CALL_REQUESTED ||
-                isJoining.current
+                callState === callStatus.CALL_REQUESTED
               }
             >
               <RxEnter />

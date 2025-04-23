@@ -8,7 +8,7 @@ const { PrismaClient, Prisma } = require("@prisma/client");
 const uuid = require("uuid");
 const cors = require("cors");
 const PORT = 3000;
-
+const { sendingOffersFunc } = require("./sendingOffersFunc");
 const app = express();
 const prisma = new PrismaClient();
 const server = http.createServer(app);
@@ -86,38 +86,39 @@ io.on("connection", (socket) => {
     io.sockets.emit("user-join", { activeUsers, activeGroupCalls });
   });
 
-  socket.on("send-pre-offer", (data) => {
-    const newRoomId = uuid.v4();
-    roomId = newRoomId;
-    socket.join(roomId);
+  // socket.on("send-pre-offer", (data) => {
+  //   const newRoomId = uuid.v4();
+  //   roomId = newRoomId;
+  //   socket.join(roomId);
 
-    socket
-      .to(data.calleSocketId)
-      .emit("send-pre-offer", { caller: data.caller, roomId });
-  });
+  //   socket
+  //     .to(data.calleSocketId)
+  //     .emit("send-pre-offer", { caller: data.caller, roomId });
+  // });
 
-  socket.on("pre-offer-answer", ({ answer, callerSocketId }) => {
-    socket
-      .to(callerSocketId)
-      .emit("pre-offer-answer", { answer, socketId: socket.id });
-  });
+  // socket.on("pre-offer-answer", ({ answer, callerSocketId }) => {
+  //   socket
+  //     .to(callerSocketId)
+  //     .emit("pre-offer-answer", { answer, socketId: socket.id });
+  // });
 
-  socket.on("send-offer", (data) => {
-    socket.join(data.roomId);
-    roomId = data.roomId;
+  // socket.on("send-offer", (data) => {
+  //   socket.join(data.roomId);
+  //   roomId = data.roomId;
 
-    socket
-      .to(data.calleSocketId)
-      .emit("send-offer", { offer: data.offer, socketId: socket.id, roomId });
-  });
+  //   socket
+  //     .to(data.calleSocketId)
+  //     .emit("send-offer", { offer: data.offer, socketId: socket.id, roomId });
+  // });
 
-  socket.on("send-offer-answer", (data) => {
-    socket.to(data.socketId).emit("send-offer-answer", data);
-  });
+  // socket.on("send-offer-answer", (data) => {
+  //   socket.to(data.socketId).emit("send-offer-answer", data);
+  // });
 
-  socket.on("send-candidate", (data) => {
-    socket.to(data.socketId).emit("send-candidate", data.candidate);
-  });
+  // socket.on("send-candidate", (data) => {
+  //   socket.to(data.socketId).emit("send-candidate", data.candidate);
+  // });
+  sendingOffersFunc(socket);
 
   socket.on("activity-change", (data) => {
     const user = activeUsers.find((user) => user.socketId === socket.id);
