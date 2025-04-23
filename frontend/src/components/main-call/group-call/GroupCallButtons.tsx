@@ -1,7 +1,7 @@
 import { FaRegEyeSlash } from "react-icons/fa";
 import { FaRegEye } from "react-icons/fa";
 import VideoIcons from "@/components/profile-dashboard/VideoIcons";
-import { handleLeaveCall } from "@/connection/webrtcConnection";
+
 import { useSelector, useDispatch } from "react-redux";
 import { IoClose } from "react-icons/io5";
 import { LuScreenShare } from "react-icons/lu";
