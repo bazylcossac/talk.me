@@ -19,6 +19,7 @@ function ActiveGroup({
     (state: RootState) => state.user.isInGroupCall
   );
   const isJoining = useRef(false);
+
   const [passwordDialogVisible, setPasswordDialogVisible] = useState(false);
 
   return (
@@ -50,26 +51,27 @@ function ActiveGroup({
         {!isInGroupCall && (
           <div>
             <button
-              onClick={() => {
+              onClick={async () => {
                 if (!isJoining.current) {
+                  isJoining.current = true;
                   if (group.groupPassword) {
                     setPasswordDialogVisible(true);
-                    isJoining.current = true;
                   } else {
-                    joinGroupCall(group.peerId, group.roomId);
-                    isJoining.current = true;
+                    await joinGroupCall(group.peerId, group.roomId);
+                    isJoining.current = false;
                   }
                 }
               }}
               className={cn(
                 "bg-[#333333] p-2 rounded-md cursor-pointer hover:bg-[#222222]",
                 {
-                  hidden: group.users.length + 1 === 4,
+                  hidden: group.users.length + 1 === 4 || isJoining.current,
                 }
               )}
               disabled={
                 callState === callStatus.CALL_IN_PROGRESS ||
-                callState === callStatus.CALL_REQUESTED
+                callState === callStatus.CALL_REQUESTED ||
+                isJoining.current
               }
             >
               <RxEnter />

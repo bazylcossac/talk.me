@@ -9,7 +9,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { joinGroupCall } from "@/connection/webrtcGroupConnection";
 import { verifyPassword } from "@/functions/verifyPassword";
-import { GroupCallDataType } from "@/types/types";
+
 import { FormEvent, useState } from "react";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
 import { toast } from "sonner";
