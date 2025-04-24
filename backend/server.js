@@ -165,6 +165,10 @@ io.on("connection", (socket) => {
     const hostingGroupCall = activeGroupCalls.find(
       (group) => group.socketId === socket.id
     );
+    const groupCall = activeGroupCalls.find((group) => group.roomId === roomId);
+
+    // delete from users array
+
     if (hostingGroupCall) {
       const filteredGroups = activeGroupCalls.filter(
         (group) => group.socketId !== hostingGroupCall.socketId
@@ -174,7 +178,29 @@ io.on("connection", (socket) => {
       io.sockets
         .to(hostingGroupCall.roomId)
         .emit("close-group-call-gone", hostingGroupCall.roomId);
+      // sprawdzic czy potrzeba index dodawac index grupy
       io.sockets.emit("active-groups", filteredGroups);
+    }
+
+    if (groupCall) {
+      const usersInGroup = groupCall.users;
+
+      const filteredUsers = usersInGroup.filter(
+        (user) => user.socketId !== socket.id
+      );
+
+      const updatedGroup = {
+        ...groupCall,
+        users: filteredUsers,
+      };
+
+      const groupCallIndex = activeGroupCalls.findIndex(
+        (group) => group.roomId === roomId
+      );
+
+      activeGroupCalls[groupCallIndex] = updatedGroup;
+      state.activeGroupCalls = activeGroupCalls;
+      io.sockets.emit("active-groups", activeGroupCalls);
     }
 
     state.activeUsers = usersLeft;
