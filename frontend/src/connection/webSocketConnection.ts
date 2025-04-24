@@ -86,19 +86,22 @@ export const connectToWebSocket = () => {
       user: userDataType;
       activity: (typeof userStatus)[keyof typeof userStatus];
     }) => {
-      const acttiveUsers = store.getState().user.activeUsers;
-      const newUsers = acttiveUsers.filter(
-        (activeUser) => activeUser.socketId !== user.socketId
-      );
-      const newActiveUsers = [
-        ...newUsers,
-        {
-          ...user,
-          status: activity,
-        },
-      ];
+      const activeUsers = store.getState().user.activeUsers;
 
-      store.dispatch(setActiveUsers(newActiveUsers));
+      const tempUseres = [...activeUsers];
+
+      const userIndex = tempUseres.findIndex(
+        (activeUser) => activeUser.socketId === user.socketId
+      );
+
+      const newUser = {
+        ...user,
+        status: activity,
+      };
+
+      tempUseres[userIndex] = newUser;
+
+      store.dispatch(setActiveUsers(tempUseres));
     }
   );
 

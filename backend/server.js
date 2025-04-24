@@ -49,20 +49,20 @@ io.on("connection", (socket) => {
   sendingOffersFunc(socket);
 
   socket.on("activity-change", (data) => {
+    console.log(state.activeUsers);
     const user = state.activeUsers.find((user) => user.socketId === socket.id);
+    const userIndex = state.activeUsers.findIndex(
+      (user) => user.socketId === socket.id
+    );
 
-    if (user) {
+    if (user && userIndex !== -1) {
       const newUser = {
         ...user,
         status: data.activity,
       };
 
-      const usersLeft = state.activeUsers.filter(
-        (user) => user.socketId !== socket.id
-      );
-
-      const newUsers = [...usersLeft, newUser];
-      state.activeUsers = newUsers;
+      state.activeUsers[userIndex] = newUser;
+      console.log(state.activeUsers);
     }
 
     io.sockets.emit("activity-change", data);
