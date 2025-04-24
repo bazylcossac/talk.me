@@ -6,7 +6,7 @@ import { HiMiniVideoCameraSlash } from "react-icons/hi2";
 import { BiSolidMicrophoneOff } from "react-icons/bi";
 import { RootState } from "../../store/store";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SettingsDialog from "./settings-dialog/SettingsDialog";
 import { setCameraEnabled, setMicEnabled } from "@/store/slices/user";
 
@@ -47,6 +47,12 @@ function VideoIcons({
   const handleShowSettings = () => {
     setShowOptions((prev) => !prev);
   };
+
+  useEffect(() => {
+    if (localStream) {
+      localStream.getAudioTracks()[0].enabled = micEnabled;
+    }
+  }, [micEnabled, localStream]);
 
   return (
     <>

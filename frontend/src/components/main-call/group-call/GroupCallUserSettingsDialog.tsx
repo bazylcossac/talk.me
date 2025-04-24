@@ -33,7 +33,11 @@ function UsersSettingsDialog({
               </p>
             </DialogTitle>
 
-            <Button onClick={kickUser} variant="destructive">
+            <Button
+              onClick={kickUser}
+              variant="destructive"
+              className="cursor-pointer hover:bg-red-800 transition"
+            >
               Kick
             </Button>
             <DialogDescription></DialogDescription>

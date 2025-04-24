@@ -225,6 +225,7 @@ export const connectToWebSocket = () => {
   socket.on(
     "kick-me",
     ({ socketId, roomId }: { socketId: string; roomId: string }) => {
+      toast.info("You were kicked from room");
       sendLeaveGroupCallRequest({ socketId, roomId });
       handleDisconnectFromGroupCall(roomId);
     }
