@@ -102,6 +102,27 @@ io.on("connection", (socket) => {
 
   socket.on("join-group-call-request", (data) => {
     socket.join(data.roomId);
+    const user = data.user;
+    const activeGroupCalls = [...state.activeGroupCalls];
+    const groupCall = activeGroupCalls.find(
+      (group) => group.roomId === data.roomId
+    );
+
+    const groupCallIndex = activeGroupCalls.findIndex(
+      (group) => group.roomId === data.roomId
+    );
+
+    const updatedGroupCall = {
+      ...groupCall,
+      users: [...groupCall.users, user],
+    };
+
+    activeGroupCalls[groupCallIndex] = updatedGroupCall;
+
+    console.log(updatedGroupCall);
+
+    state.activeGroupCalls = activeGroupCalls;
+
     roomId = data.roomId;
     socket.to(data.roomId).emit("join-group-call-request", data);
     io.sockets.emit("group-users-change-update", {
@@ -137,17 +158,19 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    const usersLeft = state.activeUsers.filter(
-      (user) => user.socketId !== socket.id
-    );
-    const hostingGroupCall = state.activeGroupCalls.find(
+    const activeUsers = [...state.activeUsers];
+    const activeGroupCalls = [...state.activeGroupCalls];
+
+    const usersLeft = activeUsers.filter((user) => user.socketId !== socket.id);
+    const hostingGroupCall = activeGroupCalls.find(
       (group) => group.socketId === socket.id
     );
-    if (!!hostingGroupCall) {
-      const filteredGroups = state.activeGroupCalls.filter(
+    if (hostingGroupCall) {
+      const filteredGroups = activeGroupCalls.filter(
         (group) => group.socketId !== hostingGroupCall.socketId
       );
       state.activeGroupCalls = filteredGroups;
+      console.log(filteredGroups);
       io.sockets
         .to(hostingGroupCall.roomId)
         .emit("close-group-call-gone", hostingGroupCall.roomId);
