@@ -26,6 +26,7 @@ import {
 import { userDataType } from "@/types/types";
 import { toast } from "sonner";
 import { getCredentials } from "@/functions/getCredentials";
+import { closeGroupCallByHost, leaveGroupCall } from "./webrtcGroupConnection";
 
 let recivedBuffers = [] as ArrayBuffer[];
 let callerSocketId: string | null;
@@ -305,8 +306,12 @@ export const handleSendAcceptCall = async ({
   callerSocketID: string;
   roomId: string;
 }) => {
+  const callState = store.getState().user.userCallState;
+  const isInGroupCall = store.getState().user.isInGroupCall;
+  const hasCreatedGroupCall = store.getState().user.hasCreatedGroupCall;
+
   if (
-    store.getState().user.userCallState === callStatus.CALL_IN_PROGRESS &&
+    callState === callStatus.CALL_IN_PROGRESS &&
     peerConnection?.connectionState === "connected"
   ) {
     sendCloseConnection({
@@ -317,7 +322,13 @@ export const handleSendAcceptCall = async ({
   // if(store.getState().user.isInGroupCall){
   //   store.getState().user. /// dodac do reux aktualna grupe
   // }
+  if (isInGroupCall && hasCreatedGroupCall) {
+    closeGroupCallByHost();
+  }
 
+  if (isInGroupCall && !hasCreatedGroupCall) {
+    leaveGroupCall();
+  }
   store.dispatch(setCallStatus(callStatus.CALL_IN_PROGRESS));
   callerSocketId = callerSocketID;
   handleUserActiveChange(userStatus.IN_CALL);
