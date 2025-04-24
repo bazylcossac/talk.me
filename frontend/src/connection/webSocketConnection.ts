@@ -221,6 +221,14 @@ export const connectToWebSocket = () => {
       handleUserGroupCallDisconnect(socketId, roomId);
     }
   );
+
+  socket.on(
+    "kick-me",
+    ({ socketId, roomId }: { socketId: string; roomId: string }) => {
+      sendLeaveGroupCallRequest({ socketId, roomId });
+      handleDisconnectFromGroupCall(roomId);
+    }
+  );
 };
 
 // user join - disconnect
@@ -395,4 +403,8 @@ export const sendGroupUsersUpdate = ({
     roomId,
     type,
   });
+};
+
+export const sendKickUserRequest = (socketId: string) => {
+  socket.emit("kick-user-request", socketId);
 };

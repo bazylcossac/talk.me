@@ -7,7 +7,8 @@ import { RootState } from "@/store/store";
 import { callStatus } from "@/lib/constants";
 import { FaLock } from "react-icons/fa6";
 import { useRef, useState } from "react";
-import PasswordDialog from "../main-call/group-call/JoinPasswordDialog";
+import PasswordDialog from "../main-call/group-call/joinPasswordDialog";
+
 function ActiveGroup({
   group,
   callState,

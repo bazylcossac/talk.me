@@ -17,14 +17,14 @@ function IncomingCallBox({
 }) {
   const handleAcceptCall = () => {
     handleSendAcceptCall({
-      callerSocketID: user.socketId,
-      roomId: user.roomId!
+      callerSocketID: user.socketId!,
+      roomId: user.roomId!,
     });
   };
 
   const handleDeclineCall = () => {
     handleRejectCall({
-      callerSocketID: user.socketId,
+      callerSocketID: user.socketId!,
     });
   };
 
@@ -47,7 +47,7 @@ function IncomingCallBox({
           onClick={() => {
             handleAcceptCall();
             toast.dismiss(toastId);
-            deleteFromShownToastIds(user.socketId);
+            deleteFromShownToastIds(user.socketId!);
           }}
         >
           Accept
@@ -58,7 +58,7 @@ function IncomingCallBox({
           onClick={() => {
             handleDeclineCall();
             toast.dismiss(toastId);
-            deleteFromShownToastIds(user.socketId);
+            deleteFromShownToastIds(user.socketId!);
           }}
         >
           Reject

@@ -3,6 +3,7 @@ import {
   sendCloseGroupCallRequest,
   sendGroupUsersUpdate,
   sendJoinRequest,
+  sendKickUserRequest,
   sendLeaveGroupCallRequest,
   sendRequestOpenGroupCall,
 } from "./webSocketConnection";
@@ -231,4 +232,8 @@ export const handleUserGroupCallDisconnect = (
     roomId,
     type: "remove",
   });
+};
+
+export const handleKickUser = (socketId: string) => {
+  sendKickUserRequest(socketId);
 };

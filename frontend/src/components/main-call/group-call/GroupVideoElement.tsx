@@ -3,7 +3,8 @@ import { userDataType } from "@/types/types";
 import { useEffect, useRef, useState } from "react";
 import { BsThreeDots } from "react-icons/bs";
 import { useSelector } from "react-redux";
-import UserDropMenu from "./GroupCallUserSettingsDialog";
+
+import UsersSettingsDialog from "./GroupCallUserSettingsDialog";
 
 function GroupVideoElement({
   stream,
@@ -12,7 +13,7 @@ function GroupVideoElement({
   stream: MediaStream;
   user?: userDataType;
 }) {
-  const [dropMenuVisible, setDropMenuVisible] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
   const loggedUser = store.getState().user.loggedUser;
   const isUserHosting = useSelector(
     (state: RootState) => state.user.hasCreatedGroupCall
@@ -47,12 +48,14 @@ function GroupVideoElement({
       )}
 
       {isUserHosting && user?.socketId !== loggedUser.socketId && (
-        <button
-          className="absolute top-0 left-0 m-2"
-          onClick={() => setDropMenuVisible(true)}
-        >
-          <BsThreeDots className="text-white/50 hover:text-white transition cursor-pointer" />
-        </button>
+        <div className="flex">
+          <button
+            className="absolute top-0 left-0 m-2 z-10"
+            onClick={() => setShowSettings(true)}
+          >
+            <BsThreeDots className="text-white hover:text-white transition cursor-pointer z-10" />
+          </button>
+        </div>
       )}
       {/* <p>Socket id: ${user?.socketId}</p>
       <p>Stream id: ${stream.id}</p> */}
@@ -65,10 +68,11 @@ function GroupVideoElement({
       <p className="absolute bottom-0 right-0  text-xs text-white text-shado-2xl bg-[#222222] p-2 rounded-md m-1 border-1 border-white/20">
         {user?.username || "guest"}
       </p>
-      {isUserHosting && (
-        <UserDropMenu
-          dropMenuVisible={dropMenuVisible}
-          setDropMenuVisible={setDropMenuVisible}
+      {isUserHosting && user?.socketId !== loggedUser.socketId && (
+        <UsersSettingsDialog
+          showSettings={showSettings}
+          setShowSettings={setShowSettings}
+          user={user}
         />
       )}
     </div>

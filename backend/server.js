@@ -146,6 +146,28 @@ io.on("connection", (socket) => {
   });
 
   socket.on("leave-group-call", ({ socketId, roomId }) => {
+    const activeGroupCalls = [...state.activeGroupCalls];
+
+    const groupCall = activeGroupCalls.find((group) => group.roomId === roomId);
+    const usersInGroup = groupCall.users;
+
+    const filteredUsers = usersInGroup.filter(
+      (user) => user.socketId !== socket.id
+    );
+
+    const updatedGroup = {
+      ...groupCall,
+      users: filteredUsers,
+    };
+
+    const groupCallIndex = activeGroupCalls.findIndex(
+      (group) => group.roomId === roomId
+    );
+
+    activeGroupCalls[groupCallIndex] = updatedGroup;
+    state.activeGroupCalls = activeGroupCalls;
+    io.sockets.emit("active-groups", activeGroupCalls);
+
     socket.to(roomId).emit("leave-group-call", { socketId, roomId });
   });
 
@@ -155,6 +177,11 @@ io.on("connection", (socket) => {
       roomId,
       type,
     });
+  });
+
+  socket.on("kick-user-request", (socketId) => {
+    socket.to(socketId).emit("kick-me", { socketId, roomId });
+    socket.to(roomId).emit("leave-group-call", { socketId, roomId });
   });
 
   socket.on("disconnect", () => {
