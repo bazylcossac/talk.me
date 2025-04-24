@@ -134,6 +134,7 @@ export const callToUser = async (calleSocketId: string) => {
     caller: currentUser,
     calleSocketId: calleSocketId,
   });
+  handleUserActiveChange(userStatus.ACTIVE);
   await setUpLocalStream();
   await createPeerConection();
 

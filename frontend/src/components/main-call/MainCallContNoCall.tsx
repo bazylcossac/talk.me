@@ -20,6 +20,7 @@ function MainCallContNoCall() {
           Start group call
         </Button>
       </div>
+
       <GroupCallCreateDialog
         createDialogVisible={createDialogVisible}
         setCreateDialogVisible={setCreateDialogVisible}
