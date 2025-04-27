@@ -5,6 +5,10 @@ import FileInput from "./FileInput";
 import { IoMdSend } from "react-icons/io";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useUser } from "@clerk/clerk-react";
+import { sendMessageDataChannels } from "@/functions/sendMessageDataChannels";
+import { toast } from "sonner";
+import { ACCEPTED_FILES, MAX_FILE_SIZE } from "@/lib/constants";
 
 function ChatForm({
   sendMessage,
@@ -13,8 +17,30 @@ function ChatForm({
   sendMessage: (arg0: FormData) => void;
   formRef: Ref<HTMLFormElement>;
 }) {
+  const { user } = useUser();
+
   const [fileOver, setFileOver] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  if (!user) return;
+
+  const handleFileDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    if (e.dataTransfer) {
+      const file = e.dataTransfer!.files[0];
+      if (file.size > MAX_FILE_SIZE) {
+        toast("Ops! File is to heavy! Try something to 100mb");
+        return;
+      }
+      if (!ACCEPTED_FILES.includes(file.type)) {
+        toast("Weird file type! Sorry!");
+        return;
+      }
+
+      sendMessageDataChannels(file, user);
+    }
+    setFileOver(false);
+  };
+
   return (
     <section
       className={cn("mt-auto w-full p-2 absolute bottom-0  bg-[#383838]", {
@@ -26,12 +52,10 @@ function ChatForm({
         className={cn(" flex flex-row w-full gap-2 relative ")}
         onDragEnter={(e) => {
           e.preventDefault();
-          console.log("START");
           setFileOver(true);
         }}
         onDragLeave={(e) => {
           e.preventDefault();
-          console.log("END");
           setFileOver(false);
         }}
       >
@@ -43,11 +67,7 @@ function ChatForm({
               "pointer-events-none": !fileOver,
             }
           )}
-          onDrop={(e) => {
-            e.preventDefault();
-            console.log("FILE DROP");
-            setFileOver(false);
-          }}
+          onDrop={(e) => handleFileDrop(e)}
           onDragOver={(e) => {
             e.preventDefault();
             setFileOver(true);

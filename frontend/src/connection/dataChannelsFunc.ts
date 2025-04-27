@@ -17,18 +17,18 @@ export const handleSendMessage = ({
 };
 
 export const sendFile = ({
-  selectedFile,
+  file,
   username,
   type,
   messageId,
 }: {
-  selectedFile: File;
+  file: File;
   username: string;
   type: "file";
   messageId: string;
 }) => {
-  const blob = new Blob([selectedFile], { type: selectedFile.type });
-  
+  const blob = new Blob([file], { type: file.type });
+
   const fileReader = new FileReader();
   let offset = 0;
 
@@ -46,7 +46,7 @@ export const sendFile = ({
         username,
         messageId,
         type,
-        fileType: selectedFile.type,
+        fileType: file.type,
       });
       currentDataChannel?.send(data);
     }
