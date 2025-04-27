@@ -75,11 +75,11 @@ export const handleScreenSharing = async (
 
 export const changeScreenSharingResolution = async () => {
   const callState = store.getState().user.userCallState;
+  const screenSharingEnabled = store.getState().user.screenSharingEnabled;
 
-  if (callState === callStatus.CALL_IN_PROGRESS) {
+  if (callState === callStatus.CALL_IN_PROGRESS && screenSharingEnabled) {
     const screenSharingStream = store.getState().webrtc.screenSharingStrem;
     screenSharingStream?.getTracks().forEach((track) => track.stop);
-
     handleScreenSharing(true);
   }
 };

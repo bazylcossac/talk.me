@@ -34,11 +34,9 @@ function Dashboard() {
     }
   }, [user]);
 
-  useEffect(() => {
-    if (!isSignedIn && isLoaded) {
-      navigate("/");
-    }
-  }, [isSignedIn, navigate, isLoaded, user]);
+  if (!isSignedIn && isLoaded) {
+    navigate("/");
+  }
 
   if (!isLoaded) {
     return (

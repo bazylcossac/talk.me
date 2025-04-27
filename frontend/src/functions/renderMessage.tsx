@@ -112,7 +112,7 @@ const renderMesage = (message: chatItemType) => {
               >
                 <FaDownload />
                 <p className="text-xs text-white/50">
-                  {message.fileType.split("/")[1]} file
+                  {message.fileType.split("/")[1].toUpperCase()} FILE
                 </p>
               </a>
             </div>

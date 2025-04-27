@@ -28,7 +28,7 @@ export const sendFile = ({
   messageId: string;
 }) => {
   const blob = new Blob([selectedFile], { type: selectedFile.type });
-  console.log(blob.size);
+  
   const fileReader = new FileReader();
   let offset = 0;
 

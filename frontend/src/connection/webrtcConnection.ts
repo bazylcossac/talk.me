@@ -98,8 +98,6 @@ export const createPeerConection = async () => {
 
         const file = new Blob(recivedBuffers, { type: fileType });
         const url = URL.createObjectURL(file);
-        console.log(file);
-        console.log(url);
         recivedBuffers = [];
         store.dispatch(
           setCurrentCallMessages({
@@ -115,7 +113,6 @@ export const createPeerConection = async () => {
       }
     }
 
-    console.log("CHUNK");
     recivedBuffers.push(event.data);
     console.log(recivedBuffers);
   };
@@ -319,9 +316,7 @@ export const handleSendAcceptCall = async ({
       currentRoomId: roomId,
     });
   }
-  // if(store.getState().user.isInGroupCall){
-  //   store.getState().user. /// dodac do reux aktualna grupe
-  // }
+
   if (isInGroupCall && hasCreatedGroupCall) {
     closeGroupCallByHost();
   }
