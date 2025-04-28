@@ -28,7 +28,7 @@ import { toast } from "sonner";
 import { getCredentials } from "@/functions/getCredentials";
 import { closeGroupCallByHost, leaveGroupCall } from "./webrtcGroupConnection";
 
-let recivedBuffers = [] as ArrayBuffer[];
+export let recivedBuffers = [] as ArrayBuffer[];
 let callerSocketId: string | null;
 export let peerConnection = null as RTCPeerConnection | null;
 let currentRoomId: string | null;

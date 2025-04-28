@@ -8,17 +8,11 @@ import store from "@/store/store";
 import { peerConnection, setUpLocalStream } from "./webrtcConnection";
 import { toast } from "sonner";
 import {
-  setGroupCallUsers,
   setLocalStream,
   setNewGroupCallUsers,
   setScreenSharingScreen,
 } from "@/store/slices/webrtc";
-import {
-  callPeerId,
-  connectToGroupCall,
-  currentCall,
-  myPeerId,
-} from "./webrtcGroupConnection";
+import { currentCall, myPeerId } from "./webrtcGroupConnection";
 
 export const handleScreenSharing = async (
   screenSharingEnabled: boolean

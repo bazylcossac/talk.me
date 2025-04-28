@@ -1,4 +1,4 @@
-import Peer, { MediaConnection } from "peerjs";
+import Peer, { DataConnection, MediaConnection } from "peerjs";
 import {
   sendCloseGroupCallRequest,
   sendGroupUsersUpdate,
@@ -22,6 +22,7 @@ import {
 } from "./webrtcConnection";
 import { getCredentials } from "@/functions/getCredentials";
 import {
+  setCurrentCallMessages,
   setGroupCallStreams,
   setGroupCallUsers,
   setNewGroupCallStreams,
@@ -36,6 +37,8 @@ export let peer: Peer;
 export let currentGroupId: string;
 export let callPeerId: string;
 export let currentCall: MediaConnection | null;
+export let dataChannelGroup: DataConnection | null;
+let recivedBuffers = [] as ArrayBuffer[];
 
 export const createGroupPeerConnection = async () => {
   const credentials = await getCredentials();
@@ -50,6 +53,52 @@ export const createGroupPeerConnection = async () => {
     console.log("PEER JS USER ", id);
     myPeerId = id;
   });
+
+  peer.on("connection", (dataConnection) => {
+    console.log(dataConnection);
+    dataChannelGroup = dataConnection;
+    dataChannelGroup.on("data", (data) => {
+      if (typeof data !== "object") {
+        if (JSON.parse(data).type === "message") {
+          console.log("MESSAGE");
+          const { username, message, messageId, type } = JSON.parse(data);
+          store.dispatch(
+            setCurrentCallMessages({
+              your: false,
+              username,
+              message,
+              messageId,
+              type,
+            })
+          );
+
+          return;
+        }
+        if (JSON.parse(data).type === "file") {
+          const { username, messageId, type, fileType } = JSON.parse(data);
+
+          const file = new Blob(recivedBuffers, { type: fileType });
+          const url = URL.createObjectURL(file);
+          recivedBuffers = [];
+          store.dispatch(
+            setCurrentCallMessages({
+              your: false,
+              username,
+              url,
+              messageId,
+              type,
+              fileType,
+            })
+          );
+          return;
+        }
+      }
+
+      recivedBuffers.push(data);
+      console.log(recivedBuffers);
+    });
+  });
+
   peer.on("call", async (call) => {
     const localStream = store.getState().webrtc.localStream;
     if (!localStream) {
@@ -107,6 +156,7 @@ export const handleDisconnectFromGroupCall = (roomId: string) => {
   disconnectFromRoom(roomId);
   store.dispatch(setNewGroupCallStreams([]));
   store.dispatch(setNewGroupCallUsers([]));
+  dataChannelGroup?.close();
   currentGroupId = "";
   currentCall = null;
 };
@@ -119,6 +169,7 @@ export const joinGroupCall = async (peerId: string, roomId: string) => {
   }
   handleDisconnectFromGroupCall(currentGroupId);
   await createGroupPeerConnection();
+
   await setUpLocalStream();
   currentGroupId = roomId;
   const loggedUser = store.getState().user.loggedUser;
@@ -142,6 +193,7 @@ export const joinGroupCall = async (peerId: string, roomId: string) => {
     roomId,
     peerId: myPeerId,
   });
+
   store.dispatch(setIsInGroupCall(true));
   store.dispatch(setCallStatus(callStatus.CALL_IN_PROGRESS));
   store.dispatch(setUserActiveStatus(userStatus.IN_CALL));
@@ -162,6 +214,8 @@ export const connectToGroupCall = (data: {
   callPeerId = data.peerId;
 
   const call = peer.call(data.peerId, localStream);
+  createDataConnection(data.peerId);
+
   console.log("CURRENT CALL");
   console.log(currentCall);
 
@@ -236,4 +290,15 @@ export const handleUserGroupCallDisconnect = (
 
 export const handleKickUser = (socketId: string) => {
   sendKickUserRequest(socketId);
+};
+
+const createDataConnection = (peerId: string) => {
+  dataChannelGroup = peer.connect(peerId);
+  dataChannelGroup.on("open", () => {
+    dataChannelGroup!.send("hELLO!");
+  });
+  dataChannelGroup.on("data", (data) => {
+    console.log("RECIVED");
+    console.log(data);
+  });
 };
