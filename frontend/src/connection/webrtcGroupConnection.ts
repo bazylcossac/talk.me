@@ -22,7 +22,6 @@ import {
 } from "./webrtcConnection";
 import { getCredentials } from "@/functions/getCredentials";
 import {
-  setCurrentCallMessages,
   setGroupCallStreams,
   setGroupCallUsers,
   setNewGroupCallStreams,
@@ -31,6 +30,7 @@ import {
 import { toast } from "sonner";
 import { isCallPossible } from "@/functions/isCallPossible";
 import { userDataType } from "@/types/types";
+import handleDataChannelMessages from "@/functions/handleDataChannelMessages";
 
 export let myPeerId: string;
 export let peer: Peer;
@@ -38,7 +38,7 @@ export let currentGroupId: string;
 export let callPeerId: string;
 export let currentCall: MediaConnection | null;
 export let dataChannelGroup: DataConnection | null;
-let recivedBuffers = [] as ArrayBuffer[];
+const recivedBuffers = [] as ArrayBuffer[];
 
 export const createGroupPeerConnection = async () => {
   const credentials = await getCredentials();
@@ -58,44 +58,7 @@ export const createGroupPeerConnection = async () => {
     console.log(dataConnection);
     dataChannelGroup = dataConnection;
     dataChannelGroup.on("data", (data) => {
-      if (typeof data !== "object") {
-        if (JSON.parse(data).type === "message") {
-          console.log("MESSAGE");
-          const { username, message, messageId, type } = JSON.parse(data);
-          store.dispatch(
-            setCurrentCallMessages({
-              your: false,
-              username,
-              message,
-              messageId,
-              type,
-            })
-          );
-
-          return;
-        }
-        if (JSON.parse(data).type === "file") {
-          const { username, messageId, type, fileType } = JSON.parse(data);
-
-          const file = new Blob(recivedBuffers, { type: fileType });
-          const url = URL.createObjectURL(file);
-          recivedBuffers = [];
-          store.dispatch(
-            setCurrentCallMessages({
-              your: false,
-              username,
-              url,
-              messageId,
-              type,
-              fileType,
-            })
-          );
-          return;
-        }
-      }
-
-      recivedBuffers.push(data);
-      console.log(recivedBuffers);
+      handleDataChannelMessages(data);
     });
   });
 
@@ -295,10 +258,9 @@ export const handleKickUser = (socketId: string) => {
 const createDataConnection = (peerId: string) => {
   dataChannelGroup = peer.connect(peerId);
   dataChannelGroup.on("open", () => {
-    dataChannelGroup!.send("hELLO!");
+    console.log("data channel group open");
   });
   dataChannelGroup.on("data", (data) => {
-    console.log("RECIVED");
-    console.log(data);
+    handleDataChannelMessages(data);
   });
 };

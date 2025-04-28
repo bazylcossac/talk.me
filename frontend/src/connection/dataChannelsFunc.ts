@@ -59,7 +59,11 @@ export const sendFile = ({
         type,
         fileType: file.type,
       });
-      currentDataChannel?.send(data);
+      if (isInGropCall) {
+        dataChannelGroup?.send(data);
+      } else {
+        currentDataChannel?.send(data);
+      }
     }
   };
 

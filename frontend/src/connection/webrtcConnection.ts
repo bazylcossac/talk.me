@@ -19,7 +19,6 @@ import {
 import {
   clearCurrentCallMessages,
   setCallingUserData,
-  setCurrentCallMessages,
   setLocalStream,
   setRemoteStream,
 } from "@/store/slices/webrtc";
@@ -27,8 +26,9 @@ import { userDataType } from "@/types/types";
 import { toast } from "sonner";
 import { getCredentials } from "@/functions/getCredentials";
 import { closeGroupCallByHost, leaveGroupCall } from "./webrtcGroupConnection";
+import handleDataChannelMessages from "@/functions/handleDataChannelMessages";
 
-export let recivedBuffers = [] as ArrayBuffer[];
+export const recivedBuffers = [] as ArrayBuffer[];
 let callerSocketId: string | null;
 export let peerConnection = null as RTCPeerConnection | null;
 let currentRoomId: string | null;
@@ -77,44 +77,7 @@ export const createPeerConection = async () => {
   };
 
   currentDataChannel.onmessage = (event) => {
-    if (typeof event.data !== "object") {
-      if (JSON.parse(event.data).type === "message") {
-        console.log("MESSAGE");
-        const { username, message, messageId, type } = JSON.parse(event.data);
-        store.dispatch(
-          setCurrentCallMessages({
-            your: false,
-            username,
-            message,
-            messageId,
-            type,
-          })
-        );
-
-        return;
-      }
-      if (JSON.parse(event.data).type === "file") {
-        const { username, messageId, type, fileType } = JSON.parse(event.data);
-
-        const file = new Blob(recivedBuffers, { type: fileType });
-        const url = URL.createObjectURL(file);
-        recivedBuffers = [];
-        store.dispatch(
-          setCurrentCallMessages({
-            your: false,
-            username,
-            url,
-            messageId,
-            type,
-            fileType,
-          })
-        );
-        return;
-      }
-    }
-
-    recivedBuffers.push(event.data);
-    console.log(recivedBuffers);
+    handleDataChannelMessages(event.data);
   };
   currentDataChannel.onopen = () => {
     console.log("DATA CHANNEL OPPENED");
