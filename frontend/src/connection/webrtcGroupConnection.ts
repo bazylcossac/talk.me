@@ -31,6 +31,7 @@ import { toast } from "sonner";
 import { isCallPossible } from "@/functions/isCallPossible";
 import { userDataType } from "@/types/types";
 import handleDataChannelMessages from "@/functions/handleDataChannelMessages";
+import getPeerIdsFromGroup from "@/functions/getPeerIdsFromGroup";
 
 export let myPeerId: string;
 export let peer: Peer;
@@ -38,7 +39,8 @@ export let currentGroupId: string;
 export let callPeerId: string;
 export let currentCall: MediaConnection | null;
 export let dataChannelGroup: DataConnection | null;
-const recivedBuffers = [] as ArrayBuffer[];
+const groupPeerIds = [] as string[];
+// const recivedBuffers = [] as ArrayBuffer[];
 
 export const createGroupPeerConnection = async () => {
   const credentials = await getCredentials();
@@ -141,6 +143,10 @@ export const joinGroupCall = async (peerId: string, roomId: string) => {
     toast("Failed to get media devices");
     return;
   }
+
+  // createDataConnection(peerId);
+
+  // dodac liste peerow w grupie
   const data = {
     peerId: myPeerId,
     roomId: roomId,
@@ -157,6 +163,13 @@ export const joinGroupCall = async (peerId: string, roomId: string) => {
     peerId: myPeerId,
   });
 
+  const ids = await getPeerIdsFromGroup(roomId);
+
+  const filteredIds = ids.ids.filter((id: string) => id !== myPeerId);
+  connectToAllPeers(filteredIds);
+
+  console.log(ids);
+
   store.dispatch(setIsInGroupCall(true));
   store.dispatch(setCallStatus(callStatus.CALL_IN_PROGRESS));
   store.dispatch(setUserActiveStatus(userStatus.IN_CALL));
@@ -168,6 +181,9 @@ export const connectToGroupCall = (data: {
   roomId: string;
   peerId: string;
 }) => {
+  groupPeerIds.push(data.peerId);
+  // connectToAllPeers(groupPeerIds);
+
   const localStream = store.getState().webrtc.localStream;
   if (!localStream) {
     toast("Failed to get media devices");
@@ -177,7 +193,6 @@ export const connectToGroupCall = (data: {
   callPeerId = data.peerId;
 
   const call = peer.call(data.peerId, localStream);
-  createDataConnection(data.peerId);
 
   console.log("CURRENT CALL");
   console.log(currentCall);
@@ -255,7 +270,19 @@ export const handleKickUser = (socketId: string) => {
   sendKickUserRequest(socketId);
 };
 
-const createDataConnection = (peerId: string) => {
+export const connectToAllPeers = (peerIds: string[]) => {
+  peerIds.forEach((peerId) => {
+    dataChannelGroup = peer.connect(peerId);
+    dataChannelGroup.on("open", () => {
+      console.log("data channel group open");
+    });
+    dataChannelGroup.on("data", (data) => {
+      handleDataChannelMessages(data);
+    });
+  });
+};
+
+export const createDataConnection = (peerId: string) => {
   dataChannelGroup = peer.connect(peerId);
   dataChannelGroup.on("open", () => {
     console.log("data channel group open");

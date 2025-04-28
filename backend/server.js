@@ -49,7 +49,6 @@ io.on("connection", (socket) => {
   sendingOffersFunc(socket);
 
   socket.on("activity-change", (data) => {
-    console.log(state.activeUsers);
     const user = state.activeUsers.find((user) => user.socketId === socket.id);
     const userIndex = state.activeUsers.findIndex(
       (user) => user.socketId === socket.id
@@ -62,7 +61,6 @@ io.on("connection", (socket) => {
       };
 
       state.activeUsers[userIndex] = newUser;
-      console.log(state.activeUsers);
     }
 
     io.sockets.emit("activity-change", data);
@@ -70,7 +68,7 @@ io.on("connection", (socket) => {
 
   socket.on("leave-call", (data) => {
     socket.leave(data.currentRoomId);
-    roomId = "";
+    state.roomId = "";
     socket.to(data.socketId).emit("leave-call");
   });
 
@@ -95,7 +93,6 @@ io.on("connection", (socket) => {
       users: [],
     };
     state.activeGroupCalls.push(newGroupCall);
-    console.log(state.activeGroupCalls);
 
     io.sockets.emit("active-groups", state.activeGroupCalls);
   });
@@ -114,16 +111,14 @@ io.on("connection", (socket) => {
 
     const updatedGroupCall = {
       ...groupCall,
-      users: [...groupCall.users, user],
+      users: [...groupCall.users, { ...data.user, peerId: data.peerId }],
     };
 
     activeGroupCalls[groupCallIndex] = updatedGroupCall;
 
-    console.log(updatedGroupCall);
-
     state.activeGroupCalls = activeGroupCalls;
 
-    roomId = data.roomId;
+    state.roomId = data.roomId;
     socket.to(data.roomId).emit("join-group-call-request", data);
     io.sockets.emit("group-users-change-update", {
       user: data.user,
@@ -133,7 +128,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("user-join-users-update", ({ users, roomId }) => {
-    socket.to(roomId).emit("user-join-users-update", users);
+    io.sockets.to(roomId).emit("user-join-users-update", users);
   });
 
   socket.on("close-group-call-by-host", (roomId) => {
@@ -148,7 +143,9 @@ io.on("connection", (socket) => {
   socket.on("leave-group-call", ({ socketId, roomId }) => {
     const activeGroupCalls = [...state.activeGroupCalls];
 
-    const groupCall = activeGroupCalls.find((group) => group.roomId === roomId);
+    const groupCall = activeGroupCalls.find(
+      (group) => group.roomId === state.roomId
+    );
     const usersInGroup = groupCall.users;
 
     const filteredUsers = usersInGroup.filter(
@@ -169,6 +166,7 @@ io.on("connection", (socket) => {
     io.sockets.emit("active-groups", activeGroupCalls);
 
     socket.to(roomId).emit("leave-group-call", { socketId, roomId });
+    state.roomId = "";
   });
 
   socket.on("group-users-change-update", ({ user, roomId, type }) => {
@@ -180,8 +178,10 @@ io.on("connection", (socket) => {
   });
 
   socket.on("kick-user-request", (socketId) => {
-    socket.to(socketId).emit("kick-me", { socketId, roomId });
-    socket.to(roomId).emit("leave-group-call", { socketId, roomId });
+    socket.to(socketId).emit("kick-me", { socketId, roomId: state.roomId });
+    socket
+      .to(state.roomId)
+      .emit("leave-group-call", { socketId, roomId: state.roomId });
   });
 
   socket.on("disconnect", () => {
@@ -192,7 +192,9 @@ io.on("connection", (socket) => {
     const hostingGroupCall = activeGroupCalls.find(
       (group) => group.socketId === socket.id
     );
-    const groupCall = activeGroupCalls.find((group) => group.roomId === roomId);
+    const groupCall = activeGroupCalls.find(
+      (group) => group.roomId === state.roomId
+    );
 
     // delete from users array
 
@@ -201,7 +203,7 @@ io.on("connection", (socket) => {
         (group) => group.socketId !== hostingGroupCall.socketId
       );
       state.activeGroupCalls = filteredGroups;
-      console.log(filteredGroups);
+
       io.sockets
         .to(hostingGroupCall.roomId)
         .emit("close-group-call-gone", hostingGroupCall.roomId);
@@ -222,7 +224,7 @@ io.on("connection", (socket) => {
       };
 
       const groupCallIndex = activeGroupCalls.findIndex(
-        (group) => group.roomId === roomId
+        (group) => group.roomId === state.roomId
       );
 
       activeGroupCalls[groupCallIndex] = updatedGroup;
@@ -232,12 +234,13 @@ io.on("connection", (socket) => {
 
     state.activeUsers = usersLeft;
     io.sockets.emit("user-disconnected", usersLeft);
-    socket
-      .to(roomId)
-      .emit("group-call-user-disconnect", { roomId, socketId: socket.id });
+    socket.to(state.roomId).emit("group-call-user-disconnect", {
+      roomId: state.roomId,
+      socketId: socket.id,
+    });
 
-    socket.leave(roomId);
-    roomId = "";
+    socket.leave(state.roomId);
+    state.roomId = "";
   });
 });
 

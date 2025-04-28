@@ -26,9 +26,11 @@ import { preOfferAnswerStatus, userStatus } from "@/lib/constants";
 import { toast } from "sonner";
 import {
   connectToGroupCall,
+  createDataConnection,
   handleDisconnectFromGroupCall,
   handleDisconnectMeFromGroupCall,
   handleUserGroupCallDisconnect,
+  myPeerId,
 } from "./webrtcGroupConnection";
 import { setGroupCallUsers, setNewGroupCallUsers } from "@/store/slices/webrtc";
 
@@ -149,6 +151,7 @@ export const connectToWebSocket = () => {
     store.dispatch(setGroupCallUsers(data));
     const users = store.getState().webrtc.groupCallUsers;
     connectToGroupCall(data);
+    // createDataConnection(data.peerId)
     socket.emit("user-join-users-update", { users, roomId: data.roomId });
   });
 
@@ -203,6 +206,9 @@ export const connectToWebSocket = () => {
   socket.on("user-join-users-update", (users) => {
     console.log("USERS");
     console.log(users);
+    // const usersIds = [];
+    // const filteredUsers = users.
+    // // connectToAllPeers(ids)
     store.dispatch(setNewGroupCallUsers(users));
   });
 
