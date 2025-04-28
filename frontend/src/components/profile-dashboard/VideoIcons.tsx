@@ -26,9 +26,9 @@ function VideoIcons({
   const localStream = useSelector(
     (state: RootState) => state.webrtc.localStream
   );
-  const isInGroupCall = useSelector(
-    (state: RootState) => state.user.isInGroupCall
-  );
+  // const isInGroupCall = useSelector(
+  //   (state: RootState) => state.user.isInGroupCall
+  // );
 
   const handleMicEnabled = () => {
     dispatch(setMicEnabled(!micEnabled));
@@ -73,7 +73,7 @@ function VideoIcons({
         </button>
         {optionsVisible && <IoMdSettings onClick={handleShowSettings} />}
       </div>
-      {showOptions && !isInGroupCall && (
+      {showOptions && (
         <SettingsDialog
           showOptions={showOptions}
           setShowOptions={setShowOptions}

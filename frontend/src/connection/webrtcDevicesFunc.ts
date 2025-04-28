@@ -93,6 +93,7 @@ export const changeInputDevice = async (
     if (deviceType === "camera") {
       console.log("camera ghange");
       try {
+        const isInGropCall = store.getState().user.isInGroupCall;
         const selectedInputDeviceId =
           store.getState().webrtc.selectedInputDeviceId;
         const stream = await navigator.mediaDevices.getUserMedia({
@@ -104,50 +105,41 @@ export const changeInputDevice = async (
 
         const videoTrack = stream.getVideoTracks()[0];
 
-        const senders = await peerConnection?.getSenders();
-        if (!senders) {
-          toast("Failed to change camera, no senders");
-          return;
+        if (isInGropCall) {
+          // change in group call
+          const groupUsers = store.getState().webrtc.groupCallUsers;
+          const user = groupUsers.find((user) => user.peerId === myPeerId);
+          if (!user) {
+            throw new Error("Error failed to change input");
+          }
+
+          const newUser = {
+            ...user,
+            streamId: stream.id,
+          };
+
+          const newGroupUsers = [...groupUsers, newUser];
+          store.dispatch(setLocalStream(stream));
+          store.dispatch(setNewGroupCallUsers(newGroupUsers));
+          currentCall?.peerConnection.getSenders()[1].replaceTrack(videoTrack);
+        } else {
+          // change in 1 to 1 call
+          const senders = await peerConnection?.getSenders();
+          if (!senders) {
+            toast("Failed to change camera, no senders");
+            return;
+          }
+          const sender = senders.find(
+            (sender) => sender.track!.kind === videoTrack.kind
+          );
+
+          if (!sender) {
+            toast("Failed to change camera, no sender");
+            return;
+          }
+          await sender?.replaceTrack(videoTrack);
+          store.dispatch(setLocalStream(stream));
         }
-        const sender = senders.find(
-          (sender) => sender.track!.kind === videoTrack.kind
-        );
-
-        if (!sender) {
-          toast("Failed to change camera, no sender");
-          return;
-        }
-        await sender?.replaceTrack(videoTrack);
-        store.dispatch(setLocalStream(stream));
-
-        // if (store.getState().user.isInGroupCall) {
-        //   console.log("CURRENT CALL");
-        //   console.log(currentCall);
-        //   currentCall.close();
-        //   const groupUsers = store.getState().webrtc.groupCallUsers;
-
-        //   const user = groupUsers.find((user) => user.peerId === myPeerId);
-        //   if (!user) {
-        //     throw new Error("Error failed to change input");
-        //   }
-
-        //   const newUser = {
-        //     ...user,
-        //     streamId: stream.id,
-        //   };
-
-        //   const newGroupUsers = [...groupUsers, newUser];
-        //   store.dispatch(setLocalStream(stream));
-        //   store.dispatch(setNewGroupCallUsers(newGroupUsers));
-        //   // currentCall.call(callPeerId, stream);
-        //   connectToGroupCall({ peerId: callPeerId });
-        // }
-
-        // store
-        //   .getState()
-        //   .webrtc.localStream?.getTracks()
-        //   .forEach((track) => track.stop());
-        // store.dispatch(setLocalStream(stream));
       } catch (err) {
         toast.error("Failed to change camera");
         console.error(err);
