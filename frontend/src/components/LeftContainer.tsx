@@ -1,5 +1,5 @@
 import { IoIosArrowForward } from "react-icons/io";
-import FriendsList from "./friends-group-list/Friends-GroupList";
+import FriendGroupsList from "./friends-group-list/Friends-GroupList";
 import Profile from "./profile-dashboard/Profile";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
@@ -13,7 +13,7 @@ function LeftContainer() {
   if (!leftContainerVisible)
     return (
       <button
-        className="bg-[#222222] hover:bg-[#333333] hover:text-[#888888] rounded-sm p-0.25  cursor-pointer"
+        className="bg-[#222222] hover:bg-[#333333] hover:text-[#888888] rounded-sm p-0.25 cursor-pointer hidden md:inline-block"
         onClick={() => dispatch(setLeftContainerVisible(!leftContainerVisible))}
       >
         <IoIosArrowForward className="text-md" />
@@ -24,7 +24,7 @@ function LeftContainer() {
     <aside className="h-full w-full flex flex-col gap-4 justify-between animate-fade-right animate-duration-300 ">
       {leftContainerVisible && (
         <>
-          <FriendsList />
+          <FriendGroupsList />
           <Profile />
         </>
       )}

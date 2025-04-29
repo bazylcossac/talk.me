@@ -4,6 +4,7 @@ import { userDataType } from "@/types/types";
 import { callToUser } from "@/connection/webrtcConnection";
 import ActiveIcon from "../profile-dashboard/ActiveIcon";
 import { setCalleData } from "@/store/slices/user";
+import { userStatus } from "@/lib/constants";
 
 function ActiveUser({ user }: { user: userDataType }) {
   const dispatch = useDispatch();
@@ -25,7 +26,9 @@ function ActiveUser({ user }: { user: userDataType }) {
               />
               <div className="absolute -bottom-2 left-[18px] focus:ring-0 focus:outline-none">
                 <ActiveIcon
-                  userActiveStatus={user.status}
+                  userActiveStatus={
+                    user.status as (typeof userStatus)[keyof typeof userStatus]
+                  }
                   className="hidden md:inline-block size-3 rounded-full border-2 border-[#222222] cursor-pointer outline-none"
                 />
               </div>
@@ -40,7 +43,7 @@ function ActiveUser({ user }: { user: userDataType }) {
         </div>
         <div
           className="bg-[#333333] p-2 rounded-md cursor-pointer hover:bg-[#222222] "
-          onClick={() => handleCallToUser(user.socketId)}
+          onClick={() => handleCallToUser(user.socketId!)}
         >
           <BsCameraVideoFill className="text-[#9C9C9C] md:text-sm" />
         </div>

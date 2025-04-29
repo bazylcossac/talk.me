@@ -7,7 +7,7 @@ function MainCallContNoCall() {
   const [createDialogVisible, setCreateDialogVisible] = useState(false);
   return (
     <>
-      <div className="absolute right-0 mr-4">
+      <div className="hidden md:absolute right-0 mr-4 ">
         <Logo className="w-20" />
       </div>
       <div className="flex flex-col h-full  items-center justify-center gap-2 fixed right-1/2 transform translate-x-1/2">

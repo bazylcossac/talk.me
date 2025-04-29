@@ -47,8 +47,8 @@ function Dashboard() {
   }
 
   return (
-    <main className="p-4 h-screen flex flex-row gap-4 ">
-      <section>
+    <main className="p-4 h-screen flex flex-row md:gap-4  ">
+      <section className="w-full md:w-auto">
         <LeftContainer />
       </section>
       <section className="w-full h-full flex-1">

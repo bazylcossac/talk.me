@@ -21,7 +21,7 @@ function GroupList({ friendsTableVisible }: { friendsTableVisible: boolean }) {
       {!friendsTableVisible && (
         <section className="animate-fade animate-duration-300">
           <Button
-            className="m-1 cursor-pointer hover:bg-neutral-700"
+            className="my-4 mx-2 md:my-2 md:mx-2 cursor-pointer hover:bg-neutral-700 p-6 md:p-4"
             onClick={() => setCreateDialogVisible((prev) => !prev)}
             disabled={
               isInGroupCall || callState === callStatus.CALL_IN_PROGRESS

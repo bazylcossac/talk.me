@@ -15,7 +15,7 @@ function MainCallContainer() {
   // no call
   if (callState !== callStatus.CALL_IN_PROGRESS) {
     return (
-      <section className="h-full w-full ">
+      <section className="h-full w-full hidden md:inline-block">
         <MainCallContNoCall />
       </section>
     );
