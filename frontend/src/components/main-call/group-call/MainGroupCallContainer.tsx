@@ -23,8 +23,6 @@ function MainGroupCallContainer() {
     (state: RootState) => state.webrtc.groupCallUsers
   );
 
-  console.log(groupCallUsers);
-
   return (
     <div ref={divRef} className="w-full h-full relative overflow-hidden">
       <div

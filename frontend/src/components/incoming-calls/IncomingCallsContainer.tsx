@@ -10,7 +10,6 @@ function IncomingCallContainer() {
   const callingUsersData = useSelector(
     (state: RootState) => state.webrtc.callingUsersData
   );
-  console.log(callingUsersData);
 
   const deleteFromShownToastIds = (socketId: string) => {
     shownToastIds.current.delete(`incoming-call-${socketId}`);

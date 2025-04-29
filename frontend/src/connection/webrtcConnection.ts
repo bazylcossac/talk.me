@@ -37,7 +37,6 @@ export let currentDataChannel = null as RTCDataChannel | null;
 export const createPeerConection = async () => {
   const configuration = await getCredentials();
   peerConnection = new RTCPeerConnection(configuration);
-  console.log(peerConnection);
   currentDataChannel = peerConnection?.createDataChannel("chat");
 
   const localStream = store.getState().webrtc.localStream;
@@ -55,11 +54,6 @@ export const createPeerConection = async () => {
     if (state === "disconnected" || state === "failed") {
       peerConnection!.restartIce();
     }
-    if (state === "connected") {
-      console.log("CONNECTED TO USER");
-      console.log(store.getState().webrtc.remoteStream);
-      console.log(store.getState().webrtc.localStream);
-    }
   };
 
   peerConnection.onicecandidate = (event) => {
@@ -73,17 +67,13 @@ export const createPeerConection = async () => {
 
   peerConnection.ondatachannel = (event) => {
     currentDataChannel = event.channel;
-    console.log(currentDataChannel);
   };
 
   currentDataChannel.onmessage = (event) => {
     handleDataChannelMessages(event.data);
   };
-  currentDataChannel.onopen = () => {
-    console.log("DATA CHANNEL OPPENED");
-  };
+
   currentDataChannel.onclose = () => {
-    console.log("closing data channel");
     store.dispatch(clearCurrentCallMessages());
   };
 };
@@ -101,7 +91,6 @@ export const callToUser = async (calleSocketId: string) => {
 
   store.dispatch(setCallStatus(callStatus.CALL_IN_PROGRESS));
   handleUserActiveChange(userStatus.IN_CALL);
-  console.log(store.getState().user.userCallState);
 };
 
 export const setUpLocalStream = async () => {
@@ -184,8 +173,6 @@ export const handlePreOfferAnswer = async ({
   roomId?: string;
 }) => {
   if (answer === preOfferAnswerStatus.CALL_ACCEPTED) {
-    console.log("ACCEPTED");
-    console.log(socketId);
     await sendOffer(socketId, roomId!);
   } else {
     if (answer === preOfferAnswerStatus.CALL_UNVAILABLE) {
@@ -227,7 +214,6 @@ export const handleOffer = async ({
   await peerConnection?.setRemoteDescription(offer);
   const answer = await peerConnection!.createAnswer();
   await peerConnection?.setLocalDescription(answer);
-  console.log(peerConnection!.connectionState);
 
   sendOfferAnswer({
     answer: answer,
@@ -242,7 +228,6 @@ export const handleOfferAnswer = async ({
   socketId: string;
 }) => {
   await peerConnection!.setRemoteDescription(answer);
-  console.log(peerConnection!.connectionState);
 };
 
 const canUserConnectiWithMe = () => {
@@ -309,7 +294,6 @@ export const handleRejectCall = ({
 }: {
   callerSocketID: string;
 }) => {
-  console.log("USUWAM");
   const currentIncomingCalls = store.getState().webrtc.callingUsersData;
   const filteredIncomingCalls = currentIncomingCalls.filter(
     (user) => user.socketId !== callerSocketID
@@ -335,7 +319,6 @@ export const handleCandidate = async (candidate: RTCIceCandidate) => {
 };
 
 export const handleLeaveCall = () => {
-  console.log(callerSocketId);
   if (
     store.getState().user.userCallState === callStatus.CALL_IN_PROGRESS &&
     peerConnection!.connectionState === "connected"
@@ -364,9 +347,6 @@ export const clearAfterClosingConnection = () => {
   store.dispatch(setScreenSharingEnabled(false));
   store.dispatch(setCalleData(null));
   store.dispatch(clearCurrentCallMessages());
-
-  console.log("WYCZYSZCZONE");
-  console.log(store.getState().webrtc.currentCallChatMessages);
 };
 
 export const disconnectFromRoom = (roomId: string) => {

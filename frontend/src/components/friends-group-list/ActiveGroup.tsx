@@ -7,7 +7,7 @@ import { RootState } from "@/store/store";
 import { callStatus } from "@/lib/constants";
 import { FaLock } from "react-icons/fa6";
 import { useRef, useState } from "react";
-import PasswordDialog from "../main-call/group-call/joinPasswordDialog";
+import PasswordDialog from "../main-call/group-call/JoinPasswordDialog";
 
 function ActiveGroup({
   group,
@@ -61,7 +61,7 @@ function ActiveGroup({
                     setPasswordDialogVisible(true);
                     isJoining.current = false;
                   } else {
-                    await joinGroupCall(group.peerId, group.roomId);
+                    await joinGroupCall(group.roomId);
                     isJoining.current = false;
                   }
                 }

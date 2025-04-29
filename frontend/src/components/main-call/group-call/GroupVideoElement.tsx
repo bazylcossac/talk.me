@@ -57,8 +57,7 @@ function GroupVideoElement({
           </button>
         </div>
       )}
-      {/* <p>Socket id: ${user?.socketId}</p>
-      <p>Stream id: ${stream.id}</p> */}
+
       <video
         ref={videoRef}
         autoPlay
@@ -68,7 +67,7 @@ function GroupVideoElement({
       <p className="absolute bottom-0 right-0  text-xs text-white text-shado-2xl bg-[#222222] p-2 rounded-md m-1 border-1 border-white/20">
         {user?.username || "guest"}
       </p>
-      {isUserHosting && user?.socketId !== loggedUser.socketId && (
+      {isUserHosting && user?.socketId !== loggedUser.socketId && user && (
         <UsersSettingsDialog
           showSettings={showSettings}
           setShowSettings={setShowSettings}

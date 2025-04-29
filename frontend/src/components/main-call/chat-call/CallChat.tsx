@@ -35,7 +35,7 @@ function CallChat() {
       setCurrentCallMessages({
         type: "message",
         your: true,
-        username: user.user?.username || user.user?.fullName,
+        username: user.user?.username || user.user.fullName!,
         message,
         messageId,
       })

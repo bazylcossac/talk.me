@@ -52,12 +52,10 @@ export const createGroupPeerConnection = async () => {
   });
 
   peer.on("open", (id: string) => {
-    console.log("PEER JS USER ", id);
     myPeerId = id;
   });
 
   peer.on("connection", (dataConnection) => {
-    console.log(dataConnection);
     dataChannelGroup = dataConnection;
     dataChannelGroup.on("data", (data) => {
       handleDataChannelMessages(data);
@@ -115,7 +113,7 @@ export const createGroupCall = async (
 // cleanup function after disconnecting from group call
 export const handleDisconnectFromGroupCall = (roomId: string) => {
   if (!roomId) return;
-  console.log("CLOSING CALL");
+
   store.dispatch(setIsInGroupCall(false));
   clearAfterClosingConnection();
   disconnectFromRoom(roomId);
@@ -126,7 +124,7 @@ export const handleDisconnectFromGroupCall = (roomId: string) => {
   currentCall = null;
 };
 
-export const joinGroupCall = async (peerId: string, roomId: string) => {
+export const joinGroupCall = async (roomId: string) => {
   const possible = await isCallPossible(roomId);
   if (!possible) {
     toast.error("Already max users in call!");
@@ -144,8 +142,6 @@ export const joinGroupCall = async (peerId: string, roomId: string) => {
     return;
   }
 
-  // createDataConnection(peerId);
-
   // dodac liste peerow w grupie
   const data = {
     peerId: myPeerId,
@@ -155,7 +151,6 @@ export const joinGroupCall = async (peerId: string, roomId: string) => {
   };
   store.dispatch(setGroupCallUsers(data));
 
-  console.log("CONECTING TO: ", peerId);
   sendJoinRequest({
     streamId: localStream.id,
     user: loggedUser,
@@ -167,8 +162,6 @@ export const joinGroupCall = async (peerId: string, roomId: string) => {
 
   const filteredIds = ids.ids.filter((id: string) => id !== myPeerId);
   connectToAllPeers(filteredIds);
-
-  console.log(ids);
 
   store.dispatch(setIsInGroupCall(true));
   store.dispatch(setCallStatus(callStatus.CALL_IN_PROGRESS));
@@ -193,9 +186,6 @@ export const connectToGroupCall = (data: {
   callPeerId = data.peerId;
 
   const call = peer.call(data.peerId, localStream);
-
-  console.log("CURRENT CALL");
-  console.log(currentCall);
 
   call.on("stream", (stream: MediaStream) => {
     const groupCallStreams = store.getState().webrtc.groupCallStreams;
@@ -224,7 +214,6 @@ export const leaveGroupCall = () => {
   const user = store.getState().user.loggedUser;
 
   if (!localStream) return;
-  // dodac od razu zalogowanego uzytkownika bedzie latwiej>??
 
   sendLeaveGroupCallRequest({
     socketId: user.socketId!,
@@ -271,7 +260,7 @@ export const connectToAllPeers = (peerIds: string[]) => {
   peerIds.forEach((peerId) => {
     dataChannelGroup = peer.connect(peerId);
     dataChannelGroup.on("open", () => {
-      console.log("data channel group open");
+      //
     });
     dataChannelGroup.on("data", (data) => {
       handleDataChannelMessages(data);
@@ -282,7 +271,7 @@ export const connectToAllPeers = (peerIds: string[]) => {
 export const createDataConnection = (peerId: string) => {
   dataChannelGroup = peer.connect(peerId);
   dataChannelGroup.on("open", () => {
-    console.log("data channel group open");
+    //
   });
   dataChannelGroup.on("data", (data) => {
     handleDataChannelMessages(data);

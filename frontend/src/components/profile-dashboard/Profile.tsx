@@ -4,7 +4,6 @@ import ActivityDropdown from "./ActivityDropdown";
 
 function Profile() {
   const user = useUser();
-  console.log(user.user?.imageUrl);
 
   return (
     <section>

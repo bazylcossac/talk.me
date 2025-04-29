@@ -1,20 +1,11 @@
-// import { DataConnection } from "peerjs";
 import store from "../store/store";
-// import { recivedBuffers } from "@/connection/webrtcConnection";
 import { setCurrentCallMessages } from "@/store/slices/webrtc";
 
 let recivedBuffers = [] as ArrayBuffer[];
 
-export default function handleDataChannelMessages(
-  //   dataChannel: DataConnection,
-  data: unknown
-  // recivedBuffers: ArrayBuffer[]
-) {
-  //   const isInGropCall = store.getState().user.isInGroupCall;
-
+export default function handleDataChannelMessages(data: unknown) {
   if (typeof data !== "object") {
     if (JSON.parse(data as string).type === "message") {
-      console.log("MESSAGE");
       const { username, message, messageId, type } = JSON.parse(data as string);
       store.dispatch(
         setCurrentCallMessages({
@@ -51,5 +42,4 @@ export default function handleDataChannelMessages(
   }
 
   recivedBuffers.push(data as ArrayBuffer);
-  console.log(recivedBuffers);
 }

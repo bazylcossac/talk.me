@@ -58,14 +58,11 @@ router.get("/getGroupPeerIds", (req, res) => {
   const allGroups = state.activeGroupCalls;
 
   const group = allGroups.find((group) => group.roomId === roomId);
-  console.log("GROUP");
-  console.log(group);
 
   const usersIds = [];
   group.users?.forEach((user) => usersIds.push(user.peerId));
   const hostPeerId = group.peerId;
   const ids = [...usersIds, hostPeerId];
-  console.log(ids)
 
   res.json({ ids });
 });

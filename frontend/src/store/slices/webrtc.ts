@@ -26,7 +26,7 @@ const webrtcSlice = createSlice({
     setRemoteStream: (state, { payload }: { payload: MediaStream | null}) => {
       state.remoteStream = payload;
     },
-    setScreenSharingScreen: (state, { payload }: { payload: MediaStream }) => {
+    setScreenSharingScreen: (state, { payload }: { payload: MediaStream | null}) => {
       state.screenSharingStrem = payload;
     },
 

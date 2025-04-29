@@ -15,7 +15,7 @@ function CameraSelect({ allCameras }: { allCameras: MediaDeviceInfo[] }) {
   const allDevices = allCameras
     ?.filter((device) => device.deviceId !== "")
     .map((device) => device);
-  console.log(allDevices);
+
   const dispatch = useDispatch();
   const cameraDeviceId = useSelector(
     (state: RootState) => state.webrtc.selectedCameraDeviceId

@@ -52,8 +52,6 @@ function SettingsDialog({
     });
   }, [allDevices]);
 
-  console.log(allOutputs);
-
   return (
     <dialog>
       <Dialog open={showOptions} onOpenChange={setShowOptions}>

@@ -18,7 +18,6 @@ function PasswordDialog({
   passwordDialogVisible,
   setPasswordDialogVisible,
   roomId,
-  peerId,
 }: {
   passwordDialogVisible: boolean;
   setPasswordDialogVisible: React.Dispatch<React.SetStateAction<boolean>>;
@@ -37,7 +36,7 @@ function PasswordDialog({
     const { verified } = await verifyPassword(passwordValue, roomId);
     if (verified && !isJoining.current) {
       isJoining.current = true;
-      await joinGroupCall(peerId, roomId);
+      await joinGroupCall(roomId);
       isJoining.current = false;
     } else {
       toast.error("Wrong password");

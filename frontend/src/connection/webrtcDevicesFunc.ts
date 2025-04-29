@@ -129,7 +129,6 @@ export const changeInputDevice = async (
   const callState = store.getState().user.userCallState;
   if (callState === callStatus.CALL_IN_PROGRESS) {
     if (deviceType === "camera") {
-      console.log("camera ghange");
       try {
         const isInGropCall = store.getState().user.isInGroupCall;
         const selectedInputDeviceId =

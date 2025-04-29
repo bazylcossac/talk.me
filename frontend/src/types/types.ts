@@ -3,8 +3,8 @@ import { userStatus } from "@/lib/constants";
 export type userDataType = {
   username: string;
   imageUrl: string;
-  status: string;
-  socketId?: string;
+  status: (typeof userStatus)[keyof typeof userStatus];
+  socketId: string;
   roomId?: string;
 };
 

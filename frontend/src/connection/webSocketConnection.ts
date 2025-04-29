@@ -26,11 +26,9 @@ import { preOfferAnswerStatus, userStatus } from "@/lib/constants";
 import { toast } from "sonner";
 import {
   connectToGroupCall,
-  createDataConnection,
   handleDisconnectFromGroupCall,
   handleDisconnectMeFromGroupCall,
   handleUserGroupCallDisconnect,
-  myPeerId,
 } from "./webrtcGroupConnection";
 import { setGroupCallUsers, setNewGroupCallUsers } from "@/store/slices/webrtc";
 
@@ -42,7 +40,6 @@ export const connectToWebSocket = () => {
 
   socket.on("connection", (socketId) => {
     mySocketId = socketId;
-    console.log(socketId);
   });
 
   socket.on("user-join", ({ activeUsers, activeGroupCalls }) => {
@@ -117,7 +114,7 @@ export const connectToWebSocket = () => {
 
   socket.on("close-call-user-gone", (roomId) => {
     toast("User left");
-    console.log("user left");
+
     clearAfterClosingConnection();
     socket.emit("disconnect-from-room", roomId);
   });
@@ -146,8 +143,6 @@ export const connectToWebSocket = () => {
   );
 
   socket.on("join-group-call-request", (data) => {
-    console.log("JOIN REQUEST");
-    console.log(data);
     store.dispatch(setGroupCallUsers(data));
     const users = store.getState().webrtc.groupCallUsers;
     connectToGroupCall(data);
@@ -179,7 +174,6 @@ export const connectToWebSocket = () => {
         break;
       }
       case "remove": {
-        console.log(user);
         // remove user
         if (!group) {
           return;
@@ -204,11 +198,6 @@ export const connectToWebSocket = () => {
   });
 
   socket.on("user-join-users-update", (users) => {
-    console.log("USERS");
-    console.log(users);
-    // const usersIds = [];
-    // const filteredUsers = users.
-    // // connectToAllPeers(ids)
     store.dispatch(setNewGroupCallUsers(users));
   });
 
