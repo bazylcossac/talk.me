@@ -17,10 +17,10 @@ import { currentCall, myPeerId } from "./webrtcGroupConnection";
 export const handleScreenSharing = async (
   screenSharingEnabled: boolean
 ): Promise<void> => {
+  const isInGropCall = store.getState().user.isInGroupCall;
   if (screenSharingEnabled) {
     try {
       const isLowMedia = store.getState().user.screenSharingLowOptions;
-
       const qualityMode = isLowMedia
         ? screenSharingLowQualityOptions
         : screenSharingHighQualityOptions;
@@ -29,18 +29,53 @@ export const handleScreenSharing = async (
         qualityMode
       );
       store.dispatch(setScreenSharingScreen(screenSharingStream));
-      const senders = await peerConnection!.getSenders();
 
-      const sender = senders.find(
-        (sender) =>
-          sender.track!.kind === screenSharingStream.getVideoTracks()[0].kind
-      );
+      if (isInGropCall) {
+        // change in group call
+        const screenSharingTrack = screenSharingStream.getVideoTracks()[0];
+        const groupUsers = store.getState().webrtc.groupCallUsers;
+        const user = groupUsers.find((user) => user.peerId === myPeerId);
+        if (!user) {
+          throw new Error("Error failed to change input");
+        }
 
-      if (!sender) {
-        toast("Failed to screern share");
-        return;
+        const newUser = {
+          ...user,
+          streamId: screenSharingStream.id,
+        };
+
+        const newGroupUsers = [...groupUsers, newUser];
+
+        // store.dispatch(setScreenSharingScreen);
+        store.dispatch(setNewGroupCallUsers(newGroupUsers));
+        const sender = currentCall?.peerConnection
+          .getSenders()
+          .find(
+            (sender) =>
+              sender.track?.kind ===
+              screenSharingStream.getVideoTracks()[0].kind
+          );
+
+        if (!sender) {
+          toast("Failed to screen share");
+          return;
+        }
+        sender.replaceTrack(screenSharingTrack);
+      } else {
+        const senders = await peerConnection!.getSenders();
+
+        const sender = senders.find(
+          (sender) =>
+            sender.track!.kind === screenSharingStream.getVideoTracks()[0].kind
+        );
+
+        if (!sender) {
+          toast("Failed to screern share");
+          return;
+        }
+
+        sender.replaceTrack(screenSharingStream.getVideoTracks()[0]);
       }
-      sender.replaceTrack(screenSharingStream.getVideoTracks()[0]);
     } catch (err) {
       const error = err as Error;
       toast(error.message);
@@ -51,18 +86,28 @@ export const handleScreenSharing = async (
     if (!localStream) {
       setUpLocalStream();
     }
-    const senders = await peerConnection!.getSenders();
 
-    const sender = senders.find(
-      (sender) => sender.track!.kind === localStream?.getVideoTracks()[0].kind
-    );
+    if (isInGropCall) {
+      const localStreamTrack = localStream!.getVideoTracks()[0];
 
-    if (!sender) {
-      toast("Failed to switch back to camera");
-      return;
+      currentCall?.peerConnection
+        .getSenders()[1]
+        .replaceTrack(localStreamTrack);
+    } else {
+      const senders = await peerConnection!.getSenders();
+
+      const sender = senders.find(
+        (sender) => sender.track!.kind === localStream?.getVideoTracks()[0].kind
+      );
+
+      if (!sender) {
+        toast("Failed to switch back to camera");
+        return;
+      }
+
+      sender.replaceTrack(localStream!.getVideoTracks()[0]);
     }
 
-    sender.replaceTrack(localStream!.getVideoTracks()[0]);
     store.dispatch(setScreenSharingScreen(null));
   }
 };
