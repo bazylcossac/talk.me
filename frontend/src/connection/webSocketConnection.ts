@@ -157,11 +157,11 @@ export const connectToWebSocket = () => {
 
   socket.on("group-users-change-update", ({ user, roomId, type }) => {
     const groups = store.getState().user.activeGroups;
+    const localGroups = [...groups];
     const group = groups.find((group) => group.roomId === roomId);
     switch (type) {
       case "add": {
         if (!group) {
-          /// do some logic when user try to join group that does not exist
           return;
         }
         const updatedUsersGroup = {
@@ -169,10 +169,12 @@ export const connectToWebSocket = () => {
           users: [...group!.users, user],
         };
 
-        const filteredGroups = groups.filter(
-          (activeGroup) => activeGroup.roomId !== group.roomId
-        );
-        const newGroups = [...filteredGroups, updatedUsersGroup];
+        const groupIndex = groups.findIndex((g) => g.roomId === group.roomId);
+
+        localGroups[groupIndex] = updatedUsersGroup;
+
+        const newGroups = [...localGroups];
+
         store.dispatch(setActiveGroups(newGroups));
         break;
       }
@@ -180,7 +182,6 @@ export const connectToWebSocket = () => {
         console.log(user);
         // remove user
         if (!group) {
-          /// do some logic when user try to join group that does not exist
           return;
         }
         const filteredUsers = group.users.filter(
@@ -192,12 +193,11 @@ export const connectToWebSocket = () => {
           users: [...filteredUsers],
         };
 
-        console.log("UPPDATES USERS");
-        console.log(updatedUsersGroup);
-        const filteredGroups = groups.filter(
-          (activeGroup) => activeGroup.roomId !== group.roomId
-        );
-        const newGroups = [...filteredGroups, updatedUsersGroup];
+        const groupIndex = groups.findIndex((g) => g.roomId === group.roomId);
+
+        localGroups[groupIndex] = updatedUsersGroup;
+
+        const newGroups = [...localGroups];
         store.dispatch(setActiveGroups(newGroups));
       }
     }

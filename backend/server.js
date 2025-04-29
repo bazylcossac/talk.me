@@ -92,6 +92,7 @@ io.on("connection", (socket) => {
       groupPassword: data.groupPassword,
       users: [],
     };
+    console.log(newGroupCall);
     state.activeGroupCalls.push(newGroupCall);
 
     io.sockets.emit("active-groups", state.activeGroupCalls);
@@ -146,6 +147,7 @@ io.on("connection", (socket) => {
     const groupCall = activeGroupCalls.find(
       (group) => group.roomId === state.roomId
     );
+    if (!groupCall) return;
     const usersInGroup = groupCall.users;
 
     const filteredUsers = usersInGroup.filter(

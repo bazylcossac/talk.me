@@ -33,6 +33,7 @@ export const handleScreenSharing = async (
       if (isInGropCall) {
         // change in group call
         const screenSharingTrack = screenSharingStream.getVideoTracks()[0];
+        alert(screenSharingTrack);
         const groupUsers = store.getState().webrtc.groupCallUsers;
         const user = groupUsers.find((user) => user.peerId === myPeerId);
         if (!user) {
@@ -46,18 +47,14 @@ export const handleScreenSharing = async (
 
         const newGroupUsers = [...groupUsers, newUser];
 
-        // store.dispatch(setScreenSharingScreen);
         store.dispatch(setNewGroupCallUsers(newGroupUsers));
         const sender = currentCall?.peerConnection
           .getSenders()
-          .find(
-            (sender) =>
-              sender.track?.kind ===
-              screenSharingStream.getVideoTracks()[0].kind
-          );
+          .find((sender) => sender.track?.kind === screenSharingTrack.kind);
 
         if (!sender) {
-          toast("Failed to screen share");
+          toast("Failed to screen share or you are using safari, bro...");
+          store.dispatch(setScreenSharingEnabled(false));
           return;
         }
         sender.replaceTrack(screenSharingTrack);
@@ -71,6 +68,7 @@ export const handleScreenSharing = async (
 
         if (!sender) {
           toast("Failed to screern share");
+          store.dispatch(setScreenSharingEnabled(false));
           return;
         }
 
@@ -80,6 +78,7 @@ export const handleScreenSharing = async (
       const error = err as Error;
       toast(error.message);
       store.dispatch(setScreenSharingEnabled(false));
+      store.dispatch(setScreenSharingScreen(null));
     }
   } else if (!screenSharingEnabled) {
     const localStream = store.getState().webrtc.localStream;

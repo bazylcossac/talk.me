@@ -242,9 +242,7 @@ export const handleUserGroupCallDisconnect = (
   const userToRemove = groupCallUsers.find(
     (user) => user.user.socketId === socketId
   );
-  console.log("USER TO REMOVE");
-  console.log(socketId);
-  console.log(userToRemove);
+
   const streamid = userToRemove?.streamId;
 
   const newUsers = groupCallUsers.filter(
@@ -252,7 +250,6 @@ export const handleUserGroupCallDisconnect = (
   );
 
   const streams = store.getState().webrtc.groupCallStreams;
-  console.log(streams);
 
   const newStreams = streams.filter((stream) => stream.id !== streamid);
 

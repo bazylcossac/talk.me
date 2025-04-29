@@ -73,6 +73,7 @@ const renderMesage = (message: chatItemType) => {
                 src={message.url}
                 controls
                 muted
+                autoPlay={message.fileType === ""}
                 className="h-32 object-cover rounded-md"
               />
               <div className="absolute top-3 right-2">
