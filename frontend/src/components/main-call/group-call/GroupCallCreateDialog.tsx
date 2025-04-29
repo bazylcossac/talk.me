@@ -29,6 +29,8 @@ function SettingsDialog({
   const [allInputs, setAllInputs] = useState<MediaDeviceInfo[]>([]);
   const [allOutputs, setAllOutputs] = useState<MediaDeviceInfo[]>([]);
   const [allCameras, setAllCamers] = useState<MediaDeviceInfo[]>([]);
+  const [creatingGroup, setCreatingGroup] = useState(false);
+
   const [passwordInputType, setPasswordInputType] = useState<
     "text" | "password"
   >("password");
@@ -62,6 +64,7 @@ function SettingsDialog({
   }, [allDevices]);
 
   const handleCreateGroup = async (e: FormEvent) => {
+    setCreatingGroup(true);
     e.preventDefault();
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
@@ -70,6 +73,7 @@ function SettingsDialog({
 
     await createGroupCall(groupName, groupPassword);
     setCreateDialogVisible(false);
+    setCreatingGroup(false);
   };
 
   return (
@@ -135,8 +139,9 @@ function SettingsDialog({
               <Button
                 className="hover:cursor-pointer hover:bg-[#121212] mt-4 w-full"
                 type="submit"
+                disabled={creatingGroup}
               >
-                Create Group
+                {creatingGroup ? "Creating..." : "Create Group"}
               </Button>
             </form>
           </DialogContent>
