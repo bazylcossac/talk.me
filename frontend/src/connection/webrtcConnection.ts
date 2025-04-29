@@ -315,7 +315,7 @@ export const handleRejectCall = ({
     (user) => user.socketId !== callerSocketID
   );
   store.dispatch(setCallingUserData(filteredIncomingCalls));
-  store.dispatch(setCalleData({}));
+  store.dispatch(setCalleData(null));
   handlePreOfferAnswer({
     answer: preOfferAnswerStatus.CALL_REJECTED,
     socketId: callerSocketID,
@@ -323,7 +323,7 @@ export const handleRejectCall = ({
 };
 
 export const handleRejectedCall = () => {
-  store.dispatch(setCalleData({}));
+  store.dispatch(setCalleData(null));
   handleOtherUserLeaveCall();
   toast("User rejected call, sorry :'( ", {
     className: "bg-black text-white",
@@ -362,7 +362,7 @@ export const clearAfterClosingConnection = () => {
   store.dispatch(setLocalStream(null));
   store.dispatch(setRemoteStream(null));
   store.dispatch(setScreenSharingEnabled(false));
-  store.dispatch(setCalleData({}));
+  store.dispatch(setCalleData(null));
   store.dispatch(clearCurrentCallMessages());
 
   console.log("WYCZYSZCZONE");

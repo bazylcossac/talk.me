@@ -4,11 +4,13 @@ import { GroupCallDataType, userDataType } from "@/types/types";
 
 const initialState = {
   loggedUser: {} as userDataType,
-  calleData: {} as userDataType,
-  userActiveStatus: userStatus.ACTIVE,
+  calleData: {} as userDataType | null,
+  userActiveStatus:
+    userStatus.ACTIVE as (typeof userStatus)[keyof typeof userStatus],
   activeUsers: [] as userDataType[],
   activeGroups: [] as GroupCallDataType[],
-  userCallState: callStatus.CALL_AVAILABLE,
+  userCallState:
+    callStatus.CALL_AVAILABLE as (typeof callStatus)[keyof typeof callStatus],
   micEnabled: true,
   cameraEnabled: true,
   screenSharingEnabled: false,
@@ -22,11 +24,14 @@ const userSlice = createSlice({
   name: "user",
   initialState: initialState,
   reducers: {
-    setCurrentlyLoggedUser: (state, action) => {
-      state.loggedUser = action.payload;
+    setCurrentlyLoggedUser: (state, { payload }: { payload: userDataType }) => {
+      state.loggedUser = payload;
     },
-    setUserActiveStatus: (state, action) => {
-      state.userActiveStatus = action.payload;
+    setUserActiveStatus: (
+      state,
+      { payload }: { payload: (typeof userStatus)[keyof typeof userStatus] }
+    ) => {
+      state.userActiveStatus = payload;
     },
     setActiveUsers: (state, action) => {
       const filteredUsers = action.payload.filter(
@@ -34,36 +39,38 @@ const userSlice = createSlice({
       );
       state.activeUsers = filteredUsers;
     },
-    setCallStatus: (state, action) => {
-      state.userCallState = action.payload;
+    setCallStatus: (
+      state,
+      { payload }: { payload: (typeof callStatus)[keyof typeof callStatus] }
+    ) => {
+      state.userCallState = payload;
     },
-    setCalleData: (state, action) => {
-      state.calleData = action.payload;
+    setCalleData: (state, { payload }: { payload: userDataType | null }) => {
+      state.calleData = payload;
     },
-    setMicEnabled: (state, action) => {
-      state.micEnabled = action.payload;
+    setMicEnabled: (state, { payload }: { payload: boolean }) => {
+      state.micEnabled = payload;
     },
-    setCameraEnabled: (state, action) => {
-      state.cameraEnabled = action.payload;
+    setCameraEnabled: (state, { payload }: { payload: boolean }) => {
+      state.cameraEnabled = payload;
     },
-    setScreenSharingEnabled: (state, action) => {
-      state.screenSharingEnabled = action.payload;
+    setScreenSharingEnabled: (state, { payload }: { payload: boolean }) => {
+      state.screenSharingEnabled = payload;
     },
-    setScreenSharingLowOptions: (state, action) => {
-      console.log(action.payload);
-      state.screenSharingLowOptions = action.payload;
+    setScreenSharingLowOptions: (state, { payload }: { payload: boolean }) => {
+      state.screenSharingLowOptions = payload;
     },
-    setLocalCameraHide: (state, action) => {
-      state.localCameraHide = action.payload;
+    setLocalCameraHide: (state, { payload }: { payload: boolean }) => {
+      state.localCameraHide = payload;
     },
-    setActiveGroups: (state, action) => {
-      state.activeGroups = action.payload;
+    setActiveGroups: (state, { payload }: { payload: GroupCallDataType[] }) => {
+      state.activeGroups = payload;
     },
-    setHasCreatedGroupCall: (state, action: { payload: boolean }) => {
-      state.hasCreatedGroupCall = action.payload;
+    setHasCreatedGroupCall: (state, { payload }: { payload: boolean }) => {
+      state.hasCreatedGroupCall = payload;
     },
-    setIsInGroupCall: (state, action: { payload: boolean }) => {
-      state.isInGroupCall = action.payload;
+    setIsInGroupCall: (state, { payload }: { payload: boolean }) => {
+      state.isInGroupCall = payload;
     },
   },
 });

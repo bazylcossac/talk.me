@@ -10,14 +10,14 @@ const appSlice = createSlice({
   name: "app",
   initialState: initialState,
   reducers: {
-    setLeftContainerVisible: (state, action) => {
-      state.leftContainerVisible = action.payload;
+    setLeftContainerVisible: (state, { payload }: { payload: boolean }) => {
+      state.leftContainerVisible = payload;
     },
-    setRightContainerVisible: (state, action) => {
-      state.rightContainerVisible = action.payload;
+    setRightContainerVisible: (state, { payload }: { payload: boolean }) => {
+      state.rightContainerVisible = payload;
     },
-    setFriendsTableVisible: (state, action) => {
-      state.friendsTableVisible = action.payload;
+    setFriendsTableVisible: (state, { payload }: { payload: boolean }) => {
+      state.friendsTableVisible = payload;
     },
   },
 });

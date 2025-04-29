@@ -16,7 +16,7 @@ export async function sendMessageDataChannels(file: File, user: UserResource) {
     setCurrentCallMessages({
       type: "file",
       your: true,
-      username: user?.username || user?.fullName,
+      username: user.username || user.fullName!,
       url: url,
       messageId,
       fileType: file.type,

@@ -20,52 +20,61 @@ const webrtcSlice = createSlice({
   name: "webrtc",
   initialState: initialState,
   reducers: {
-    setLocalStream: (state, action) => {
-      state.localStream = action.payload;
+    setLocalStream: (state, { payload }: { payload: MediaStream | null}) => {
+      state.localStream = payload;
     },
-    setRemoteStream: (state, action) => {
-      state.remoteStream = action.payload;
+    setRemoteStream: (state, { payload }: { payload: MediaStream | null}) => {
+      state.remoteStream = payload;
     },
-    setScreenSharingScreen: (state, action) => {
-      state.screenSharingStrem = action.payload;
+    setScreenSharingScreen: (state, { payload }: { payload: MediaStream }) => {
+      state.screenSharingStrem = payload;
     },
 
-    setSelectedInputDeviceId: (state, action) => {
-      state.selectedInputDeviceId = action.payload;
+    setSelectedInputDeviceId: (state, { payload }: { payload: string }) => {
+      state.selectedInputDeviceId = payload;
     },
-    setSelectedOutputDeviceId: (state, action) => {
-      state.selectedOutputDeviceId = action.payload;
+    setSelectedOutputDeviceId: (state, { payload }: { payload: string }) => {
+      state.selectedOutputDeviceId = payload;
     },
-    setSelectedCameraDeviceId: (state, action) => {
-      state.selectedCameraDeviceId = action.payload;
+    setSelectedCameraDeviceId: (state, { payload }: { payload: string }) => {
+      state.selectedCameraDeviceId = payload;
     },
-    setCallingUserData: (state, action) => {
-      state.callingUsersData = action.payload;
+    setCallingUserData: (state, { payload }: { payload: userDataType[] }) => {
+      state.callingUsersData = payload;
     },
-    setCurrentCallMessages: (state, action) => {
+    setCurrentCallMessages: (state, { payload }: { payload: chatItemType }) => {
       const newMessages = state.currentCallChatMessages;
-      newMessages.push(action.payload);
+      newMessages.push(payload);
       state.currentCallChatMessages = newMessages;
     },
     clearCurrentCallMessages: (state) => {
       state.currentCallChatMessages = [];
     },
-    setGroupCallStreams: (state, action) => {
+    setGroupCallStreams: (state, { payload }: { payload: MediaStream }) => {
       const streams = state.groupCallStreams;
-      streams.push(action.payload);
+      streams.push(payload);
 
       state.groupCallStreams = streams;
     },
-    setNewGroupCallStreams: (state, action) => {
-      state.groupCallStreams = action.payload;
+    setNewGroupCallStreams: (
+      state,
+      { payload }: { payload: MediaStream[] }
+    ) => {
+      state.groupCallStreams = payload;
     },
-    setGroupCallUsers: (state, action) => {
+    setGroupCallUsers: (
+      state,
+      { payload }: { payload: groupCallUserDataType }
+    ) => {
       const users = state.groupCallUsers;
-      users.push(action.payload);
+      users.push(payload);
       state.groupCallUsers = users;
     },
-    setNewGroupCallUsers: (state, action) => {
-      state.groupCallUsers = action.payload;
+    setNewGroupCallUsers: (
+      state,
+      { payload }: { payload: groupCallUserDataType[] }
+    ) => {
+      state.groupCallUsers = payload;
     },
   },
 });
