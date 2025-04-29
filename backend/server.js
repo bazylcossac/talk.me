@@ -2,14 +2,11 @@ const state = require("./state");
 const express = require("express");
 const http = require("http");
 const socket = require("socket.io");
-const axios = require("axios");
 const { ExpressPeerServer } = require("peer");
-const { PrismaClient, Prisma } = require("@prisma/client");
 const cors = require("cors");
 const PORT = 3000;
 const { sendingOffersFunc } = require("./sendingOffersFunc");
 const app = express();
-const prisma = new PrismaClient();
 const server = http.createServer(app);
 const apiRountes = require("./routes");
 
