@@ -1,21 +1,21 @@
 const state = require("./state");
 const express = require("express");
 const axios = require("axios");
-const dotenv = require("dotenv").config();
+const dotenv = require("dotenv");
 const cors = require("cors");
 const router = express.Router();
-
+dotenv.config();
 router.use(cors());
 router.use(express.json());
 
 router.post("/getTURNCredentials", async (req, res) => {
   const ttl = 86400;
   const response = await axios.post(
-    dotenv.parsed.API_TURN_URL,
+    process.env.API_TURN_URL,
     { ttl },
     {
       headers: {
-        Authorization: `Bearer ${dotenv.parsed.API_TURN_TOKEN}`,
+        Authorization: `Bearer ${process.env.API_TURN_TOKEN}`,
         "Content-Type": "application/json",
       },
     }
