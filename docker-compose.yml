@@ -1,0 +1,25 @@
+version: "3.8"
+services:
+  backend:
+    build: "./backend"
+    ports:
+      - "3000:3000"
+    environment:
+      API_TURN_TOKEN: ${API_TURN_TOKEN}
+      API_TURN_URL: ${API_TURN_URL}
+      TURN_TTL: ${TURN_TTL}
+  frontend:
+    build: "./frontend"
+    ports:
+      - "5173:5173"
+    environment:
+      SERVER_URL: ${SERVER_URL}
+      CLIENT_URL: ${CLIENT_URL}
+      VITE_CLERK_PUBLISHABLE_KEY: ${VITE_CLERK_PUBLISHABLE_KEY}
+      PEER_JS_HOST: ${PEER_JS_HOST}
+      PEER_JS_PORT: ${PEER_JS_PORT}
+      PEER_JS_PATH: ${PEER_JS_PATH}
+    depends_on:
+      - backend
+volumes:
+  videoconf:
