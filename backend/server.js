@@ -89,8 +89,9 @@ io.on("connection", (socket) => {
       groupPassword: data.groupPassword,
       users: [],
     };
-    console.log(newGroupCall);
+
     state.activeGroupCalls.push(newGroupCall);
+    console.log(state.activeGroupCalls);
 
     io.sockets.emit("active-groups", state.activeGroupCalls);
   });

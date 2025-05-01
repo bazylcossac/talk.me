@@ -159,6 +159,7 @@ export const joinGroupCall = async (roomId: string) => {
   });
 
   const ids = await getPeerIdsFromGroup(roomId);
+  console.log(ids);
 
   const filteredIds = ids.ids.filter((id: string) => id !== myPeerId);
   connectToAllPeers(filteredIds);

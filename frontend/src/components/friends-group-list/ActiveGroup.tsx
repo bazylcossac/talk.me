@@ -25,24 +25,28 @@ function ActiveGroup({
 
   return (
     <section className="p-2">
-      <p className="md:text-[10px] text-white/30">{group.users.length + 1}/4</p>
+      <p className="md:text-[10px] text-white/30">
+        {group?.users?.length + 1}/4
+      </p>
       <div className="flex items-center gap-2">
         <p className="md:text-sm text-lg max-w-[220px] truncate">
-          {group.groupName}
+          {group?.groupName}
         </p>
-        {group.groupPassword && <FaLock className="text-neutral-600 text-xs" />}
+        {group?.groupPassword && (
+          <FaLock className="text-neutral-600 text-xs" />
+        )}
       </div>
       <div className="flex flex-row justify-between relative h-8 mt-1">
         <div className="flex flex-row">
           <img
-            src={group.hostUser.imageUrl}
+            src={group?.hostUser?.imageUrl}
             alt="host image"
             className="size-12 md:size-8 rounded-full relative z-100 border-2 border-[#222222]"
           />
-          {group.users.map((user, index) => (
+          {group?.users?.map((user, index) => (
             <img
-              src={user.imageUrl}
-              alt={`${user.username}'s image`}
+              src={user?.imageUrl}
+              alt={`${user?.username}'s image`}
               className="size-12 md:size-8 rounded-full absolute border-2 border-[#222222]"
               style={{
                 left: `${(index + 1) * 25}px`,
@@ -69,7 +73,7 @@ function ActiveGroup({
               className={cn(
                 "bg-[#333333] p-2 rounded-md cursor-pointer hover:bg-[#222222]",
                 {
-                  hidden: group.users.length + 1 === 4,
+                  hidden: group?.users?.length + 1 === 4,
                 }
               )}
               disabled={
