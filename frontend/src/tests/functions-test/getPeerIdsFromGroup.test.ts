@@ -26,6 +26,19 @@ describe("getPeerIdsFromGroup function", () => {
       "3e0cfea7-f610-4a5a-a921-2ee227b8181f"
     );
 
-    expect(result).toBe(mockPeerIds);
+    expect(result).toEqual(mockPeerIds);
+  });
+
+  it("Should return null if there is no such room", async () => {
+    globalThis.fetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => null,
+    });
+
+    const result = await getPeerIdsFromGroup(
+      "3e0cfea7-f610-4a5a-a921-2ee227b8181f"
+    );
+
+    expect(result).toEqual(null);
   });
 });

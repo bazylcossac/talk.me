@@ -7,6 +7,10 @@ export default async function getPeerIdsFromGroup(roomId: string) {
       throw new Error("Failed to get peer ids");
     }
     const data = await response.json();
+    if (!data) {
+      return null;
+    }
+
     return data;
   } catch (err) {
     const error = err as Error;

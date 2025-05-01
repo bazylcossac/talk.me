@@ -43,7 +43,9 @@ router.post("/isCallPossible", (req, res) => {
   const { roomId } = req.body;
 
   const room = state.activeGroupCalls.find((group) => group.roomId === roomId);
-
+  if (!room) {
+    res.json({ possible: false });
+  }
   if (room.users.length + 1 >= 4) {
     res.json({ possible: false });
   } else {
@@ -58,8 +60,6 @@ router.get("/getGroupPeerIds", (req, res) => {
   const allGroups = state.activeGroupCalls;
 
   const group = allGroups.find((group) => group.roomId === roomId);
-
-  
 
   const usersIds = [];
   group.users?.forEach((user) => usersIds.push(user.peerId));

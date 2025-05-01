@@ -126,6 +126,7 @@ export const handleDisconnectFromGroupCall = (roomId: string) => {
 
 export const joinGroupCall = async (roomId: string) => {
   const possible = await isCallPossible(roomId);
+  console.log(possible);
   if (!possible) {
     toast.error("Already max users in call!");
     return;
