@@ -5,7 +5,7 @@ vi.stubGlobal("fetch", vi.fn());
 
 describe("isCallPossible function", () => {
   beforeEach(() => {
-    (globalThis.fetch as vi.Mock).mockClear();
+    vi.clearAllMocks();
   });
 
   afterAll(() => {
@@ -15,10 +15,10 @@ describe("isCallPossible function", () => {
   it("Should return true if call is possible", async () => {
     const mockRoomId = "3e0cfea7-f610-4a5a-a921-2ee227b8181f";
 
-    (globalThis.fetch as vi.Mock).mockResolvedValueOnce({
+    vi.mocked(globalThis.fetch).mockResolvedValueOnce({
       ok: true,
       json: async () => ({ possible: true }),
-    });
+    } as unknown as Response);
 
     const response = await isCallPossible(mockRoomId);
 
@@ -28,10 +28,10 @@ describe("isCallPossible function", () => {
   it("Should return false if call is not possible", async () => {
     const mockRoomId = "3e0cfea7-f610-4a5a-a921-2ee227b8181f";
 
-    (globalThis.fetch as vi.Mock).mockResolvedValueOnce({
+    vi.mocked(globalThis.fetch).mockResolvedValueOnce({
       ok: true,
       json: async () => ({ possible: false }),
-    });
+    } as unknown as Response);
     const response = await isCallPossible(mockRoomId);
 
     expect(response).toEqual(false);

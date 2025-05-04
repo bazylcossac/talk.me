@@ -45,8 +45,9 @@ const groupPeerIds = [] as string[];
 export const createGroupPeerConnection = async () => {
   const credentials = await getCredentials();
   peer = new Peer({
-    host: "localhost",
-    port: 3000,
+    host: "talkme-backend-production.up.railway.app",
+    port: 443,
+    secure: true,
     path: "/peerjs",
     config: credentials,
   });

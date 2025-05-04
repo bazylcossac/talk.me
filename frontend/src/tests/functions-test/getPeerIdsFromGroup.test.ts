@@ -5,7 +5,7 @@ vi.stubGlobal("fetch", vi.fn());
 
 describe("getPeerIdsFromGroup function", () => {
   beforeEach(() => {
-    (globalThis.fetch as vi.Mock).mockClear();
+    vi.clearAllMocks();
   });
 
   afterAll(() => {
@@ -19,10 +19,10 @@ describe("getPeerIdsFromGroup function", () => {
         "a7f73a46-fb86-4334-8cfa-0c3975c8a8ae",
       ],
     };
-    (globalThis.fetch as vi.Mock).mockResolvedValueOnce({
+    vi.mocked(globalThis.fetch).mockResolvedValueOnce({
       ok: true,
       json: async () => mockPeerIds,
-    });
+    } as unknown as Response);
 
     const result = await getPeerIdsFromGroup(
       "3e0cfea7-f610-4a5a-a921-2ee227b8181f"
@@ -32,10 +32,10 @@ describe("getPeerIdsFromGroup function", () => {
   });
 
   it("Should return null if there is no such room", async () => {
-    (globalThis.fetch as vi.Mock).mockResolvedValueOnce({
+    vi.mocked(globalThis.fetch).mockResolvedValueOnce({
       ok: true,
       json: async () => null,
-    });
+    } as unknown as Response);
 
     const result = await getPeerIdsFromGroup(
       "3e0cfea7-f610-4a5a-a921-2ee227b8181f"
