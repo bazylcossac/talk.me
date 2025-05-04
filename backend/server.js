@@ -10,7 +10,15 @@ const app = express();
 const server = http.createServer(app);
 const apiRountes = require("./routes");
 
-const peerServer = ExpressPeerServer(server, { debug: true });
+app.use(
+  cors({
+    origin: "https://talk-me-front.vercel.app",
+    methods: ["GET", "POST"],
+  })
+);
+app.use(express.json());
+
+const peerServer = ExpressPeerServer(server, { debug: true, path: "/peerjs" });
 
 peerServer.on("connection", (id) => {
   console.log(`user conencted with ${id} id`);
@@ -18,9 +26,6 @@ peerServer.on("connection", (id) => {
 
 app.use("/peerjs", peerServer);
 app.use("/api", apiRountes);
-app.use(express.json());
-app.use(cors());
-
 const io = socket(server, {
   cors: {
     origin: "https://talk-me-front.vercel.app",
