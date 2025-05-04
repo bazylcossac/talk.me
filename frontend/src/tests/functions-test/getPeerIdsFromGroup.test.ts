@@ -1,9 +1,11 @@
 import getPeerIdsFromGroup from "@/functions/getPeerIdsFromGroup";
 import { describe, it, expect, afterAll, beforeEach, vi } from "vitest";
 
+vi.stubGlobal("fetch", vi.fn());
+
 describe("getPeerIdsFromGroup function", () => {
   beforeEach(() => {
-    globalThis.fetch = vi.fn();
+    (globalThis.fetch as vi.Mock).mockClear();
   });
 
   afterAll(() => {
@@ -17,7 +19,7 @@ describe("getPeerIdsFromGroup function", () => {
         "a7f73a46-fb86-4334-8cfa-0c3975c8a8ae",
       ],
     };
-    globalThis.fetch.mockResolvedValueOnce({
+    (globalThis.fetch as vi.Mock).mockResolvedValueOnce({
       ok: true,
       json: async () => mockPeerIds,
     });
@@ -30,7 +32,7 @@ describe("getPeerIdsFromGroup function", () => {
   });
 
   it("Should return null if there is no such room", async () => {
-    globalThis.fetch.mockResolvedValueOnce({
+    (globalThis.fetch as vi.Mock).mockResolvedValueOnce({
       ok: true,
       json: async () => null,
     });
