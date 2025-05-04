@@ -46,7 +46,7 @@ export const createGroupPeerConnection = async () => {
   const credentials = await getCredentials();
   peer = new Peer({
     host: "talkme-backend-production.up.railway.app",
-    port: 443,
+    port: 3000,
     secure: true,
     path: "/peerjs",
     config: credentials,
