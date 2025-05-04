@@ -1,6 +1,6 @@
 export async function isCallPossible(roomId: string) {
   try {
-    const response = await fetch("http://localhost:3000/api/isCallPossible", {
+    const response = await fetch("https://talkme-backend-production.up.railway.app/api/isCallPossible", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

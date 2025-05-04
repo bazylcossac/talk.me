@@ -1,7 +1,7 @@
 export default async function getPeerIdsFromGroup(roomId: string) {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/getGroupPeerIds?roomId=${roomId}`
+      `https://talkme-backend-production.up.railway.app/api/getGroupPeerIds?roomId=${roomId}`
     );
     if (!response.ok) {
       throw new Error("Failed to get peer ids");

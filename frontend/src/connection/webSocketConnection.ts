@@ -36,7 +36,7 @@ let socket: Socket;
 let mySocketId: string;
 
 export const connectToWebSocket = () => {
-  socket = io("http://localhost:3000");
+  socket = io("https://talkme-backend-production.up.railway.app");
 
   socket.on("connection", (socketId) => {
     mySocketId = socketId;
