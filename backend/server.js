@@ -26,6 +26,7 @@ peerServer.on("connection", (id) => {
 
 app.use("/peerjs", peerServer);
 app.use("/api", apiRountes);
+
 const io = socket(server, {
   cors: {
     origin: "https://talk-me-front.vercel.app",
